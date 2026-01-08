@@ -9,7 +9,8 @@ A Next.js application with Supabase integration, using shadcn/ui components and 
 
 ### Environment Variables
 
-Create a `.env.local` file in the root directory with the following variables:
+1. Copy the template file: `cp env-template.txt .env.local`
+2. Edit `.env.local` and replace the placeholder values with your actual Supabase credentials
 
 ```env
 # Supabase Configuration
@@ -18,6 +19,15 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
 Get these values from your Supabase project dashboard.
+
+### Database Schema
+
+**Important:** All tables created in Supabase must be prefixed with `cap_`. This naming convention helps organize the database schema and prevents conflicts with future tables.
+
+Example table names:
+- `cap_users` (instead of `users`)
+- `cap_posts` (instead of `posts`)
+- `cap_comments` (instead of `comments`)
 
 ## Development
 
