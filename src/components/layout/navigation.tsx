@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Logo } from '@/components/ui/logo'
 import { Button } from '@/components/ui/button'
-import { Menu, X, ArrowRight, Zap, Code, Smartphone, Brain, CreditCard, Mail, Phone } from 'lucide-react'
+import { Menu, X, ArrowRight, Zap, Code, Smartphone, Brain, CreditCard, Mail, Phone, LogIn } from 'lucide-react'
 
 // Pages with dark hero sections that need transparent nav
 const darkHeroPages = ['/', '/services', '/about', '/portfolio', '/pricing']
@@ -81,8 +81,22 @@ export function Navigation() {
               <Logo width={100} height={28} variant={logoVariant} textFallback="Ceptiv" />
             </Link>
 
-            {/* Right side: Start Project + Menu */}
-            <div className="flex items-center space-x-4">
+            {/* Right side: Login + Start Project + Menu */}
+            <div className="flex items-center space-x-3">
+              {/* Login Button - Desktop */}
+              <div className="hidden sm:block">
+                <Button
+                  asChild
+                  variant={isTransparent ? 'outline-light' : 'outline'}
+                  className="transition-all duration-300"
+                >
+                  <Link href="/client/login">
+                    <LogIn className="w-4 h-4 mr-2" />
+                    Login
+                  </Link>
+                </Button>
+              </div>
+
               {/* Start Project Button - Desktop */}
               <div className="hidden sm:block">
                 <Button
@@ -252,6 +266,7 @@ export function Navigation() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.6 }}
+                      className="flex flex-col sm:flex-row gap-4"
                     >
                       <Button
                         asChild
@@ -261,6 +276,17 @@ export function Navigation() {
                         <Link href="/start">
                           Start Your Project
                           <ArrowRight className="w-5 h-5 ml-2" />
+                        </Link>
+                      </Button>
+                      <Button
+                        asChild
+                        size="lg"
+                        variant="outline-light"
+                        className="w-full sm:w-auto"
+                      >
+                        <Link href="/client/login">
+                          <LogIn className="w-5 h-5 mr-2" />
+                          Client Login
                         </Link>
                       </Button>
                     </motion.div>

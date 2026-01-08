@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -30,8 +31,13 @@ import {
   Plus,
   Layers,
   AlertCircle,
-  Link2
+  Link2,
+  Key,
+  Copy,
+  LogIn
 } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
+import { generatePin, hashPin } from '@/lib/client-auth'
 
 type ProjectApproach = 'new' | 'existing' | null
 type ProjectType = 'system' | 'website' | 'mobile' | 'ai' | 'integration'
@@ -95,6 +101,7 @@ const budgetRanges = {
 }
 
 export default function StartProjectPage() {
+  const router = useRouter()
   const [currentStep, setCurrentStep] = useState(1)
   const [projectApproach, setProjectApproach] = useState<ProjectApproach>(null)
   const [understandsApproach, setUnderstandsApproach] = useState(false)
@@ -115,6 +122,8 @@ export default function StartProjectPage() {
   const [additionalInfo, setAdditionalInfo] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [generatedPin, setGeneratedPin] = useState('')
+  const [pinCopied, setPinCopied] = useState(false)
 
   const totalSteps = 6
 
@@ -161,26 +170,89 @@ export default function StartProjectPage() {
   const handleSubmit = async () => {
     setIsSubmitting(true)
     
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    
-    const formData = {
-      projectApproach,
-      projectTypes: selectedTypes,
-      description: projectDescription,
-      integrations: selectedIntegrations,
-      aiCapabilities: selectedAiCapabilities,
-      integrationTypes: selectedIntegrationTypes,
-      teamSize,
-      timeline,
-      budget: { starting: startingBudget, monthly: monthlyBudget, flexible: flexibleBudget },
-      contact: { name, company, email, phone },
-      additionalInfo
+    try {
+      // Generate a 4-digit PIN for the client
+      const pin = generatePin()
+      const hashedPin = hashPin(pin)
+      
+      // Check if client already exists
+      const { data: existingClient } = await supabase
+        .from('cap_clients')
+        .select('id')
+        .eq('email', email.toLowerCase())
+        .single()
+      
+      let clientId: string
+      
+      if (existingClient) {
+        // Use existing client
+        clientId = existingClient.id
+      } else {
+        // Create new client
+        const { data: newClient, error: clientError } = await supabase
+          .from('cap_clients')
+          .insert({
+            email: email.toLowerCase(),
+            pin_code: hashedPin,
+            company_name: company || null,
+            contact_name: name,
+            phone: phone || null
+          })
+          .select('id')
+          .single()
+        
+        if (clientError) {
+          console.error('Error creating client:', clientError)
+          throw new Error('Failed to create account')
+        }
+        
+        clientId = newClient.id
+      }
+      
+      // Map project type to database enum
+      const projectTypeMap: Record<ProjectType, string> = {
+        system: 'backend_application',
+        website: 'website',
+        mobile: 'mobile_app',
+        ai: 'ai_integration',
+        integration: 'integration'
+      }
+      
+      // Create the project
+      const projectName = company 
+        ? `${company} - ${selectedTypes.map(t => projectTypes.find(pt => pt.id === t)?.title).join(' & ')}`
+        : `${name}'s Project`
+      
+      const { error: projectError } = await supabase
+        .from('cap_projects')
+        .insert({
+          client_id: clientId,
+          project_name: projectName,
+          project_type: projectTypeMap[selectedTypes[0]] || 'backend_application',
+          description: projectDescription + (additionalInfo ? `\n\nAdditional info: ${additionalInfo}` : ''),
+          is_new_build: projectApproach === 'new',
+          timeline: timelineOptions.find(t => t.id === timeline)?.label || timeline,
+          budget_range: `Starting: ${startingBudget || 'Flexible'}, Monthly: ${monthlyBudget || 'Flexible'}`,
+          status: 'pending',
+          contact_person_name: 'Daniel Vestergaard',
+          contact_person_email: 'dv@ceptiv.net'
+        })
+      
+      if (projectError) {
+        console.error('Error creating project:', projectError)
+        throw new Error('Failed to create project')
+      }
+      
+      // Store the generated PIN to show to user
+      setGeneratedPin(pin)
+      setIsSubmitted(true)
+      
+    } catch (error) {
+      console.error('Submission error:', error)
+      alert('There was an error submitting your project. Please try again.')
+    } finally {
+      setIsSubmitting(false)
     }
-    
-    console.log('Form submitted:', formData)
-    
-    setIsSubmitting(false)
-    setIsSubmitted(true)
   }
 
   const nextStep = () => {
@@ -197,9 +269,15 @@ export default function StartProjectPage() {
     }
   }
 
+  const copyPin = () => {
+    navigator.clipboard.writeText(generatedPin)
+    setPinCopied(true)
+    setTimeout(() => setPinCopied(false), 2000)
+  }
+
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-neutral-50 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-neutral-900 flex items-center justify-center px-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -210,58 +288,115 @@ export default function StartProjectPage() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-            className="w-24 h-24 bg-neutral-900 rounded-full flex items-center justify-center mx-auto mb-8"
+            className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-8"
           >
-            <PartyPopper className="w-12 h-12 text-white" />
+            <PartyPopper className="w-12 h-12 text-neutral-900" />
           </motion.div>
           
-          <h1 className="text-3xl lg:text-4xl font-bold text-neutral-900 mb-4">
-            Your project request is on its way!
+          <h1 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+            Welcome to Ceptiv!
           </h1>
           
-          <p className="text-lg text-neutral-600 mb-8">
-            We've received your project details and will get back to you within 24 hours.
+          <p className="text-lg text-neutral-300 mb-8">
+            Your project request has been submitted. Save your login PIN below.
           </p>
 
-          <Card className="mb-8">
-            <CardContent className="p-6">
-              <div className="flex items-center space-x-4 text-left">
-                <div className="w-12 h-12 bg-neutral-100 rounded-full flex items-center justify-center">
-                  <Clock className="w-6 h-6 text-neutral-700" />
+          {/* PIN Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <Card className="mb-6 bg-gradient-to-br from-neutral-800 to-neutral-900 border-neutral-700">
+              <CardContent className="p-8">
+                <div className="flex items-center justify-center gap-3 mb-4">
+                  <Key className="w-6 h-6 text-neutral-400" />
+                  <p className="text-neutral-400 font-medium">Your Login PIN</p>
                 </div>
-                <div>
-                  <p className="font-bold text-neutral-900">Within 24 hours</p>
-                  <p className="text-neutral-600">You'll receive a fixed-price proposal via email at {email}</p>
+                
+                <div className="flex justify-center gap-3 mb-6">
+                  {generatedPin.split('').map((digit, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.5 + index * 0.1 }}
+                      className="w-16 h-20 bg-white rounded-xl flex items-center justify-center text-3xl font-bold text-neutral-900"
+                    >
+                      {digit}
+                    </motion.div>
+                  ))}
                 </div>
-              </div>
-            </CardContent>
-          </Card>
 
-          <Card className="mb-8">
+                <Button 
+                  onClick={copyPin}
+                  variant="outline"
+                  className="border-neutral-600 text-white hover:bg-neutral-800"
+                >
+                  {pinCopied ? (
+                    <>
+                      <Check className="w-4 h-4 mr-2" />
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4 mr-2" />
+                      Copy PIN
+                    </>
+                  )}
+                </Button>
+
+                <p className="text-sm text-neutral-500 mt-4">
+                  Use this PIN with your email ({email}) to log in to your client portal.
+                </p>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Next Steps */}
+          <Card className="mb-8 bg-neutral-800 border-neutral-700">
             <CardContent className="p-6">
-              <h3 className="font-bold text-neutral-900 mb-4 text-left">Your request summary:</h3>
-              <ul className="text-left space-y-2 text-neutral-600">
-                <li className="flex items-center">
-                  <Check className="w-4 h-4 mr-2 text-neutral-900" />
-                  {projectApproach === 'new' ? 'Building from scratch' : 'Separate system with API'}
+              <h3 className="font-bold text-white mb-4 text-left">What happens next?</h3>
+              <ul className="text-left space-y-3 text-neutral-300">
+                <li className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-neutral-700 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-xs font-bold text-white">1</span>
+                  </div>
+                  <span>We review your project and prepare a proposal within 24 hours</span>
                 </li>
-                <li className="flex items-center">
-                  <Check className="w-4 h-4 mr-2 text-neutral-900" />
-                  {selectedTypes.map(t => projectTypes.find(pt => pt.id === t)?.title).join(' + ')}
+                <li className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-neutral-700 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-xs font-bold text-white">2</span>
+                  </div>
+                  <span>You&apos;ll receive a notification when your proposal is ready</span>
                 </li>
-                <li className="flex items-center">
-                  <Check className="w-4 h-4 mr-2 text-neutral-900" />
-                  Timeline: {timelineOptions.find(t => t.id === timeline)?.label}
+                <li className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-neutral-700 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-xs font-bold text-white">3</span>
+                  </div>
+                  <span>Log in to your portal to review and accept the proposal</span>
                 </li>
               </ul>
             </CardContent>
           </Card>
 
-          <Button asChild size="lg" variant="outline">
-            <Link href="/">
-              Back to Homepage
-            </Link>
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button 
+              asChild 
+              size="lg" 
+              className="bg-white text-neutral-900 hover:bg-neutral-100"
+            >
+              <Link href="/client/login">
+                <LogIn className="w-5 h-5 mr-2" />
+                Go to Client Portal
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="outline-light">
+              <Link href="/">
+                Back to Homepage
+              </Link>
+            </Button>
+          </div>
         </motion.div>
       </div>
     )

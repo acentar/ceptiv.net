@@ -11,7 +11,10 @@ import {
   FileImage,
   Users,
   Database,
-  BarChart3
+  BarChart3,
+  FolderKanban,
+  CreditCard,
+  FileText
 } from 'lucide-react'
 
 const navigation = [
@@ -21,9 +24,24 @@ const navigation = [
     icon: LayoutDashboard,
   },
   {
-    name: 'Users',
-    href: '/admin/users',
+    name: 'Projects',
+    href: '/admin/projects',
+    icon: FolderKanban,
+  },
+  {
+    name: 'Clients',
+    href: '/admin/clients',
     icon: Users,
+  },
+  {
+    name: 'Subscriptions',
+    href: '/admin/subscriptions',
+    icon: CreditCard,
+  },
+  {
+    name: 'Invoices',
+    href: '/admin/invoices',
+    icon: FileText,
   },
   {
     name: 'Content',
@@ -34,11 +52,6 @@ const navigation = [
     name: 'Analytics',
     href: '/admin/analytics',
     icon: BarChart3,
-  },
-  {
-    name: 'Database',
-    href: '/admin/database',
-    icon: Database,
   },
 ]
 
