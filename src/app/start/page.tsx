@@ -243,6 +243,17 @@ export default function StartProjectPage() {
         throw new Error('Failed to create project')
       }
       
+      // Auto-login the client by storing their data in localStorage
+      const clientData = {
+        id: clientId,
+        email: email.toLowerCase(),
+        company_name: company || null,
+        contact_name: name,
+        phone: phone || null,
+        created_at: new Date().toISOString()
+      }
+      localStorage.setItem('ceptiv_client', JSON.stringify(clientData))
+      
       // Store the generated PIN to show to user
       setGeneratedPin(pin)
       setIsSubmitted(true)
@@ -386,9 +397,9 @@ export default function StartProjectPage() {
               size="lg" 
               className="bg-white text-neutral-900 hover:bg-neutral-100"
             >
-              <Link href="/client/login">
-                <LogIn className="w-5 h-5 mr-2" />
-                Go to Client Portal
+              <Link href="/client/dashboard">
+                <ArrowRight className="w-5 h-5 mr-2" />
+                Continue to Dashboard
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline-light">
@@ -397,6 +408,10 @@ export default function StartProjectPage() {
               </Link>
             </Button>
           </div>
+
+          <p className="text-neutral-500 text-sm mt-6">
+            You&apos;re now signed in. Save your PIN for future logins.
+          </p>
         </motion.div>
       </div>
     )

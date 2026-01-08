@@ -16,6 +16,7 @@ interface ClientAuthContextType {
   client: Client | null
   isLoading: boolean
   login: (email: string, pin: string) => Promise<{ success: boolean; error?: string }>
+  loginDirect: (clientData: Client) => void
   logout: () => void
   isAuthenticated: boolean
 }
@@ -97,6 +98,11 @@ export function ClientAuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  const loginDirect = (clientData: Client) => {
+    setClient(clientData)
+    localStorage.setItem('ceptiv_client', JSON.stringify(clientData))
+  }
+
   const logout = () => {
     setClient(null)
     localStorage.removeItem('ceptiv_client')
@@ -107,6 +113,7 @@ export function ClientAuthProvider({ children }: { children: ReactNode }) {
       client,
       isLoading,
       login,
+      loginDirect,
       logout,
       isAuthenticated: !!client
     }}>
