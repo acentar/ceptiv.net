@@ -1,4 +1,4 @@
--- Create admin user: dv@acentarecruit.com with password Star9!
+-- Create admin user: admin@ceptiv.net with password Star9!
 -- SECURITY NOTE: This script contains a plaintext password for development purposes only.
 -- In production, users should set their own passwords through the Supabase auth flow.
 -- Never commit scripts with real user passwords to version control.
@@ -11,7 +11,7 @@ BEGIN
     -- Check if user already exists
     SELECT EXISTS(
         SELECT 1 FROM auth.users
-        WHERE email = 'dv@acentarecruit.com'
+        WHERE email = 'admin@ceptiv.net'
     ) INTO user_exists;
 
     -- Only create user if they don't exist
@@ -54,7 +54,7 @@ BEGIN
             gen_random_uuid(), -- random UUID for user
             'authenticated',
             'authenticated',
-            'dv@acentarecruit.com',
+            'admin@ceptiv.net',
             crypt('Star9!', gen_salt('bf')), -- encrypted password
             NOW(), -- email_confirmed_at
             NULL, -- invited_at
@@ -90,10 +90,10 @@ BEGIN
             'admin',
             '["all"]'::jsonb
         FROM auth.users
-        WHERE email = 'dv@acentarecruit.com';
+        WHERE email = 'admin@ceptiv.net';
 
-        RAISE NOTICE 'Admin user dv@acentarecruit.com created successfully';
+        RAISE NOTICE 'Admin user admin@ceptiv.net created successfully';
     ELSE
-        RAISE NOTICE 'Admin user dv@acentarecruit.com already exists';
+        RAISE NOTICE 'Admin user admin@ceptiv.net already exists';
     END IF;
 END $$;

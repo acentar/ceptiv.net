@@ -29,7 +29,7 @@ To create the default admin user, run the database migration script:
 3. Run the script: `database/migrations/004_create_admin_user.sql`
 
 **Admin Credentials:**
-- **Email:** `dv@acentarecruit.com`
+- **Email:** `admin@ceptiv.net`
 - **Password:** `Star9!`
 
 ⚠️ **Security Note:** This script contains a development password. In production, users should set their own secure passwords.
@@ -51,7 +51,7 @@ Database scripts are located in the `database/migrations/` directory.
 - `001_create_cap_settings_table.sql` - Application settings storage
 - `002_create_cap_user_roles_table.sql` - User roles and permissions
 - `003_create_cap_assets_table.sql` - Uploaded files/assets tracking
-- `004_create_admin_user.sql` - Creates admin user (dv@acentarecruit.com / Star9!)
+- `004_create_admin_user.sql` - Creates admin user (admin@ceptiv.net / Star9!)
 
 **Example script names:**
 - `005_create_cap_users_table.sql`
