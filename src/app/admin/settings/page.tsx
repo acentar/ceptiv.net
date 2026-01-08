@@ -32,15 +32,34 @@ export default function AdminSettingsPage() {
           setConnectionStatus('connected')
 
           // Fetch current logo URLs
+          console.log('Fetching logo URLs from database...')
           const [logoResult, lightLogoResult, faviconResult] = await Promise.all([
             supabase.from('cap_settings').select('value').eq('key', 'logo_url').single(),
             supabase.from('cap_settings').select('value').eq('key', 'light_logo_url').single(),
             supabase.from('cap_settings').select('value').eq('key', 'favicon_url').single()
           ])
 
-          if (logoResult.data?.value) setCurrentLogoUrl(logoResult.data.value)
-          if (lightLogoResult.data?.value) setCurrentLightLogoUrl(lightLogoResult.data.value)
-          if (faviconResult.data?.value) setCurrentFaviconUrl(faviconResult.data.value)
+          console.log('Logo fetch results:', {
+            logo: logoResult.data,
+            logoError: logoResult.error,
+            lightLogo: lightLogoResult.data,
+            lightLogoError: lightLogoResult.error,
+            favicon: faviconResult.data,
+            faviconError: faviconResult.error
+          })
+
+          if (logoResult.data?.value) {
+            console.log('Setting logo URL:', logoResult.data.value)
+            setCurrentLogoUrl(logoResult.data.value)
+          }
+          if (lightLogoResult.data?.value) {
+            console.log('Setting light logo URL:', lightLogoResult.data.value)
+            setCurrentLightLogoUrl(lightLogoResult.data.value)
+          }
+          if (faviconResult.data?.value) {
+            console.log('Setting favicon URL:', faviconResult.data.value)
+            setCurrentFaviconUrl(faviconResult.data.value)
+          }
         }
       } catch (err) {
         setConnectionStatus('error')
@@ -127,17 +146,17 @@ export default function AdminSettingsPage() {
           return
         }
 
-        console.log('Upload successful, saving to database...')
-        const { error: dbError } = await supabase
+        console.log('Upload successful, URL:', url)
+        console.log('Saving logo URL to database...')
+        
+        // Use UPDATE instead of UPSERT since row already exists with NULL value
+        const { data: updateData, error: dbError } = await supabase
           .from('cap_settings')
-          .upsert({
-            key: 'logo_url',
-            value: url,
-            value_type: 'string',
-            category: 'branding',
-            description: 'URL to the site logo (SVG)',
-            is_public: true
-          })
+          .update({ value: url })
+          .eq('key', 'logo_url')
+          .select()
+
+        console.log('Database update result:', { updateData, dbError })
 
         if (dbError) {
           console.error('Database save failed:', dbError)
@@ -146,8 +165,9 @@ export default function AdminSettingsPage() {
           return
         }
 
-        console.log('Database save successful')
+        console.log('Database save successful! URL saved:', url)
         setCurrentLogoUrl(url)
+        setLogoFile(null) // Clear the file input
         uploadedCount++
       }
 
@@ -164,16 +184,14 @@ export default function AdminSettingsPage() {
           return
         }
 
-        const { error: dbError } = await supabase
+        console.log('Saving light logo URL to database...')
+        const { data: updateData, error: dbError } = await supabase
           .from('cap_settings')
-          .upsert({
-            key: 'light_logo_url',
-            value: url,
-            value_type: 'string',
-            category: 'branding',
-            description: 'URL to the light site logo (SVG)',
-            is_public: true
-          })
+          .update({ value: url })
+          .eq('key', 'light_logo_url')
+          .select()
+
+        console.log('Database update result:', { updateData, dbError })
 
         if (dbError) {
           console.error('Database save failed:', dbError)
@@ -183,6 +201,7 @@ export default function AdminSettingsPage() {
         }
 
         setCurrentLightLogoUrl(url)
+        setLightLogoFile(null)
         uploadedCount++
       }
 
@@ -199,16 +218,14 @@ export default function AdminSettingsPage() {
           return
         }
 
-        const { error: dbError } = await supabase
+        console.log('Saving favicon URL to database...')
+        const { data: updateData, error: dbError } = await supabase
           .from('cap_settings')
-          .upsert({
-            key: 'favicon_url',
-            value: url,
-            value_type: 'string',
-            category: 'branding',
-            description: 'URL to the site favicon (SVG)',
-            is_public: true
-          })
+          .update({ value: url })
+          .eq('key', 'favicon_url')
+          .select()
+
+        console.log('Database update result:', { updateData, dbError })
 
         if (dbError) {
           console.error('Database save failed:', dbError)
@@ -218,15 +235,14 @@ export default function AdminSettingsPage() {
         }
 
         setCurrentFaviconUrl(url)
+        setFaviconFile(null)
         uploadedCount++
       }
 
       if (uploadedCount === 0) {
         alert('No files selected for upload.')
       } else {
-        alert(`Success! ${uploadedCount} file(s) uploaded and saved to database.`)
-        // Refresh the page to show updated thumbnails
-        window.location.reload()
+        alert(`Success! ${uploadedCount} file(s) uploaded and saved.`)
       }
     } catch (error) {
       console.error('Unexpected error:', error)

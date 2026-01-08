@@ -35,12 +35,16 @@ ALTER TABLE cap_settings ENABLE ROW LEVEL SECURITY;
 -- Create policies for admin access (drop existing first to avoid conflicts)
 DROP POLICY IF EXISTS "Allow authenticated users to read public settings" ON cap_settings;
 DROP POLICY IF EXISTS "Allow authenticated users to update settings" ON cap_settings;
+DROP POLICY IF EXISTS "Allow authenticated users to insert settings" ON cap_settings;
 
 CREATE POLICY "Allow authenticated users to read public settings" ON cap_settings
     FOR SELECT USING (is_public = true OR auth.role() = 'authenticated');
 
 CREATE POLICY "Allow authenticated users to update settings" ON cap_settings
     FOR UPDATE USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Allow authenticated users to insert settings" ON cap_settings
+    FOR INSERT WITH CHECK (auth.role() = 'authenticated');
 
 -- Function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
