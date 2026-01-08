@@ -1,5 +1,9 @@
+'use client'
+
 import Link from 'next/link'
 import { Logo } from '@/components/ui/logo'
+import { Button } from '@/components/ui/button'
+import { ArrowRight, Mail, Phone, MapPin } from 'lucide-react'
 
 const footerNavigation = {
   services: [
@@ -23,33 +27,106 @@ const footerNavigation = {
 
 export function Footer() {
   return (
-    <footer className="bg-neutral-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Company Info */}
-          <div className="space-y-4">
-            <Logo width={120} height={32} variant="light" />
-            <p className="text-neutral-400 text-sm">
-              We build from scratch. You get exactly what you need—nothing more, nothing less. 
-              Fixed prices. Fast delivery. Danish craftsmanship.
+    <footer className="bg-neutral-900 text-white relative overflow-hidden">
+      {/* Decorative gradient orbs */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-neutral-800/30 rounded-full blur-3xl -translate-y-1/2" />
+      <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-neutral-800/20 rounded-full blur-3xl translate-y-1/2" />
+      
+      {/* Big CTA Section */}
+      <div className="relative border-b border-neutral-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight">
+                Ready to build
+                <br />
+                <span className="text-neutral-500">something great?</span>
+              </h2>
+              <p className="text-xl text-neutral-400 mb-8 max-w-lg">
+                We build from scratch. You get exactly what you need—nothing more, nothing less.
+              </p>
+              <Button
+                asChild
+                size="lg"
+                className="bg-white text-neutral-900 hover:bg-neutral-100 px-8 py-6 text-lg font-semibold group"
+              >
+                <Link href="/start">
+                  Start Your Project
+                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </Button>
+            </div>
+            
+            <div className="grid grid-cols-3 gap-6 text-center">
+              <div className="p-6">
+                <div className="text-4xl lg:text-5xl font-bold text-white mb-2">40+</div>
+                <div className="text-neutral-500 text-sm">Integrations</div>
+              </div>
+              <div className="p-6">
+                <div className="text-4xl lg:text-5xl font-bold text-white mb-2">24h</div>
+                <div className="text-neutral-500 text-sm">Quote Delivery</div>
+              </div>
+              <div className="p-6">
+                <div className="text-4xl lg:text-5xl font-bold text-white mb-2">100%</div>
+                <div className="text-neutral-500 text-sm">Fixed Pricing</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Footer Content */}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
+          {/* Brand & Contact */}
+          <div className="lg:col-span-2 space-y-8">
+            <Logo width={140} height={40} variant="light" />
+            
+            <p className="text-lg text-neutral-300 font-medium max-w-sm">
+              Fixed prices. Fast delivery.
+              <br />
+              <span className="text-neutral-500">Danish craftsmanship.</span>
             </p>
-            <div className="text-neutral-500 text-xs space-y-1">
-              <p className="font-medium text-neutral-400">Part of Acenta Group ApS</p>
-              <p>CVR: 37576476</p>
-              <p>Maglebjergvej 6</p>
-              <p>2800 Kongens Lyngby, Danmark</p>
+            
+            <div className="space-y-4">
+              <a
+                href="mailto:dv@ceptiv.net"
+                className="flex items-center gap-3 text-neutral-400 hover:text-white transition-colors group"
+              >
+                <div className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center group-hover:bg-neutral-700 transition-colors">
+                  <Mail className="w-5 h-5" />
+                </div>
+                <span className="text-lg">dv@ceptiv.net</span>
+              </a>
+              <a
+                href="tel:+4581983271"
+                className="flex items-center gap-3 text-neutral-400 hover:text-white transition-colors group"
+              >
+                <div className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center group-hover:bg-neutral-700 transition-colors">
+                  <Phone className="w-5 h-5" />
+                </div>
+                <span className="text-lg">+45 81 98 32 71</span>
+              </a>
+              <div className="flex items-center gap-3 text-neutral-500">
+                <div className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center">
+                  <MapPin className="w-5 h-5" />
+                </div>
+                <span>Kongens Lyngby, Denmark</span>
+              </div>
             </div>
           </div>
 
           {/* Services */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Services</h3>
-            <ul className="space-y-2">
+            <h3 className="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-6">
+              Services
+            </h3>
+            <ul className="space-y-4">
               {footerNavigation.services.map((item) => (
                 <li key={item.name}>
                   <Link
                     href={item.href}
-                    className="text-neutral-400 hover:text-white transition-colors text-sm"
+                    className="text-neutral-300 hover:text-white transition-colors"
                   >
                     {item.name}
                   </Link>
@@ -60,13 +137,15 @@ export function Footer() {
 
           {/* Company */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Company</h3>
-            <ul className="space-y-2">
+            <h3 className="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-6">
+              Company
+            </h3>
+            <ul className="space-y-4">
               {footerNavigation.company.map((item) => (
                 <li key={item.name}>
                   <Link
                     href={item.href}
-                    className="text-neutral-400 hover:text-white transition-colors text-sm"
+                    className="text-neutral-300 hover:text-white transition-colors"
                   >
                     {item.name}
                   </Link>
@@ -75,47 +154,46 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Contact & Legal */}
+          {/* Legal */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Contact & Legal</h3>
-            <ul className="space-y-2">
-              <li>
-                <a
-                  href="mailto:dv@ceptiv.net"
-                  className="text-neutral-400 hover:text-white transition-colors text-sm"
-                >
-                  dv@ceptiv.net
-                </a>
-              </li>
-              <li>
-                <a
-                  href="tel:+4581983271"
-                  className="text-neutral-400 hover:text-white transition-colors text-sm"
-                >
-                  +45 81 98 32 71
-                </a>
-              </li>
+            <h3 className="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-6">
+              Legal
+            </h3>
+            <ul className="space-y-4">
               {footerNavigation.legal.map((item) => (
                 <li key={item.name}>
                   <Link
                     href={item.href}
-                    className="text-neutral-400 hover:text-white transition-colors text-sm"
+                    className="text-neutral-300 hover:text-white transition-colors"
                   >
                     {item.name}
                   </Link>
                 </li>
               ))}
             </ul>
+            
+            <div className="mt-8 pt-8 border-t border-neutral-800">
+              <p className="text-xs text-neutral-500 font-medium mb-2">Part of</p>
+              <p className="text-sm text-neutral-400">Acenta Group ApS</p>
+              <p className="text-xs text-neutral-500 mt-1">CVR: 37576476</p>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div className="border-t border-neutral-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-neutral-400 text-sm">
-            © {new Date().getFullYear()} Ceptiv — Part of Acenta Group ApS. All rights reserved.
-          </p>
-          <p className="text-neutral-500 text-xs mt-2 md:mt-0">
-            CVR 37576476 · Kongens Lyngby, Denmark
-          </p>
+      {/* Bottom Bar */}
+      <div className="relative border-t border-neutral-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-neutral-500 text-sm">
+              © {new Date().getFullYear()} Ceptiv. All rights reserved.
+            </p>
+            <div className="flex items-center gap-6 text-sm text-neutral-500">
+              <span>Maglebjergvej 6, 2800 Kongens Lyngby</span>
+              <span className="hidden md:inline">·</span>
+              <span>Denmark 🇩🇰</span>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
