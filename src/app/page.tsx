@@ -45,9 +45,9 @@ const services = [
   },
   {
     icon: CreditCard,
-    title: 'Payment Systems',
-    tagline: 'Stripe, MobilePay, Dinero. Ready to go.',
-    description: 'Seamless payment integrations with our pre-built modules. Subscriptions, invoicing, and more.'
+    title: 'Integrations',
+    tagline: 'We\'ve done it before. So it costs you less.',
+    description: 'Payments, accounting, shipping, payroll—we\'ve integrated them all. Pre-built modules mean lower costs for you.'
   }
 ]
 
@@ -340,7 +340,7 @@ export default function Home() {
             >
               <h3 className="text-xl font-bold text-neutral-900 mb-6 flex items-center">
                 <CreditCard className="w-6 h-6 mr-3" />
-                Payment Systems
+                Payment & Accounting
               </h3>
               <div className="flex flex-wrap gap-3">
                 {paymentIntegrations.map((integration, index) => (

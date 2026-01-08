@@ -34,7 +34,7 @@ import {
 } from 'lucide-react'
 
 type ProjectApproach = 'new' | 'existing' | null
-type ProjectType = 'system' | 'website' | 'mobile' | 'ai' | 'payments'
+type ProjectType = 'system' | 'website' | 'mobile' | 'ai' | 'integration'
 
 interface ProjectTypeOption {
   id: ProjectType
@@ -48,7 +48,7 @@ const projectTypes: ProjectTypeOption[] = [
   { id: 'website', icon: Code, title: 'Website Solution', description: 'Custom, fast, clean' },
   { id: 'mobile', icon: Smartphone, title: 'Mobile App', description: 'iOS & Android' },
   { id: 'ai', icon: Brain, title: 'AI Integration', description: 'Intelligent automation' },
-  { id: 'payments', icon: CreditCard, title: 'Payment System', description: 'Stripe, MobilePay, etc.' }
+  { id: 'integration', icon: CreditCard, title: 'Integration', description: 'Connect systems & APIs' }
 ]
 
 const aiCapabilities = [
@@ -61,13 +61,14 @@ const aiCapabilities = [
   'Not sure - advise me'
 ]
 
-const paymentMethods = [
-  'Credit/Debit Cards (Stripe)',
-  'MobilePay (Denmark)',
-  'Dinero Invoicing',
-  'Subscription billing',
-  'One-time payments',
-  'Marketplace payments'
+const integrationOptions = [
+  'Payment gateways (Stripe, QuickPay, etc.)',
+  'Accounting (Dinero, e-conomic, Billy)',
+  'Shipping (Shipmondo, PostNord, GLS)',
+  'Payroll (DataLøn, Zenegy)',
+  'CRM (HubSpot, Pipedrive)',
+  'E-signature (Penneo, GetAccept)',
+  'Other API integration'
 ]
 
 const integrationsNeeded = [
@@ -101,7 +102,7 @@ export default function StartProjectPage() {
   const [projectDescription, setProjectDescription] = useState('')
   const [selectedIntegrations, setSelectedIntegrations] = useState<string[]>([])
   const [selectedAiCapabilities, setSelectedAiCapabilities] = useState<string[]>([])
-  const [selectedPaymentMethods, setSelectedPaymentMethods] = useState<string[]>([])
+  const [selectedIntegrations, setSelectedIntegrations] = useState<string[]>([])
   const [teamSize, setTeamSize] = useState('')
   const [timeline, setTimeline] = useState('')
   const [startingBudget, setStartingBudget] = useState('')
@@ -168,7 +169,7 @@ export default function StartProjectPage() {
       description: projectDescription,
       integrations: selectedIntegrations,
       aiCapabilities: selectedAiCapabilities,
-      paymentMethods: selectedPaymentMethods,
+      integrations: selectedIntegrations,
       teamSize,
       timeline,
       budget: { starting: startingBudget, monthly: monthlyBudget, flexible: flexibleBudget },
@@ -614,24 +615,24 @@ export default function StartProjectPage() {
                   </div>
                 )}
 
-                {selectedTypes.includes('payments') && (
+                {selectedTypes.includes('integration') && (
                   <div>
                     <Label className="text-base font-medium mb-4 block">
-                      What payment methods do you need?
+                      What do you need to integrate?
                     </Label>
                     <div className="flex flex-wrap gap-3">
-                      {paymentMethods.map((method) => (
+                      {integrationOptions.map((option) => (
                         <button
-                          key={method}
+                          key={option}
                           type="button"
-                          onClick={() => toggleArrayItem(method, selectedPaymentMethods, setSelectedPaymentMethods)}
+                          onClick={() => toggleArrayItem(option, selectedIntegrations, setSelectedIntegrations)}
                           className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                            selectedPaymentMethods.includes(method)
+                            selectedIntegrations.includes(option)
                               ? 'bg-neutral-900 text-white'
                               : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
                           }`}
                         >
-                          {method}
+                          {option}
                         </button>
                       ))}
                     </div>

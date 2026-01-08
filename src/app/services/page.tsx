@@ -54,11 +54,11 @@ const services = [
     href: '/services/ai'
   },
   {
-    id: 'payments',
+    id: 'integrations',
     icon: CreditCard,
-    title: 'Payment Systems',
-    tagline: 'Stripe, MobilePay, Dinero. Ready to go.',
-    description: 'Seamless payment integrations with our pre-built modules. Subscriptions, one-time payments, invoicing, and more.',
+    title: 'Integrations',
+    tagline: 'We\'ve done it before. So it costs you less.',
+    description: 'Payments, accounting, shipping, payroll—we\'ve integrated them all. Our experience means faster delivery and lower costs.',
     examples: ['Subscription billing', 'Marketplace payments', 'Invoice automation', 'Multi-currency'],
     href: '/services/payments'
   }

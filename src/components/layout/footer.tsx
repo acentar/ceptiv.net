@@ -8,7 +8,7 @@ const footerNavigation = {
     { name: 'Web Solutions', href: '/services/web' },
     { name: 'Mobile Apps', href: '/services/mobile' },
     { name: 'AI Integrations', href: '/services/ai' },
-    { name: 'Payment Systems', href: '/services/payments' },
+    { name: 'Integrations', href: '/services/payments' },
   ],
   company: [
     { name: 'About Us', href: '/about' },
