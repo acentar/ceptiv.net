@@ -66,7 +66,7 @@ const services = [
 
 const differentiators = [
   { title: 'From Scratch Only', desc: 'We build new systems, not modify existing code' },
-  { title: 'No Templates', desc: 'Everything is designed and built specifically for you' },
+  { title: 'Custom Design', desc: 'Everything is designed and built specifically for you' },
   { title: 'Pre-built Modules', desc: 'Years of integrations ready to deploy instantly' },
   { title: 'Fixed Pricing', desc: 'Know exactly what you pay before we start' }
 ]
