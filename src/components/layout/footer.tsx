@@ -203,15 +203,10 @@ export function Footer() {
       {/* Bottom Bar */}
       <div className="relative border-t border-neutral-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex justify-center">
             <p className="text-neutral-500 text-sm">
               © {new Date().getFullYear()} Ceptiv. All rights reserved.
             </p>
-            <div className="flex items-center gap-6 text-sm text-neutral-500">
-              <span>Maglebjergvej 6, 2800 Kongens Lyngby</span>
-              <span className="hidden md:inline">·</span>
-              <span>Denmark 🇩🇰</span>
-            </div>
           </div>
         </div>
       </div>
