@@ -95,6 +95,48 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Design System
+
+### Color Tokens
+This project uses a strict neutral color palette to maintain a sleek, professional appearance. **Only color tokens from the UI kit are allowed to be used.**
+
+#### Primary Colors
+- **Primary**: `neutral-900` (black) - Used for headings, primary buttons, and key UI elements
+- **Secondary**: `neutral-700` - Used for secondary buttons and important text
+- **Accent**: `neutral-600` - Used for icons, borders, and supporting text
+
+#### Neutral Palette
+- `neutral-50` - Very light backgrounds
+- `neutral-100` - Light backgrounds and subtle borders
+- `neutral-200` - Light borders and dividers
+- `neutral-300` - Medium borders
+- `neutral-400` - Medium text and disabled states
+- `neutral-500` - Placeholder text
+- `neutral-600` - Body text and icons
+- `neutral-700` - Secondary buttons and headings
+- `neutral-800` - Dark backgrounds
+- `neutral-900` - Primary headings and dark text
+
+#### Usage Rules
+1. **Never use arbitrary colors** - Always use Tailwind's neutral scale
+2. **Primary color is black** (`neutral-900`) - This represents Ceptiv's professional brand
+3. **Maintain contrast ratios** - Ensure text readability with proper contrast
+4. **Consistent application** - Use the same color tokens across similar UI elements
+5. **Theme consistency** - All components should follow the neutral theme
+
+#### Examples
+```tsx
+// ✅ Correct - Using UI kit colors
+<Button className="bg-neutral-900 hover:bg-neutral-800 text-white">
+  Primary Action
+</Button>
+
+// ❌ Incorrect - Using arbitrary colors
+<Button className="bg-blue-600 hover:bg-blue-700 text-white">
+  Wrong Color
+</Button>
+```
+
 ## Deployment
 
 This project is configured for deployment on Vercel. Make sure to set the environment variables in your Vercel project settings.
