@@ -96,10 +96,10 @@ export function Footer() {
             <ul className="space-y-2">
               <li>
                 <a
-                  href="mailto:hello@ceptiv.net"
+                  href="mailto:dv@ceptiv.net"
                   className="text-neutral-400 hover:text-white transition-colors text-sm"
                 >
-                  hello@ceptiv.net
+                  dv@ceptiv.net
                 </a>
               </li>
               <li>

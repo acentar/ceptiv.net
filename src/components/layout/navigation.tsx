@@ -231,11 +231,11 @@ export function Navigation() {
                       </p>
                       <div className="space-y-4">
                         <a
-                          href="mailto:hello@ceptiv.net"
+                          href="mailto:dv@ceptiv.net"
                           className="flex items-center space-x-3 text-neutral-400 hover:text-white transition-colors"
                         >
                           <Mail className="w-5 h-5" />
-                          <span>hello@ceptiv.net</span>
+                          <span>dv@ceptiv.net</span>
                         </a>
                         <a
                           href="tel:+4581983271"

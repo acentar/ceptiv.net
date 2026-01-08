@@ -117,7 +117,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-neutral-900">Email Us</h3>
-                    <p className="text-neutral-600">hello@ceptiv.net</p>
+                    <p className="text-neutral-600">dv@ceptiv.net</p>
                     <p className="text-sm text-neutral-500">We'll respond within 24 hours</p>
                   </div>
                 </div>
