@@ -116,6 +116,14 @@ const integrationPlatforms = {
     { name: 'Plivo', category: 'SMS' },
     { name: 'GatewayAPI', category: 'SMS' },
   ],
+  workspace: [
+    { name: 'Microsoft 365', category: 'Workspace' },
+    { name: 'Google Workspace', category: 'Workspace' },
+    { name: 'Outlook', category: 'Email' },
+    { name: 'SharePoint', category: 'Workspace' },
+    { name: 'OneDrive', category: 'Storage' },
+    { name: 'Teams', category: 'Workspace' },
+  ],
 }
 
 // Flatten for marquee rows
@@ -131,6 +139,7 @@ const marqueeRow2 = [
   ...integrationPlatforms.payroll,
   ...integrationPlatforms.business,
   ...integrationPlatforms.ai.slice(4),
+  ...integrationPlatforms.workspace,
 ]
 
 const processSteps = [
@@ -452,12 +461,18 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center"
           >
-            <div className="inline-flex items-center gap-2 bg-neutral-900 text-white px-6 py-3 rounded-full">
-              <Workflow className="w-5 h-5" />
-              <span className="font-medium">+ Any system with an API</span>
+            <div className="flex flex-wrap justify-center gap-3 mb-6">
+              <div className="inline-flex items-center gap-2 bg-neutral-900 text-white px-6 py-3 rounded-full">
+                <Workflow className="w-5 h-5" />
+                <span className="font-medium">+ Any system with an API</span>
+              </div>
             </div>
-            <p className="text-neutral-500 mt-4 text-sm">
+            <p className="text-neutral-600 max-w-2xl mx-auto">
               Don&apos;t see your platform? We can integrate with anything that has an API.
+            </p>
+            <p className="text-neutral-500 mt-3 text-sm max-w-2xl mx-auto">
+              <strong className="text-neutral-700">Need email?</strong> We don&apos;t host email ourselves—we help you 
+              set up Microsoft 365 or Google Workspace and integrate it seamlessly into your solution.
             </p>
           </motion.div>
         </div>
