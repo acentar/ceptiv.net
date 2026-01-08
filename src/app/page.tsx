@@ -190,7 +190,7 @@ export default function Home() {
                 className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-full px-4 py-2 mb-8"
               >
                 <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                <span className="text-sm text-neutral-300">For startups & growing companies</span>
+                <span className="text-sm text-neutral-300">For businesses without in-house dev teams</span>
               </motion.div>
               
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-[1.1] tracking-tight">
