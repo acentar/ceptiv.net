@@ -23,21 +23,6 @@ export default function AdminLoginPage() {
     setLoading(false)
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
-
-    const { error } = await signIn(email, password)
-
-    if (error) {
-      setError(error.message)
-      setLoading(false)
-    } else {
-      router.push('/admin/dashboard')
-    }
-  }
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-neutral-50 px-4">
       <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
