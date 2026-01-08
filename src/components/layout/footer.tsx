@@ -34,7 +34,13 @@ export function Footer() {
               Custom digital solutions built from scratch. No templates, no plugins—just 
               clean code tailored to your exact needs at fixed prices.
             </p>
-            <div className="flex space-x-4">
+            <div className="text-neutral-500 text-xs space-y-1">
+              <p className="font-medium text-neutral-400">Part of Acenta Group ApS</p>
+              <p>CVR: 37576476</p>
+              <p>Maglebjergvej 6</p>
+              <p>2800 Kongens Lyngby, Danmark</p>
+            </div>
+            <div className="flex space-x-4 pt-2">
               <a href="#" className="text-neutral-400 hover:text-white transition-colors">
                 <Facebook className="w-5 h-5" />
               </a>
@@ -120,10 +126,10 @@ export function Footer() {
 
         <div className="border-t border-neutral-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-neutral-400 text-sm">
-            © {new Date().getFullYear()} Ceptiv. All rights reserved.
+            © {new Date().getFullYear()} Ceptiv — Part of Acenta Group ApS. All rights reserved.
           </p>
-          <p className="text-neutral-400 text-sm mt-2 md:mt-0">
-            Built with ❤️ for digital innovation
+          <p className="text-neutral-500 text-xs mt-2 md:mt-0">
+            CVR 37576476 · Kongens Lyngby, Denmark
           </p>
         </div>
       </div>
