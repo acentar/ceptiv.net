@@ -11,31 +11,31 @@ const services = [
     icon: Zap,
     title: 'System Applications & Automation',
     description: 'Custom apps that automate manual processes into seamless workflows.',
-    color: 'text-yellow-500'
+    color: 'text-neutral-600'
   },
   {
     icon: Code,
     title: 'Website Solutions',
     description: 'High-performance sites with clean backends—no WordPress bloat.',
-    color: 'text-blue-500'
+    color: 'text-neutral-600'
   },
   {
     icon: Brain,
     title: 'AI Integrations',
     description: 'Leverage cutting-edge AI APIs for chatbots, analytics, and more.',
-    color: 'text-purple-500'
+    color: 'text-neutral-600'
   },
   {
     icon: Smartphone,
     title: 'Mobile Apps',
     description: 'Custom iOS/Android apps built with Expo for cross-platform efficiency.',
-    color: 'text-green-500'
+    color: 'text-neutral-600'
   },
   {
     icon: Shield,
     title: 'Payment Systems',
     description: 'Seamless integration with Stripe, MobilePay, Dinero, and more.',
-    color: 'text-indigo-500'
+    color: 'text-neutral-600'
   }
 ]
 
@@ -50,7 +50,7 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-green-800 text-white overflow-hidden">
+      <section className="relative bg-neutral-900 text-white overflow-hidden">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <motion.div
@@ -62,7 +62,7 @@ export default function Home() {
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6">
               Automate, Integrate,
               <br />
-              <span className="text-orange-400">Innovate</span>
+              <span className="text-neutral-300">Innovate</span>
             </h1>
             <p className="text-xl md:text-2xl text-blue-100 mb-8 max-w-3xl mx-auto">
               Ceptiv builds your digital future with custom automation, AI integrations,
@@ -72,7 +72,7 @@ export default function Home() {
               <Button
                 asChild
                 size="lg"
-                className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 text-lg"
+                className="bg-neutral-700 hover:bg-neutral-600 text-white px-8 py-3 text-lg"
               >
                 <Link href="/start-project">
                   Start Your Project
@@ -83,7 +83,7 @@ export default function Home() {
                 asChild
                 variant="outline"
                 size="lg"
-                className="border-white text-white hover:bg-white hover:text-blue-900 px-8 py-3 text-lg"
+                className="border-neutral-400 text-white hover:bg-white hover:text-neutral-900 px-8 py-3 text-lg"
               >
                 <Link href="/portfolio">
                   View Our Work
@@ -244,7 +244,7 @@ export default function Home() {
             <Button
               asChild
               size="lg"
-              className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 text-lg"
+              className="bg-neutral-700 hover:bg-neutral-600 text-white px-8 py-3 text-lg"
             >
               <Link href="/start-project">
                 Get Your Free Consultation
