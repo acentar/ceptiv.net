@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { X, Save, AlertCircle } from 'lucide-react'
 import { uploadFile } from '@/lib/storage'
 import { supabase } from '@/lib/supabase'
+import { LogoThumbnail } from '@/components/ui/logo'
 
 export default function AdminSettingsPage() {
   const [logoFile, setLogoFile] = useState<File | null>(null)
@@ -16,23 +17,37 @@ export default function AdminSettingsPage() {
   const [faviconFile, setFaviconFile] = useState<File | null>(null)
   const [saving, setSaving] = useState(false)
   const [connectionStatus, setConnectionStatus] = useState<'checking' | 'connected' | 'error'>('checking')
+  const [currentLogoUrl, setCurrentLogoUrl] = useState<string | null>(null)
+  const [currentLightLogoUrl, setCurrentLightLogoUrl] = useState<string | null>(null)
+  const [currentFaviconUrl, setCurrentFaviconUrl] = useState<string | null>(null)
 
   useEffect(() => {
-    // Check Supabase connection
-    const checkConnection = async () => {
+    // Check Supabase connection and fetch current logo URLs
+    const initializeSettings = async () => {
       try {
         const { error } = await supabase.from('cap_settings').select('count').limit(1)
         if (error && error.code !== 'PGRST116') { // PGRST116 is "no rows returned"
           setConnectionStatus('error')
         } else {
           setConnectionStatus('connected')
+
+          // Fetch current logo URLs
+          const [logoResult, lightLogoResult, faviconResult] = await Promise.all([
+            supabase.from('cap_settings').select('value').eq('key', 'logo_url').single(),
+            supabase.from('cap_settings').select('value').eq('key', 'light_logo_url').single(),
+            supabase.from('cap_settings').select('value').eq('key', 'favicon_url').single()
+          ])
+
+          if (logoResult.data?.value) setCurrentLogoUrl(logoResult.data.value)
+          if (lightLogoResult.data?.value) setCurrentLightLogoUrl(lightLogoResult.data.value)
+          if (faviconResult.data?.value) setCurrentFaviconUrl(faviconResult.data.value)
         }
       } catch (err) {
         setConnectionStatus('error')
       }
     }
 
-    checkConnection()
+    initializeSettings()
   }, [])
 
   const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -119,6 +134,9 @@ export default function AdminSettingsPage() {
           setSaving(false)
           return
         }
+
+        // Update local state for immediate UI update
+        setCurrentLogoUrl(logoUrl)
       }
 
       // Upload light logo if selected
@@ -156,6 +174,9 @@ export default function AdminSettingsPage() {
           setSaving(false)
           return
         }
+
+        // Update local state for immediate UI update
+        setCurrentLightLogoUrl(lightLogoUrl)
       }
 
       // Upload dark favicon if selected
@@ -193,6 +214,9 @@ export default function AdminSettingsPage() {
           setSaving(false)
           return
         }
+
+        // Update local state for immediate UI update
+        setCurrentFaviconUrl(faviconUrl)
       }
 
       const uploadedFiles = [logoFile, lightLogoFile, faviconFile].filter(Boolean)
@@ -261,6 +285,15 @@ export default function AdminSettingsPage() {
                 {/* Dark Logo */}
                 <div className="space-y-4">
                   <Label className="text-base font-medium">Dark Logo</Label>
+                  {currentLogoUrl && (
+                    <div className="flex items-center space-x-3 p-3 bg-neutral-50 rounded-lg">
+                      <LogoThumbnail src={currentLogoUrl} alt="Current Dark Logo" size={48} />
+                      <div className="text-sm text-neutral-600">
+                        <p className="font-medium">Current Logo</p>
+                        <p className="text-xs">This logo is currently displayed on your website</p>
+                      </div>
+                    </div>
+                  )}
                   <div className="space-y-2">
                     <Input
                       type="file"
@@ -285,6 +318,15 @@ export default function AdminSettingsPage() {
                 {/* Light Logo */}
                 <div className="space-y-4">
                   <Label className="text-base font-medium">Light Logo</Label>
+                  {currentLightLogoUrl && (
+                    <div className="flex items-center space-x-3 p-3 bg-neutral-50 rounded-lg">
+                      <LogoThumbnail src={currentLightLogoUrl} alt="Current Light Logo" size={48} />
+                      <div className="text-sm text-neutral-600">
+                        <p className="font-medium">Current Light Logo</p>
+                        <p className="text-xs">This logo is used on light backgrounds</p>
+                      </div>
+                    </div>
+                  )}
                   <div className="space-y-2">
                     <Input
                       type="file"
@@ -310,6 +352,15 @@ export default function AdminSettingsPage() {
               {/* Favicon Upload */}
               <div className="space-y-4">
                 <Label className="text-base font-medium">Favicon</Label>
+                {currentFaviconUrl && (
+                  <div className="flex items-center space-x-3 p-3 bg-neutral-50 rounded-lg">
+                    <LogoThumbnail src={currentFaviconUrl} alt="Current Favicon" size={32} />
+                    <div className="text-sm text-neutral-600">
+                      <p className="font-medium">Current Favicon</p>
+                      <p className="text-xs">This icon appears in browser tabs</p>
+                    </div>
+                  </div>
+                )}
                 <div className="space-y-2">
                   <Input
                     type="file"

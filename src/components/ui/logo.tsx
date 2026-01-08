@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 
 interface LogoProps {
   className?: string
@@ -35,6 +36,8 @@ export function Logo({
           settingKey = 'logo_url'
         }
 
+        console.log('Fetching logo for variant:', variant, 'using setting key:', settingKey)
+
         // Fetch logo URL from settings table
         const { data, error } = await supabase
           .from('cap_settings')
@@ -43,15 +46,19 @@ export function Logo({
           .single()
 
         if (error) {
-          console.warn('Error fetching logo setting:', error)
+          console.warn('Error fetching logo setting:', error, 'for key:', settingKey)
         } else if (data?.value) {
+          console.log('Found logo URL in database:', data.value)
           // Verify the logo URL is accessible
           const response = await fetch(data.value, { method: 'HEAD' })
           if (response.ok) {
+            console.log('Logo URL is accessible, setting logoUrl')
             setLogoUrl(data.value)
           } else {
-            console.warn('Logo URL not accessible:', data.value)
+            console.warn('Logo URL not accessible:', data.value, 'status:', response.status)
           }
+        } else {
+          console.log('No logo URL found in database for key:', settingKey)
         }
       } catch (error) {
         console.warn('Error fetching logo:', error)
@@ -97,5 +104,40 @@ export function Logo({
         setLogoUrl(null)
       }}
     />
+  )
+}
+
+// LogoThumbnail component for displaying logo previews in settings
+interface LogoThumbnailProps {
+  src?: string
+  alt?: string
+  size?: number
+  className?: string
+}
+
+export function LogoThumbnail({
+  src,
+  alt = "Logo",
+  size = 64,
+  className = ""
+}: LogoThumbnailProps) {
+  if (!src) {
+    return (
+      <div
+        className={`bg-neutral-100 border-2 border-dashed border-neutral-300 rounded-lg flex items-center justify-center text-neutral-400 text-sm ${className}`}
+        style={{ width: size, height: size }}
+      >
+        No Logo
+      </div>
+    )
+  }
+
+  return (
+    <Avatar className={className} style={{ width: size, height: size }}>
+      <AvatarImage src={src} alt={alt} />
+      <AvatarFallback className="bg-neutral-100 text-neutral-600">
+        Logo
+      </AvatarFallback>
+    </Avatar>
   )
 }
