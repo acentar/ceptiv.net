@@ -21,9 +21,9 @@ import {
 const services = [
   {
     icon: Zap,
-    title: 'System Automation',
-    tagline: 'Kill manual processes. Forever.',
-    description: 'We build custom applications that transform repetitive manual tasks into seamless automated workflows.'
+    title: 'Web Applications',
+    tagline: 'Custom apps for any purpose.',
+    description: 'From automation systems to business tools—we build custom web applications that solve your specific problems.'
   },
   {
     icon: Code,

@@ -4,7 +4,7 @@ import { Facebook, Twitter, Linkedin, Github } from 'lucide-react'
 
 const footerNavigation = {
   services: [
-    { name: 'System Automation', href: '/services/automation' },
+    { name: 'Web Applications', href: '/services/automation' },
     { name: 'Web Solutions', href: '/services/web' },
     { name: 'Mobile Apps', href: '/services/mobile' },
     { name: 'AI Integrations', href: '/services/ai' },

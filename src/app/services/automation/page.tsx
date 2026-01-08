@@ -95,16 +95,16 @@ export default function AutomationServicePage() {
             </div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-              System Automation
+              Web Applications
             </h1>
 
             <p className="text-2xl text-neutral-300 mb-4 font-medium">
-              Kill manual processes. Forever.
+              Custom apps for any purpose.
             </p>
 
             <p className="text-xl text-neutral-400 mb-10 max-w-2xl">
-              We build custom applications that transform repetitive manual tasks into 
-              seamless automated workflows—saving time, reducing errors, and scaling your operations.
+              From automation systems to business dashboards—we build custom web applications 
+              that solve your specific problems, streamline operations, and scale with your business.
             </p>
 
             <Button

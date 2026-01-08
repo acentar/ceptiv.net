@@ -20,7 +20,7 @@ const projects = [
     title: 'Automated Inventory System',
     client: 'Retail Company',
     description: 'Complete inventory management automation that reduced manual work by 80% and eliminated stock discrepancies.',
-    tags: ['System Automation', 'Integration', 'Dashboard'],
+    tags: ['Web Application', 'Integration', 'Dashboard'],
     icon: Zap,
     results: ['80% less manual work', '99.9% accuracy', '24/7 operation']
   },

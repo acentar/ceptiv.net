@@ -20,10 +20,10 @@ const services = [
   {
     id: 'automation',
     icon: Zap,
-    title: 'System Automation',
-    tagline: 'Kill manual processes. Forever.',
-    description: 'We build custom applications that transform repetitive manual tasks into seamless automated workflows. From data entry to complex business logic.',
-    examples: ['Inventory management', 'Customer onboarding', 'Reporting dashboards', 'Workflow orchestration'],
+    title: 'Web Applications',
+    tagline: 'Custom apps for any purpose.',
+    description: 'From automation systems to business tools—we build custom web applications that solve your specific problems. No off-the-shelf software limitations.',
+    examples: ['Process automation', 'Business dashboards', 'Internal tools', 'Customer portals'],
     href: '/services/automation'
   },
   {
