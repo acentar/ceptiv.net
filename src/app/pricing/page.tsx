@@ -14,65 +14,42 @@ import {
   Rocket,
   TrendingUp,
   Building2,
-  Plus,
-  Crown
+  Plus
 } from 'lucide-react'
 
 const packages = [
   {
     name: 'Starter',
     icon: Zap,
-    description: 'MVP or simple internal tool',
-    features: 10,
-    integrations: 0,
-    oneTime: '21.000',
-    monthly: '600',
-    popular: false,
-    perFeature: '2.100',
-  },
-  {
-    name: 'Foundation',
-    icon: Rocket,
-    description: 'Simple projects with core functionality',
-    features: 20,
+    description: 'Perfect for MVPs and simple tools',
+    features: 12,
     integrations: 1,
-    oneTime: '40.000',
-    monthly: '1.200',
+    oneTime: '24.000',
+    monthly: '900',
     popular: false,
     perFeature: '2.000',
   },
   {
     name: 'Business',
-    icon: TrendingUp,
-    description: 'Most common for growing SMBs',
-    features: 40,
+    icon: Rocket,
+    description: 'Most popular for growing SMBs',
+    features: 24,
     integrations: 3,
-    oneTime: '72.000',
-    monthly: '1.800',
+    oneTime: '45.000',
+    monthly: '1.500',
     popular: true,
-    perFeature: '1.800',
+    perFeature: '1.875',
   },
   {
     name: 'Professional',
-    icon: Building2,
-    description: 'Complex systems with multiple modules',
-    features: 60,
+    icon: TrendingUp,
+    description: 'For complex business systems',
+    features: 36,
     integrations: 6,
-    oneTime: '102.000',
-    monthly: '2.500',
+    oneTime: '64.000',
+    monthly: '2.200',
     popular: false,
-    perFeature: '1.700',
-  },
-  {
-    name: 'Premium',
-    icon: Crown,
-    description: 'Full-scale business platforms',
-    features: 80,
-    integrations: 10,
-    oneTime: '128.000',
-    monthly: '3.200',
-    popular: false,
-    perFeature: '1.600',
+    perFeature: '1.778',
   },
 ]
 
@@ -96,11 +73,11 @@ const faqs = [
   },
   {
     question: 'What if I don\'t use all my features at launch?',
-    answer: 'Unused features roll over! If your Foundation package includes 20 features but you only need 15 at launch, you keep those 5 for later. Use them when you\'re ready to expand—no extra cost.'
+    answer: 'Unused features roll over! If your Starter package includes 12 features but you only need 8 at launch, you keep those 4 for later. Use them when you\'re ready to expand—no extra cost.'
   },
   {
     question: 'What if I need more features later?',
-    answer: 'Additional features are 2.500 DKK each after your package features are used. Buying a larger package upfront gives you a better per-feature price (as low as 1.600 DKK each with Premium).'
+    answer: 'Additional features are 2.500 DKK each after your package features are used. Buying a larger package upfront gives you a better per-feature price.'
   },
   {
     question: 'What\'s included in the monthly subscription?',
@@ -189,7 +166,7 @@ export default function PricingPage() {
       {/* Pricing Cards */}
       <section className="py-24 bg-neutral-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {packages.map((pkg, index) => (
               <motion.div
                 key={pkg.name}
@@ -271,6 +248,47 @@ export default function PricingPage() {
                 </Card>
               </motion.div>
             ))}
+
+            {/* Custom/Enterprise Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              viewport={{ once: true }}
+            >
+              <Card className="h-full border-2 border-dashed border-neutral-300 hover:border-neutral-400 transition-all duration-300 bg-neutral-50">
+                <CardContent className="p-8 flex flex-col justify-center h-full">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-neutral-200 text-neutral-600">
+                      <Building2 className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-neutral-900">Bigger Project?</h3>
+                    </div>
+                  </div>
+
+                  <p className="text-neutral-600 text-sm mb-6">
+                    Need more than 36 features? Complex integrations? Multiple systems?
+                  </p>
+
+                  <div className="bg-white rounded-xl p-4 mb-6 border border-neutral-200">
+                    <p className="text-sm text-neutral-700">
+                      <span className="font-semibold text-neutral-900">We&apos;ll create a custom quote</span> tailored to your exact needs within 24 hours.
+                    </p>
+                  </div>
+
+                  <Button
+                    asChild
+                    className="w-full py-6 bg-neutral-900 hover:bg-neutral-800 text-white"
+                  >
+                    <Link href="/start">
+                      Get Custom Quote
+                      <ArrowRight className="ml-2 w-4 h-4" />
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            </motion.div>
           </div>
 
           {/* Additional features note */}
