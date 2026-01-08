@@ -64,7 +64,8 @@ export function Navigation() {
   }, [isMenuOpen])
 
   // Determine nav styles based on scroll and page type
-  const isTransparent = hasDarkHero && !hasScrolled && !isMenuOpen
+  // Menu open should keep nav transparent on dark hero pages
+  const isTransparent = hasDarkHero && !hasScrolled
   const navBg = isTransparent ? 'bg-transparent' : 'bg-white/95 backdrop-blur-md'
   const navBorder = isTransparent ? 'border-transparent' : 'border-neutral-200'
   const textColor = isTransparent ? 'text-white' : 'text-neutral-900'
@@ -104,7 +105,7 @@ export function Navigation() {
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className={`relative z-50 p-2 rounded-lg transition-colors ${
                   isMenuOpen
-                    ? 'text-white'
+                    ? 'text-white hover:bg-white/10'
                     : isTransparent
                     ? 'text-white hover:bg-white/10'
                     : 'text-neutral-900 hover:bg-neutral-100'
