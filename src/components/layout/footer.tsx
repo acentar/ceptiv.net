@@ -186,9 +186,15 @@ export function Footer() {
             </ul>
             
             <div className="mt-8 pt-8 border-t border-neutral-800">
+              <Logo width={80} height={24} variant="light" className="mb-3 opacity-60" />
               <p className="text-xs text-neutral-500 font-medium mb-2">Part of</p>
               <p className="text-sm text-neutral-400">Acenta Group ApS</p>
               <p className="text-xs text-neutral-500 mt-1">CVR: 37576476</p>
+              <div className="mt-3 text-[10px] text-neutral-600 leading-relaxed">
+                <p>Maglebjergvej 6</p>
+                <p>2800 Kongens Lyngby</p>
+                <p>Denmark</p>
+              </div>
             </div>
           </div>
         </div>
