@@ -62,8 +62,8 @@ const useCases = [
 ]
 
 const technologies = [
-  'Node.js', 'Python', 'TypeScript', 'PostgreSQL', 'Redis', 
-  'RabbitMQ', 'AWS Lambda', 'Supabase', 'Vercel'
+  'Next.js', 'React', 'TypeScript', 'Node.js', 'PostgreSQL', 
+  'Supabase', 'Vercel', 'Tailwind CSS', 'Redis'
 ]
 
 export default function AutomationServicePage() {
@@ -113,7 +113,7 @@ export default function AutomationServicePage() {
               className="bg-white text-neutral-900 hover:bg-neutral-100 px-8 py-6 text-lg font-semibold"
             >
               <Link href="/start">
-                Build Your System
+                Start Your Project
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Link>
             </Button>
