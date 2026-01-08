@@ -10,46 +10,34 @@ import {
   ArrowDown,
   Check,
   HelpCircle,
-  Zap,
-  Rocket,
-  TrendingUp,
   Building2,
   Plus
 } from 'lucide-react'
 
 const packages = [
   {
-    name: 'Starter',
-    icon: Zap,
-    description: 'Perfect for MVPs and simple tools',
+    name: 'Core',
     features: 12,
     integrations: 1,
     oneTime: '24.000',
     monthly: '900',
     popular: false,
-    perFeature: '2.000',
   },
   {
-    name: 'Business',
-    icon: Rocket,
-    description: 'Most popular for growing SMBs',
+    name: 'Growth',
     features: 24,
     integrations: 3,
     oneTime: '45.000',
     monthly: '1.500',
     popular: true,
-    perFeature: '1.875',
   },
   {
-    name: 'Professional',
-    icon: TrendingUp,
-    description: 'For complex business systems',
+    name: 'Complete',
     features: 36,
     integrations: 6,
     oneTime: '64.000',
     monthly: '2.200',
     popular: false,
-    perFeature: '1.778',
   },
 ]
 
@@ -73,7 +61,7 @@ const faqs = [
   },
   {
     question: 'What if I don\'t use all my features at launch?',
-    answer: 'Unused features roll over! If your Starter package includes 12 features but you only need 8 at launch, you keep those 4 for later. Use them when you\'re ready to expand—no extra cost.'
+    answer: 'Unused features roll over! If your Core package includes 12 features but you only need 8 at launch, you keep those 4 for later. Use them when you\'re ready to expand—no extra cost.'
   },
   {
     question: 'What if I need more features later?',
@@ -188,20 +176,10 @@ export default function PricingPage() {
                     </div>
                   )}
                   <CardContent className={`p-8 ${pkg.popular ? 'pt-14' : ''}`}>
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                        pkg.popular ? 'bg-neutral-900 text-white' : 'bg-neutral-100 text-neutral-700'
-                      }`}>
-                        <pkg.icon className="w-6 h-6" />
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-bold text-neutral-900">{pkg.name}</h3>
-                      </div>
+                    <div className="mb-6">
+                      <p className="text-sm text-neutral-500 mb-1">Start your project with</p>
+                      <h3 className="text-2xl font-bold text-neutral-900">{pkg.name}</h3>
                     </div>
-
-                    <p className="text-neutral-600 text-sm mb-6 min-h-[40px]">
-                      {pkg.description}
-                    </p>
 
                     {/* Pricing */}
                     <div className="mb-6 pb-6 border-b border-neutral-200">
