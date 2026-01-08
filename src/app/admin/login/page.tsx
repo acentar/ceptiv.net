@@ -1,76 +1,71 @@
-'use client'
-
-import { useState } from 'react'
-
+// Simple test component to verify React is working
 export default function AdminLoginPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
-
-    // Simple test login - replace with actual auth later
-    if (email === 'admin@test.com' && password === 'password') {
-      alert('Login successful!')
-    } else {
-      setError('Invalid credentials')
-    }
-
-    setLoading(false)
-  }
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-neutral-50 px-4">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
-        <div className="space-y-1 mb-6">
-          <h1 className="text-2xl font-bold text-center">Admin Login (Test)</h1>
-          <p className="text-center text-gray-600">
-            Test login form - use admin@test.com / password
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#f5f5f4',
+      padding: '16px'
+    }}>
+      <div style={{
+        width: '100%',
+        maxWidth: '28rem',
+        backgroundColor: 'white',
+        borderRadius: '8px',
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+        padding: '24px'
+      }}>
+        <div style={{ marginBottom: '24px' }}>
+          <h1 style={{
+            fontSize: '1.5rem',
+            fontWeight: 'bold',
+            textAlign: 'center',
+            marginBottom: '8px'
+          }}>
+            Admin Login Page
+          </h1>
+          <p style={{
+            textAlign: 'center',
+            color: '#6b7280',
+            fontSize: '14px'
+          }}>
+            If you can see this, React is working!
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <label htmlFor="email" className="text-sm font-medium">Email</label>
-            <input
-              id="email"
-              type="email"
-              placeholder="admin@test.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div className="space-y-2">
-            <label htmlFor="password" className="text-sm font-medium">Password</label>
-            <input
-              id="password"
-              type="password"
-              placeholder="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          {error && (
-            <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
-              {error}
-            </div>
-          )}
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50"
-            disabled={loading}
-          >
-            {loading ? 'Signing in...' : 'Sign In'}
-          </button>
-        </form>
+        <div style={{
+          backgroundColor: '#dbeafe',
+          border: '1px solid #bfdbfe',
+          borderRadius: '6px',
+          padding: '12px',
+          marginBottom: '16px'
+        }}>
+          <p style={{
+            color: '#1e40af',
+            fontSize: '14px',
+            margin: 0
+          }}>
+            ✅ Page is loading successfully!
+          </p>
+        </div>
+
+        <button
+          style={{
+            width: '100%',
+            backgroundColor: '#2563eb',
+            color: 'white',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            border: 'none',
+            fontSize: '14px',
+            cursor: 'pointer'
+          }}
+          onClick={() => alert('Button clicked! React events work too!')}
+        >
+          Test Button
+        </button>
       </div>
     </div>
   )
