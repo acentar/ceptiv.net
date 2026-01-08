@@ -93,8 +93,6 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
           {/* Brand & Contact */}
           <div className="lg:col-span-2 space-y-8">
-            <Logo width={140} height={40} variant="light" />
-            
             <p className="text-lg text-neutral-300 font-medium max-w-sm">
               Fixed prices. Fast delivery.
               <br />
@@ -190,7 +188,7 @@ export function Footer() {
               <p className="text-xs text-neutral-500 font-medium mb-2">Part of</p>
               <p className="text-sm text-neutral-400">Acenta Group ApS</p>
               <p className="text-xs text-neutral-500 mt-1">CVR: 37576476</p>
-              <div className="mt-3 text-[10px] text-neutral-600 leading-relaxed">
+              <div className="mt-3 text-xs text-neutral-500 leading-relaxed">
                 <p>Maglebjergvej 6</p>
                 <p>2800 Kongens Lyngby</p>
                 <p>Denmark</p>
@@ -201,7 +199,7 @@ export function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="relative border-t border-neutral-800">
+      <div className="relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex justify-center">
             <p className="text-neutral-500 text-sm">
