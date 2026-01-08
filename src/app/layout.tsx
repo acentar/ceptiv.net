@@ -1,3 +1,6 @@
+'use client'
+
+import { usePathname } from 'next/navigation'
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -26,6 +29,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Conditionally render navigation and footer based on current path
+  const pathname = usePathname()
+  const isAdminPage = pathname?.startsWith('/admin')
+
   return (
     <html lang="en">
       <body
@@ -33,11 +40,11 @@ export default function RootLayout({
       >
         <AuthProvider>
           <FaviconManager />
-          <Navigation />
+          {!isAdminPage && <Navigation />}
           <main className="min-h-screen">
             {children}
           </main>
-          <Footer />
+          {!isAdminPage && <Footer />}
         </AuthProvider>
       </body>
     </html>
