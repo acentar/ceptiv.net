@@ -625,9 +625,6 @@ export default function Home() {
                   <h3 className="text-2xl font-bold text-neutral-900">
                     Custom Business Platform
                   </h3>
-                  <p className="text-sm text-neutral-600 mt-2">
-                    Designed by a UX professional, built by experienced developers
-                  </p>
                 </div>
 
                 {/* What's included */}
@@ -637,8 +634,8 @@ export default function Home() {
                       <Check className="w-3.5 h-3.5 text-white" />
                     </div>
                     <div>
-                      <p className="font-medium text-neutral-900">UX professional design</p>
-                      <p className="text-sm text-neutral-500">Designed in collaboration with you, using proven UI kits</p>
+                      <p className="font-medium text-neutral-900">Custom website designed with you</p>
+                      <p className="text-sm text-neutral-500">Designed by our UX specialist, using proven UI kits</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
