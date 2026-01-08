@@ -14,7 +14,6 @@ export default function AdminSettingsPage() {
   const [logoFile, setLogoFile] = useState<File | null>(null)
   const [lightLogoFile, setLightLogoFile] = useState<File | null>(null)
   const [faviconFile, setFaviconFile] = useState<File | null>(null)
-  const [lightFaviconFile, setLightFaviconFile] = useState<File | null>(null)
   const [saving, setSaving] = useState(false)
   const [connectionStatus, setConnectionStatus] = useState<'checking' | 'connected' | 'error'>('checking')
 
@@ -63,14 +62,6 @@ export default function AdminSettingsPage() {
     }
   }
 
-  const handleLightFaviconUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file && file.type === 'image/svg+xml') {
-      setLightFaviconFile(file)
-    } else if (file) {
-      alert('Please select an SVG file for the light favicon.')
-    }
-  }
 
   const removeLogo = () => {
     setLogoFile(null)
@@ -84,9 +75,6 @@ export default function AdminSettingsPage() {
     setFaviconFile(null)
   }
 
-  const removeLightFavicon = () => {
-    setLightFaviconFile(null)
-  }
 
   const handleSave = async () => {
     setSaving(true)
@@ -143,24 +131,7 @@ export default function AdminSettingsPage() {
         console.log('Dark favicon uploaded successfully:', faviconUrl)
       }
 
-      // Upload light favicon if selected
-      if (lightFaviconFile) {
-        const lightFaviconPath = `branding/favicon-light-${Date.now()}.svg`
-        console.log('Attempting to upload light favicon:', lightFaviconPath)
-
-        const { url: lightFaviconUrl, error: lightFaviconError } = await uploadFile(lightFaviconFile, 'cap_file_bucket', lightFaviconPath)
-
-        if (lightFaviconError) {
-          console.error('Light favicon upload error:', lightFaviconError)
-          alert(`Failed to upload light favicon: ${lightFaviconError}\n\nTroubleshooting:\n1. Make sure the 'cap_file_bucket' bucket exists in Supabase Storage\n2. Ensure the bucket is set to 'Public'\n3. Check that you're logged in as an authenticated user`)
-          setSaving(false)
-          return
-        }
-
-        console.log('Light favicon uploaded successfully:', lightFaviconUrl)
-      }
-
-      const uploadedFiles = [logoFile, lightLogoFile, faviconFile, lightFaviconFile].filter(Boolean)
+      const uploadedFiles = [logoFile, lightLogoFile, faviconFile].filter(Boolean)
       if (uploadedFiles.length === 0) {
         alert('No files selected for upload.')
       } else {
@@ -272,55 +243,31 @@ export default function AdminSettingsPage() {
                 </div>
               </div>
 
-              {/* Favicon Upload - Dark/Light variants */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Dark Favicon */}
-                <div className="space-y-4">
-                  <Label className="text-base font-medium">Dark Favicon</Label>
-                  <div className="space-y-2">
-                    <Input
-                      type="file"
-                      accept=".svg"
-                      onChange={handleFaviconUpload}
-                    />
-                    {faviconFile && (
-                      <div className="flex items-center justify-between p-2 bg-neutral-50 rounded">
-                        <span className="text-sm text-neutral-600">{faviconFile.name}</span>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={removeFavicon}
-                        >
-                          <X className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    )}
-                  </div>
+              {/* Favicon Upload */}
+              <div className="space-y-4">
+                <Label className="text-base font-medium">Favicon</Label>
+                <div className="space-y-2">
+                  <Input
+                    type="file"
+                    accept=".svg"
+                    onChange={handleFaviconUpload}
+                  />
+                  {faviconFile && (
+                    <div className="flex items-center justify-between p-2 bg-neutral-50 rounded">
+                      <span className="text-sm text-neutral-600">{faviconFile.name}</span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={removeFavicon}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  )}
                 </div>
-
-                {/* Light Favicon */}
-                <div className="space-y-4">
-                  <Label className="text-base font-medium">Light Favicon</Label>
-                  <div className="space-y-2">
-                    <Input
-                      type="file"
-                      accept=".svg"
-                      onChange={handleLightFaviconUpload}
-                    />
-                    {lightFaviconFile && (
-                      <div className="flex items-center justify-between p-2 bg-neutral-50 rounded">
-                        <span className="text-sm text-neutral-600">{lightFaviconFile.name}</span>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={removeLightFavicon}
-                        >
-                          <X className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                </div>
+                <p className="text-sm text-neutral-500">
+                  Upload an SVG favicon that will be used across all pages
+                </p>
               </div>
             </CardContent>
           </Card>

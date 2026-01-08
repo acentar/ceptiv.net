@@ -3,6 +3,7 @@
 import { useAuth } from '@/lib/auth-context'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import { Logo } from '@/components/ui/logo'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,7 +29,7 @@ export function AdminHeader() {
     <header className="bg-white border-b border-neutral-200 px-6 py-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-neutral-900">Ceptiv Admin</h1>
+          <Logo width={100} height={30} />
         </div>
 
         <div className="flex items-center space-x-4">
