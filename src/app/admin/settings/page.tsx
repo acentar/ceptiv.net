@@ -94,34 +94,45 @@ export default function AdminSettingsPage() {
   const handleSave = async () => {
     setSaving(true)
 
-    let logoUrl = null
-    let lightLogoUrl = null
-    let faviconUrl = null
-
     try {
+      console.log('Starting save operation...')
+
+      // First, let's check if we can access the settings table
+      const { error: testError } = await supabase
+        .from('cap_settings')
+        .select('count')
+        .limit(1)
+
+      if (testError) {
+        console.error('Cannot access cap_settings table:', testError)
+        alert(`Database access error: ${testError.message}\n\nPlease ensure:\n1. The cap_settings table exists\n2. You have proper database permissions\n3. RLS policies allow your user to access the table`)
+        setSaving(false)
+        return
+      }
+
+      console.log('Database access confirmed')
+
+      let uploadedCount = 0
+
       // Upload dark logo if selected
       if (logoFile) {
+        console.log('Uploading dark logo...')
         const logoPath = `branding/logo-dark-${Date.now()}.svg`
-        console.log('Attempting to upload dark logo:', logoPath)
-
         const { url, error: logoError } = await uploadFile(logoFile, 'cap_file_bucket', logoPath)
 
         if (logoError) {
-          console.error('Dark logo upload error:', logoError)
-          alert(`Failed to upload dark logo: ${logoError}\n\nTroubleshooting:\n1. Make sure the 'cap_file_bucket' bucket exists in Supabase Storage\n2. Ensure the bucket is set to 'Public'\n3. Check that you're logged in as an authenticated user`)
+          console.error('Upload failed:', logoError)
+          alert(`Upload failed: ${logoError}`)
           setSaving(false)
           return
         }
 
-        logoUrl = url
-        console.log('Dark logo uploaded successfully:', logoUrl)
-
-        // Update the database with the logo URL
+        console.log('Upload successful, saving to database...')
         const { error: dbError } = await supabase
           .from('cap_settings')
           .upsert({
             key: 'logo_url',
-            value: logoUrl,
+            value: url,
             value_type: 'string',
             category: 'branding',
             description: 'URL to the site logo (SVG)',
@@ -129,39 +140,35 @@ export default function AdminSettingsPage() {
           })
 
         if (dbError) {
-          console.error('Database update error for logo:', dbError)
-          alert('Logo uploaded but failed to save URL to database. Please try again.')
+          console.error('Database save failed:', dbError)
+          alert(`Database save failed: ${dbError.message}`)
           setSaving(false)
           return
         }
 
-        // Update local state for immediate UI update
-        setCurrentLogoUrl(logoUrl)
+        console.log('Database save successful')
+        setCurrentLogoUrl(url)
+        uploadedCount++
       }
 
       // Upload light logo if selected
       if (lightLogoFile) {
+        console.log('Uploading light logo...')
         const lightLogoPath = `branding/logo-light-${Date.now()}.svg`
-        console.log('Attempting to upload light logo:', lightLogoPath)
-
         const { url, error: lightLogoError } = await uploadFile(lightLogoFile, 'cap_file_bucket', lightLogoPath)
 
         if (lightLogoError) {
-          console.error('Light logo upload error:', lightLogoError)
-          alert(`Failed to upload light logo: ${lightLogoError}\n\nTroubleshooting:\n1. Make sure the 'cap_file_bucket' bucket exists in Supabase Storage\n2. Ensure the bucket is set to 'Public'\n3. Check that you're logged in as an authenticated user`)
+          console.error('Upload failed:', lightLogoError)
+          alert(`Upload failed: ${lightLogoError}`)
           setSaving(false)
           return
         }
 
-        lightLogoUrl = url
-        console.log('Light logo uploaded successfully:', lightLogoUrl)
-
-        // Update the database with the light logo URL
         const { error: dbError } = await supabase
           .from('cap_settings')
           .upsert({
             key: 'light_logo_url',
-            value: lightLogoUrl,
+            value: url,
             value_type: 'string',
             category: 'branding',
             description: 'URL to the light site logo (SVG)',
@@ -169,39 +176,34 @@ export default function AdminSettingsPage() {
           })
 
         if (dbError) {
-          console.error('Database update error for light logo:', dbError)
-          alert('Light logo uploaded but failed to save URL to database. Please try again.')
+          console.error('Database save failed:', dbError)
+          alert(`Database save failed: ${dbError.message}`)
           setSaving(false)
           return
         }
 
-        // Update local state for immediate UI update
-        setCurrentLightLogoUrl(lightLogoUrl)
+        setCurrentLightLogoUrl(url)
+        uploadedCount++
       }
 
-      // Upload dark favicon if selected
+      // Upload favicon if selected
       if (faviconFile) {
+        console.log('Uploading favicon...')
         const faviconPath = `branding/favicon-dark-${Date.now()}.svg`
-        console.log('Attempting to upload dark favicon:', faviconPath)
-
         const { url, error: faviconError } = await uploadFile(faviconFile, 'cap_file_bucket', faviconPath)
 
         if (faviconError) {
-          console.error('Dark favicon upload error:', faviconError)
-          alert(`Failed to upload dark favicon: ${faviconError}\n\nTroubleshooting:\n1. Make sure the 'cap_file_bucket' bucket exists in Supabase Storage\n2. Ensure the bucket is set to 'Public'\n3. Check that you're logged in as an authenticated user`)
+          console.error('Upload failed:', faviconError)
+          alert(`Upload failed: ${faviconError}`)
           setSaving(false)
           return
         }
 
-        faviconUrl = url
-        console.log('Dark favicon uploaded successfully:', faviconUrl)
-
-        // Update the database with the favicon URL
         const { error: dbError } = await supabase
           .from('cap_settings')
           .upsert({
             key: 'favicon_url',
-            value: faviconUrl,
+            value: url,
             value_type: 'string',
             category: 'branding',
             description: 'URL to the site favicon (SVG)',
@@ -209,25 +211,26 @@ export default function AdminSettingsPage() {
           })
 
         if (dbError) {
-          console.error('Database update error for favicon:', dbError)
-          alert('Favicon uploaded but failed to save URL to database. Please try again.')
+          console.error('Database save failed:', dbError)
+          alert(`Database save failed: ${dbError.message}`)
           setSaving(false)
           return
         }
 
-        // Update local state for immediate UI update
-        setCurrentFaviconUrl(faviconUrl)
+        setCurrentFaviconUrl(url)
+        uploadedCount++
       }
 
-      const uploadedFiles = [logoFile, lightLogoFile, faviconFile].filter(Boolean)
-      if (uploadedFiles.length === 0) {
+      if (uploadedCount === 0) {
         alert('No files selected for upload.')
       } else {
-        alert(`Settings saved successfully! ${uploadedFiles.length} file(s) uploaded and saved to database.`)
+        alert(`Success! ${uploadedCount} file(s) uploaded and saved to database.`)
+        // Refresh the page to show updated thumbnails
+        window.location.reload()
       }
     } catch (error) {
-      console.error('Save error:', error)
-      alert('An unexpected error occurred while saving settings. Check the browser console for details.')
+      console.error('Unexpected error:', error)
+      alert(`Unexpected error: ${error}`)
     } finally {
       setSaving(false)
     }
