@@ -31,10 +31,17 @@ Example table names:
 
 **Database Scripts:** All database migration scripts and SQL files must be prefixed with a 3-digit number for proper ordering and versioning.
 
-Example script names:
-- `001_create_cap_users_table.sql`
-- `002_add_cap_posts_table.sql`
-- `003_create_cap_comments_table.sql`
+Database scripts are located in the `database/migrations/` directory.
+
+**Available Scripts:**
+- `001_create_cap_settings_table.sql` - Application settings storage
+- `002_create_cap_user_roles_table.sql` - User roles and permissions
+- `003_create_cap_assets_table.sql` - Uploaded files/assets tracking
+
+**Example script names:**
+- `004_create_cap_users_table.sql`
+- `005_add_cap_posts_table.sql`
+- `006_create_cap_comments_table.sql`
 
 ## Development
 
