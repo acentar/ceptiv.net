@@ -51,14 +51,78 @@ const services = [
   }
 ]
 
-const aiIntegrations = [
-  'OpenAI GPT-4', 'Claude 3', 'Google Gemini', 'Mistral AI', 
-  'LLaMA 2', 'DALL-E 3', 'Stable Diffusion', 'ElevenLabs',
-  'Whisper', 'AssemblyAI', 'Pinecone', 'LangChain'
+// Integration platforms we've worked with - organized by category
+const integrationPlatforms = {
+  payments: [
+    { name: 'Stripe', category: 'Payments' },
+    { name: 'QuickPay', category: 'Payments' },
+    { name: 'PensoPay', category: 'Payments' },
+    { name: 'Paylike', category: 'Payments' },
+    { name: 'Clearhaus', category: 'Payments' },
+    { name: 'ePay', category: 'Payments' },
+    { name: 'OnPay', category: 'Payments' },
+    { name: 'MobilePay', category: 'Payments' },
+    { name: 'Apple Pay', category: 'Payments' },
+    { name: 'Google Pay', category: 'Payments' },
+    { name: 'PayPal', category: 'Payments' },
+    { name: 'Klarna', category: 'Payments' },
+  ],
+  accounting: [
+    { name: 'Dinero', category: 'Accounting' },
+    { name: 'e-conomic', category: 'Accounting' },
+    { name: 'Billy', category: 'Accounting' },
+    { name: 'Uniconta', category: 'Accounting' },
+    { name: 'Visma', category: 'Accounting' },
+    { name: 'DynAccount', category: 'Accounting' },
+  ],
+  shipping: [
+    { name: 'Shipmondo', category: 'Shipping' },
+    { name: 'PostNord', category: 'Shipping' },
+    { name: 'GLS', category: 'Shipping' },
+    { name: 'Unifaun', category: 'Shipping' },
+    { name: 'Webshipper', category: 'Shipping' },
+    { name: 'DAO', category: 'Shipping' },
+    { name: 'Bring', category: 'Shipping' },
+  ],
+  payroll: [
+    { name: 'DataLøn', category: 'Payroll' },
+    { name: 'Zenegy', category: 'Payroll' },
+    { name: 'Salary', category: 'Payroll' },
+    { name: 'Danløn', category: 'Payroll' },
+  ],
+  ai: [
+    { name: 'OpenAI', category: 'AI' },
+    { name: 'Claude', category: 'AI' },
+    { name: 'Gemini', category: 'AI' },
+    { name: 'Mistral', category: 'AI' },
+    { name: 'ElevenLabs', category: 'AI' },
+    { name: 'Whisper', category: 'AI' },
+    { name: 'DALL-E', category: 'AI' },
+    { name: 'Stable Diffusion', category: 'AI' },
+  ],
+  business: [
+    { name: 'Trustpilot', category: 'Business' },
+    { name: 'Penneo', category: 'E-Sign' },
+    { name: 'GetAccept', category: 'E-Sign' },
+    { name: 'HubSpot', category: 'CRM' },
+    { name: 'Pipedrive', category: 'CRM' },
+    { name: 'Heyloyalty', category: 'Marketing' },
+    { name: 'cvr.dev', category: 'Data' },
+  ],
+}
+
+// Flatten for marquee rows
+const marqueeRow1 = [
+  ...integrationPlatforms.payments,
+  ...integrationPlatforms.accounting,
+  ...integrationPlatforms.ai.slice(0, 4),
 ]
 
-const paymentIntegrations = [
-  'Stripe', 'MobilePay', 'Dinero', 'PayPal', 'Apple Pay', 'Google Pay'
+const marqueeRow2 = [
+  ...integrationPlatforms.shipping,
+  ...integrationPlatforms.payroll,
+  ...integrationPlatforms.business,
+  ...integrationPlatforms.ai.slice(4),
 ]
 
 const processSteps = [
@@ -108,7 +172,7 @@ export default function Home() {
               <span className="text-neutral-400">
                 We build systems that transform how you work.
               </span>
-            </h1>
+          </h1>
             
             <motion.p
               initial={{ opacity: 0 }}
@@ -284,8 +348,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Integration Ecosystem */}
-      <section className="py-24 bg-white">
+      {/* Integration Marquee */}
+      <section className="py-24 bg-neutral-50 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -295,87 +359,99 @@ export default function Home() {
             className="text-center mb-16"
           >
             <h2 className="text-3xl lg:text-5xl font-bold text-neutral-900 mb-6">
-              Integration Ecosystem
+              We&apos;ve Done It Before
             </h2>
             <p className="text-xl text-neutral-600 max-w-3xl mx-auto">
-              We connect your new system with anything that has an API. 
-              AI, payments, ERPs, CRMs—if it's got an API, we can integrate it.
+              40+ platforms we&apos;ve integrated. Pre-built modules mean 
+              <span className="text-neutral-900 font-semibold"> faster delivery </span> 
+              and 
+              <span className="text-neutral-900 font-semibold"> lower costs </span> 
+              for you.
             </p>
           </motion.div>
+        </div>
 
-          <div className="space-y-12">
-            {/* AI Integrations */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <h3 className="text-xl font-bold text-neutral-900 mb-6 flex items-center">
-                <Brain className="w-6 h-6 mr-3" />
-                AI Capabilities
-              </h3>
-              <div className="flex flex-wrap gap-3">
-                {aiIntegrations.map((integration, index) => (
-                  <motion.span
-                    key={integration}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3, delay: index * 0.05 }}
-                    viewport={{ once: true }}
-                    className="px-4 py-2 bg-neutral-100 text-neutral-700 rounded-full text-sm font-medium hover:bg-neutral-900 hover:text-white transition-colors cursor-default"
-                  >
-                    {integration}
-                  </motion.span>
-                ))}
+        {/* Marquee Row 1 - Left to Right */}
+        <div className="relative mb-6">
+          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-neutral-50 to-transparent z-10" />
+          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-neutral-50 to-transparent z-10" />
+          
+          <motion.div
+            className="flex gap-4"
+            animate={{ x: ['0%', '-50%'] }}
+            transition={{ 
+              duration: 30, 
+              repeat: Infinity, 
+              ease: 'linear',
+            }}
+          >
+            {[...marqueeRow1, ...marqueeRow1].map((platform, index) => (
+              <div
+                key={`row1-${index}`}
+                className="flex-shrink-0 group"
+              >
+                <div className="bg-white rounded-xl px-6 py-4 shadow-sm border border-neutral-200 hover:border-neutral-400 hover:shadow-md transition-all duration-300 cursor-default min-w-[160px]">
+                  <div className="text-lg font-semibold text-neutral-900 group-hover:text-neutral-700 transition-colors">
+                    {platform.name}
+                  </div>
+                  <div className="text-xs text-neutral-500 uppercase tracking-wide mt-1">
+                    {platform.category}
+                  </div>
+                </div>
               </div>
-            </motion.div>
+            ))}
+          </motion.div>
+        </div>
 
-            {/* Payment Integrations */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <h3 className="text-xl font-bold text-neutral-900 mb-6 flex items-center">
-                <CreditCard className="w-6 h-6 mr-3" />
-                Payment & Accounting
-              </h3>
-              <div className="flex flex-wrap gap-3">
-                {paymentIntegrations.map((integration, index) => (
-                  <motion.span
-                    key={integration}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3, delay: index * 0.05 }}
-                    viewport={{ once: true }}
-                    className="px-4 py-2 bg-neutral-100 text-neutral-700 rounded-full text-sm font-medium hover:bg-neutral-900 hover:text-white transition-colors cursor-default"
-                  >
-                    {integration}
-                  </motion.span>
-                ))}
+        {/* Marquee Row 2 - Right to Left */}
+        <div className="relative">
+          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-neutral-50 to-transparent z-10" />
+          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-neutral-50 to-transparent z-10" />
+          
+          <motion.div
+            className="flex gap-4"
+            animate={{ x: ['-50%', '0%'] }}
+            transition={{ 
+              duration: 35, 
+              repeat: Infinity, 
+              ease: 'linear',
+            }}
+          >
+            {[...marqueeRow2, ...marqueeRow2].map((platform, index) => (
+              <div
+                key={`row2-${index}`}
+                className="flex-shrink-0 group"
+              >
+                <div className="bg-white rounded-xl px-6 py-4 shadow-sm border border-neutral-200 hover:border-neutral-400 hover:shadow-md transition-all duration-300 cursor-default min-w-[160px]">
+                  <div className="text-lg font-semibold text-neutral-900 group-hover:text-neutral-700 transition-colors">
+                    {platform.name}
+                  </div>
+                  <div className="text-xs text-neutral-500 uppercase tracking-wide mt-1">
+                    {platform.category}
+                  </div>
+                </div>
               </div>
-            </motion.div>
+            ))}
+          </motion.div>
+        </div>
 
-            {/* Custom */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="bg-neutral-50 rounded-2xl p-8 text-center"
-            >
-              <Workflow className="w-12 h-12 text-neutral-900 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-neutral-900 mb-2">
-                + Any System With an API
-              </h3>
-              <p className="text-neutral-600 max-w-xl mx-auto">
-                Microsoft 365, Google Workspace, Salesforce, HubSpot, custom ERPs, 
-                legacy systems—if it has an API, we can make it talk to your new system.
-              </p>
-            </motion.div>
-          </div>
+        {/* Bottom message */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <div className="inline-flex items-center gap-2 bg-neutral-900 text-white px-6 py-3 rounded-full">
+              <Workflow className="w-5 h-5" />
+              <span className="font-medium">+ Any system with an API</span>
+            </div>
+            <p className="text-neutral-500 mt-4 text-sm">
+              Don&apos;t see your platform? We can integrate with anything that has an API.
+            </p>
+          </motion.div>
         </div>
       </section>
 
