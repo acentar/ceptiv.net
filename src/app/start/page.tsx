@@ -102,7 +102,7 @@ export default function StartProjectPage() {
   const [projectDescription, setProjectDescription] = useState('')
   const [selectedIntegrations, setSelectedIntegrations] = useState<string[]>([])
   const [selectedAiCapabilities, setSelectedAiCapabilities] = useState<string[]>([])
-  const [selectedIntegrations, setSelectedIntegrations] = useState<string[]>([])
+  const [selectedIntegrationTypes, setSelectedIntegrationTypes] = useState<string[]>([])
   const [teamSize, setTeamSize] = useState('')
   const [timeline, setTimeline] = useState('')
   const [startingBudget, setStartingBudget] = useState('')
@@ -169,7 +169,7 @@ export default function StartProjectPage() {
       description: projectDescription,
       integrations: selectedIntegrations,
       aiCapabilities: selectedAiCapabilities,
-      integrations: selectedIntegrations,
+      integrationTypes: selectedIntegrationTypes,
       teamSize,
       timeline,
       budget: { starting: startingBudget, monthly: monthlyBudget, flexible: flexibleBudget },
@@ -625,9 +625,9 @@ export default function StartProjectPage() {
                         <button
                           key={option}
                           type="button"
-                          onClick={() => toggleArrayItem(option, selectedIntegrations, setSelectedIntegrations)}
+                          onClick={() => toggleArrayItem(option, selectedIntegrationTypes, setSelectedIntegrationTypes)}
                           className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                            selectedIntegrations.includes(option)
+                            selectedIntegrationTypes.includes(option)
                               ? 'bg-neutral-900 text-white'
                               : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
                           }`}
