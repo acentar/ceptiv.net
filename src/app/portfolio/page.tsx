@@ -105,8 +105,8 @@ export default function PortfolioPage() {
               transition={{ delay: 0.4, duration: 0.6 }}
               className="text-xl text-neutral-300 mb-10 max-w-2xl"
             >
-              Every project here was built from scratch, custom-designed for the client's 
-              specific needs. No templates. No shortcuts.
+              Every project here was custom-designed with the end-user in mind. 
+              Tell us your goals—we'll create the design that achieves them.
             </motion.p>
           </motion.div>
 

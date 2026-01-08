@@ -124,6 +124,13 @@ const integrationPlatforms = {
     { name: 'OneDrive', category: 'Storage' },
     { name: 'Teams', category: 'Workspace' },
   ],
+  designSystems: [
+    { name: 'Microsoft Fluent', category: 'Design System' },
+    { name: 'Material Design', category: 'Design System' },
+    { name: 'Apple HIG', category: 'Design System' },
+    { name: 'Ant Design', category: 'Design System' },
+    { name: 'Tailwind', category: 'Design System' },
+  ],
 }
 
 // Flatten for marquee rows
@@ -132,6 +139,7 @@ const marqueeRow1 = [
   ...integrationPlatforms.accounting,
   ...integrationPlatforms.ai.slice(0, 4),
   ...integrationPlatforms.sms,
+  ...integrationPlatforms.designSystems,
 ]
 
 const marqueeRow2 = [
@@ -257,8 +265,8 @@ export default function Home() {
               What We Actually Do
             </h2>
             <p className="text-xl text-neutral-600 max-w-3xl mx-auto">
-              We build custom digital solutions. No templates. No shortcuts. 
-              Just clean, powerful systems tailored to your exact needs.
+              We design with end-users in mind. Tell us about your project and 
+              we'll create a solution that works—using proven design systems for consistency.
             </p>
           </motion.div>
 
@@ -308,10 +316,10 @@ export default function Home() {
               </h2>
               <div className="space-y-6">
                 {[
-                  { text: 'No WordPress', desc: 'Custom code, not plugins' },
+                  { text: 'Custom Design', desc: 'Designed with end-users in mind' },
+                  { text: 'Design Systems', desc: 'Microsoft Fluent, Material, and more' },
                   { text: 'No Bloat', desc: 'Only what you need' },
-                  { text: 'No Templates', desc: 'Designed with you' },
-                  { text: 'No Surprises', desc: 'Fixed pricing' }
+                  { text: 'Fixed Pricing', desc: 'No hourly billing surprises' }
                 ].map((item, index) => (
                   <motion.div
                     key={item.text}

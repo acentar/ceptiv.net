@@ -31,8 +31,8 @@ export function Footer() {
           <div className="space-y-4">
             <Logo width={120} height={32} variant="light" />
             <p className="text-neutral-400 text-sm">
-              Custom digital solutions built from scratch. No templates, no plugins—just 
-              clean code tailored to your exact needs at fixed prices.
+              Custom digital solutions designed with end-users in mind. Tell us about your 
+              project and we'll create a design that works—clean code at fixed prices.
             </p>
             <div className="text-neutral-500 text-xs space-y-1">
               <p className="font-medium text-neutral-400">Part of Acenta Group ApS</p>
