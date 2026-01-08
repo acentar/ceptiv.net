@@ -643,8 +643,8 @@ export default function Home() {
                       <Check className="w-3.5 h-3.5 text-white" />
                     </div>
                     <div>
-                      <p className="font-medium text-neutral-900">Custom backend system</p>
-                      <p className="text-sm text-neutral-500">Only what you need—12 features included</p>
+                      <p className="font-medium text-neutral-900">Custom backend with 12 features</p>
+                      <p className="text-sm text-neutral-500">A medium-sized system—yours might be smaller or larger</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
