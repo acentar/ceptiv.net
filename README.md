@@ -27,7 +27,7 @@ For file uploads (logos, favicons) to work, you need to create and configure the
 1. Go to your Supabase project dashboard
 2. Navigate to **Storage**
 3. Click **Create bucket**
-4. Name it: `assets`
+4. Name it: `cap_file_bucket`
 5. ✅ **Check "Public bucket"** (important for logo/favicon access!)
 6. Click **Create bucket**
 

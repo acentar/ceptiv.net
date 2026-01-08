@@ -1,4 +1,4 @@
--- Create the assets storage bucket for logo and favicon uploads
+-- Create the cap_file_bucket storage bucket for logo and favicon uploads
 -- This bucket will store uploaded files like logos, favicons, and other assets
 --
 -- IMPORTANT: This script only creates the bucket. Storage policies are automatically
@@ -7,7 +7,7 @@
 -- To create the bucket:
 -- 1. Go to Supabase Dashboard → Storage
 -- 2. Click "Create bucket"
--- 3. Name: "assets"
+-- 3. Name: "cap_file_bucket"
 -- 4. Check "Public bucket"
 -- 5. Click "Create bucket"
 --
@@ -17,5 +17,5 @@
 
 -- Alternative: If you have admin permissions, you can run this SQL:
 -- INSERT INTO storage.buckets (id, name, public)
--- VALUES ('assets', 'assets', true)
+-- VALUES ('cap_file_bucket', 'cap_file_bucket', true)
 -- ON CONFLICT (id) DO NOTHING;

@@ -83,11 +83,11 @@ export default function AdminSettingsPage() {
         const logoPath = `branding/logo-${Date.now()}.svg`
         console.log('Attempting to upload logo:', logoPath)
 
-        const { url: logoUrl, error: logoError } = await uploadFile(logoFile, 'assets', logoPath)
+        const { url: logoUrl, error: logoError } = await uploadFile(logoFile, 'cap_file_bucket', logoPath)
 
         if (logoError) {
           console.error('Logo upload error:', logoError)
-          alert(`Failed to upload logo: ${logoError}\n\nTroubleshooting:\n1. Make sure the 'assets' bucket exists in Supabase Storage\n2. Ensure the bucket is set to 'Public'\n3. Check that you're logged in as an authenticated user`)
+          alert(`Failed to upload logo: ${logoError}\n\nTroubleshooting:\n1. Make sure the 'cap_file_bucket' bucket exists in Supabase Storage\n2. Ensure the bucket is set to 'Public'\n3. Check that you're logged in as an authenticated user`)
           setSaving(false)
           return
         }
@@ -101,11 +101,11 @@ export default function AdminSettingsPage() {
         const faviconPath = `branding/favicon-${Date.now()}.svg`
         console.log('Attempting to upload favicon:', faviconPath)
 
-        const { url: faviconUrl, error: faviconError } = await uploadFile(faviconFile, 'assets', faviconPath)
+        const { url: faviconUrl, error: faviconError } = await uploadFile(faviconFile, 'cap_file_bucket', faviconPath)
 
         if (faviconError) {
           console.error('Favicon upload error:', faviconError)
-          alert(`Failed to upload favicon: ${faviconError}\n\nTroubleshooting:\n1. Make sure the 'assets' bucket exists in Supabase Storage\n2. Ensure the bucket is set to 'Public'\n3. Check that you're logged in as an authenticated user`)
+          alert(`Failed to upload favicon: ${faviconError}\n\nTroubleshooting:\n1. Make sure the 'cap_file_bucket' bucket exists in Supabase Storage\n2. Ensure the bucket is set to 'Public'\n3. Check that you're logged in as an authenticated user`)
           setSaving(false)
           return
         }

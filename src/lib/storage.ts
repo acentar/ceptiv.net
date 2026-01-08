@@ -2,7 +2,7 @@ import { supabase } from './supabase'
 
 export async function uploadFile(
   file: File,
-  bucket: string,
+  bucket: string = 'cap_file_bucket',
   path: string
 ): Promise<{ url: string | null; error: string | null }> {
   try {
