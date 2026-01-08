@@ -19,44 +19,48 @@ import {
 
 const packages = [
   {
-    name: 'Starter',
+    name: 'Foundation',
     icon: Zap,
-    description: 'Perfect for startups and small projects',
-    features: 12,
+    description: 'Simple projects with core functionality',
+    features: 20,
     integrations: 1,
-    oneTime: '24.000',
-    monthly: '900',
+    oneTime: '40.000',
+    monthly: '1.200',
     popular: false,
+    perFeature: '2.000',
   },
   {
-    name: 'Growth',
+    name: 'Business',
     icon: Rocket,
-    description: 'For growing businesses with more needs',
-    features: 24,
+    description: 'Most common for growing SMBs',
+    features: 40,
     integrations: 3,
-    oneTime: '48.000',
-    monthly: '1.500',
-    popular: true,
-  },
-  {
-    name: 'Scale',
-    icon: TrendingUp,
-    description: 'For established companies scaling up',
-    features: 36,
-    integrations: 6,
     oneTime: '72.000',
-    monthly: '2.200',
-    popular: false,
+    monthly: '1.800',
+    popular: true,
+    perFeature: '1.800',
   },
   {
-    name: 'Enterprise',
-    icon: Building2,
-    description: 'Full-scale digital transformation',
-    features: 48,
-    integrations: 10,
-    oneTime: '96.000',
-    monthly: '3.000',
+    name: 'Professional',
+    icon: TrendingUp,
+    description: 'Complex systems with multiple modules',
+    features: 60,
+    integrations: 6,
+    oneTime: '102.000',
+    monthly: '2.500',
     popular: false,
+    perFeature: '1.700',
+  },
+  {
+    name: 'Premium',
+    icon: Building2,
+    description: 'Full-scale business platforms',
+    features: 80,
+    integrations: 10,
+    oneTime: '128.000',
+    monthly: '3.200',
+    popular: false,
+    perFeature: '1.600',
   },
 ]
 
@@ -79,8 +83,12 @@ const faqs = [
     answer: 'A feature is a distinct piece of functionality—like user authentication, a dashboard, payment processing, email notifications, or a reporting module. We\'ll help you identify exactly how many features your project needs during our consultation.'
   },
   {
+    question: 'What if I don\'t use all my features at launch?',
+    answer: 'Unused features roll over! If your Foundation package includes 20 features but you only need 15 at launch, you keep those 5 for later. Use them when you\'re ready to expand—no extra cost.'
+  },
+  {
     question: 'What if I need more features later?',
-    answer: 'That\'s the beauty of our model! Additional features are 3.000 DKK each, added to your one-time fee. Your monthly subscription may increase slightly depending on complexity. We grow with you.'
+    answer: 'Additional features are 2.500 DKK each after your package features are used. Buying a larger package upfront gives you a better per-feature price (as low as 1.600 DKK each with Premium).'
   },
   {
     question: 'What\'s included in the monthly subscription?',
@@ -259,13 +267,24 @@ export default function PricingPage() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="mt-12 text-center"
+            className="mt-12"
           >
-            <div className="inline-flex items-center gap-3 bg-white border border-neutral-200 rounded-full px-6 py-3">
-              <Plus className="w-5 h-5 text-neutral-700" />
-              <span className="text-neutral-700">
-                Need more features? <span className="font-bold text-neutral-900">3.000 DKK</span> per additional feature
-              </span>
+            <div className="max-w-2xl mx-auto bg-white border border-neutral-200 rounded-2xl p-6 text-center">
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <Plus className="w-6 h-6 text-neutral-700" />
+                <span className="text-lg font-bold text-neutral-900">
+                  Additional features: 2.500 DKK each
+                </span>
+              </div>
+              <p className="text-neutral-600 text-sm mb-4">
+                Need more features after launch? Add them anytime at a fixed price.
+              </p>
+              <div className="bg-neutral-50 rounded-xl p-4">
+                <p className="text-sm text-neutral-700">
+                  <span className="font-semibold text-neutral-900">💡 Unused features are saved:</span> If you don&apos;t use all your features at launch, 
+                  they roll over. Use them later as your business grows—no extra cost.
+                </p>
+              </div>
             </div>
           </motion.div>
         </div>
