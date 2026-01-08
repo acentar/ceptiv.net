@@ -373,6 +373,86 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Who We Work With */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <p className="text-sm font-medium text-neutral-500 uppercase tracking-wider mb-4">
+              Who we work with
+            </p>
+            <h2 className="text-3xl lg:text-5xl font-bold text-neutral-900 mb-6">
+              Your dev team—without the overhead
+            </h2>
+            <p className="text-xl text-neutral-600 max-w-3xl mx-auto">
+              We partner with companies that need professional digital solutions 
+              but don&apos;t want the cost and complexity of in-house development.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="text-center p-8 rounded-2xl bg-neutral-50"
+            >
+              <div className="text-5xl mb-4">🚀</div>
+              <h3 className="text-xl font-bold text-neutral-900 mb-3">Startups</h3>
+              <p className="text-neutral-600">
+                Launch fast with enterprise-quality tech. No need to hire a CTO or build a team—we&apos;re your tech partner from day one.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="text-center p-8 rounded-2xl bg-neutral-50"
+            >
+              <div className="text-5xl mb-4">📈</div>
+              <h3 className="text-xl font-bold text-neutral-900 mb-3">Growing SMBs</h3>
+              <p className="text-neutral-600">
+                Scale without the hiring headaches. Get custom systems that automate your operations and fuel growth.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              viewport={{ once: true }}
+              className="text-center p-8 rounded-2xl bg-neutral-50"
+            >
+              <div className="text-5xl mb-4">🏢</div>
+              <h3 className="text-xl font-bold text-neutral-900 mb-3">Established Companies</h3>
+              <p className="text-neutral-600">
+                Digital isn&apos;t your core business—it&apos;s ours. Focus on what you do best while we handle the technology.
+              </p>
+            </motion.div>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="mt-12 text-center"
+          >
+            <p className="text-lg text-neutral-700 font-medium">
+              You focus on your business. We handle the tech.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Integration Marquee */}
       <section className="py-24 bg-neutral-50 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

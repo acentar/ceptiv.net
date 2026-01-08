@@ -37,13 +37,17 @@ export function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
+              <p className="text-sm font-medium text-neutral-500 uppercase tracking-wider mb-4">
+                For startups & growing companies
+              </p>
               <h2 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight">
-                Ready to build
+                Your dev team.
                 <br />
-                <span className="text-neutral-500">something great?</span>
+                <span className="text-neutral-500">Without the overhead.</span>
               </h2>
               <p className="text-xl text-neutral-400 mb-8 max-w-lg">
-                We build from scratch. You get exactly what you need—nothing more, nothing less.
+                You focus on your business. We handle the tech. No need to hire developers—get 
+                enterprise-quality solutions at a fraction of the cost.
               </p>
               <Button
                 asChild
@@ -57,18 +61,27 @@ export function Footer() {
               </Button>
             </div>
             
-            <div className="grid grid-cols-3 gap-6 text-center">
-              <div className="p-6">
-                <div className="text-4xl lg:text-5xl font-bold text-white mb-2">40+</div>
-                <div className="text-neutral-500 text-sm">Integrations</div>
+            <div className="space-y-6">
+              <div className="grid grid-cols-3 gap-4 text-center">
+                <div className="bg-neutral-800/50 rounded-xl p-5">
+                  <div className="text-3xl lg:text-4xl font-bold text-white mb-1">40+</div>
+                  <div className="text-neutral-500 text-xs">Integrations</div>
+                </div>
+                <div className="bg-neutral-800/50 rounded-xl p-5">
+                  <div className="text-3xl lg:text-4xl font-bold text-white mb-1">24h</div>
+                  <div className="text-neutral-500 text-xs">Quote Delivery</div>
+                </div>
+                <div className="bg-neutral-800/50 rounded-xl p-5">
+                  <div className="text-3xl lg:text-4xl font-bold text-white mb-1">100%</div>
+                  <div className="text-neutral-500 text-xs">Fixed Pricing</div>
+                </div>
               </div>
-              <div className="p-6">
-                <div className="text-4xl lg:text-5xl font-bold text-white mb-2">24h</div>
-                <div className="text-neutral-500 text-sm">Quote Delivery</div>
-              </div>
-              <div className="p-6">
-                <div className="text-4xl lg:text-5xl font-bold text-white mb-2">100%</div>
-                <div className="text-neutral-500 text-sm">Fixed Pricing</div>
+              <div className="bg-neutral-800/30 rounded-xl p-6 border border-neutral-700/50">
+                <p className="text-neutral-400 text-sm leading-relaxed">
+                  <span className="text-white font-medium">Perfect for:</span> Startups, SMBs, and growing companies 
+                  who need professional digital solutions but don&apos;t want the cost and complexity 
+                  of an in-house development team.
+                </p>
               </div>
             </div>
           </div>
