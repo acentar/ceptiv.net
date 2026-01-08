@@ -313,10 +313,10 @@ export default function Home() {
                 >
                   <div className="flex items-center gap-2 mb-3">
                     <Sparkles className="w-5 h-5 text-neutral-400" />
-                    <span className="text-white font-medium">100% Custom</span>
+                    <span className="text-white font-medium">Built for you</span>
                   </div>
                   <p className="text-sm text-neutral-400">
-                    Every line of code written specifically for your project
+                    Every line of code crafted specifically for your needs
                   </p>
                 </motion.div>
 
