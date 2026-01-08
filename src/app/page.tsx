@@ -660,21 +660,8 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* What's always included */}
-              <div className="bg-neutral-800 text-white rounded-2xl p-6 mt-6">
-                <p className="text-sm font-medium text-neutral-300 mb-4">Every package includes:</p>
-                <div className="grid grid-cols-2 gap-3">
-                  {['UX designer consultation', 'Custom website design', 'Custom backend', 'Auto-scaling database', 'Fast hosting', 'Ongoing support'].map((item) => (
-                    <div key={item} className="flex items-center gap-2 text-sm text-neutral-300">
-                      <Check className="w-4 h-4 text-neutral-500" />
-                      {item}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
               {/* Note */}
-              <div className="bg-neutral-700 rounded-xl p-4">
+              <div className="bg-neutral-800 rounded-xl p-4">
                 <p className="text-sm text-neutral-300">
                   <span className="font-medium text-white">Note:</span> Email not included—we help you set up 
                   Microsoft 365, which you pay directly to Microsoft.
