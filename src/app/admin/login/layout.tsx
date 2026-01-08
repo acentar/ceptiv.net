@@ -3,5 +3,6 @@ export default function LoginLayout({
 }: {
   children: React.ReactNode
 }) {
-  return <>{children}</>
+  // Temporarily bypass all layouts to isolate the issue
+  return children
 }

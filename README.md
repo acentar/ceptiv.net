@@ -20,6 +20,20 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 
 Get these values from your Supabase project dashboard.
 
+### Admin User Setup
+
+To create the default admin user, run the database migration script:
+
+1. Go to your Supabase project dashboard
+2. Navigate to **SQL Editor**
+3. Run the script: `database/migrations/004_create_admin_user.sql`
+
+**Admin Credentials:**
+- **Email:** `dv@acentarecruit.com`
+- **Password:** `Star9!`
+
+⚠️ **Security Note:** This script contains a development password. In production, users should set their own secure passwords.
+
 ### Database Schema
 
 **Important:** All tables created in Supabase must be prefixed with `cap_`. This naming convention helps organize the database schema and prevents conflicts with future tables.
@@ -37,11 +51,12 @@ Database scripts are located in the `database/migrations/` directory.
 - `001_create_cap_settings_table.sql` - Application settings storage
 - `002_create_cap_user_roles_table.sql` - User roles and permissions
 - `003_create_cap_assets_table.sql` - Uploaded files/assets tracking
+- `004_create_admin_user.sql` - Creates admin user (dv@acentarecruit.com / Star9!)
 
 **Example script names:**
-- `004_create_cap_users_table.sql`
-- `005_add_cap_posts_table.sql`
-- `006_create_cap_comments_table.sql`
+- `005_create_cap_users_table.sql`
+- `006_add_cap_posts_table.sql`
+- `007_create_cap_comments_table.sql`
 
 ## Development
 
