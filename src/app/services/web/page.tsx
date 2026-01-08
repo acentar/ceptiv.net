@@ -95,16 +95,16 @@ export default function WebServicePage() {
             </div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-              Web Solutions
+              Websites
             </h1>
 
             <p className="text-2xl text-neutral-300 mb-4 font-medium">
-              Clean code. Zero bloat. Maximum speed.
+              Your public face. Fast & beautiful.
             </p>
 
             <p className="text-xl text-neutral-400 mb-10 max-w-2xl">
-              High-performance websites with custom backends. No WordPress, no plugins, 
-              no compromise. Just fast, secure, scalable web applications.
+              High-performance public websites that represent your brand. No WordPress, no 
+              plugins—just fast, secure, custom code that loads instantly.
             </p>
 
             <Button

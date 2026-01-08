@@ -7,8 +7,8 @@ import { ArrowRight, Mail, Phone, MapPin } from 'lucide-react'
 
 const footerNavigation = {
   services: [
-    { name: 'Web Applications', href: '/services/automation' },
-    { name: 'Web Solutions', href: '/services/web' },
+    { name: 'Backend Applications', href: '/services/automation' },
+    { name: 'Websites', href: '/services/web' },
     { name: 'Mobile Apps', href: '/services/mobile' },
     { name: 'AI Integrations', href: '/services/ai' },
     { name: 'Integrations', href: '/services/payments' },

@@ -44,8 +44,8 @@ interface ProjectTypeOption {
 }
 
 const projectTypes: ProjectTypeOption[] = [
-  { id: 'system', icon: Zap, title: 'Web Application', description: 'Custom tools & automation' },
-  { id: 'website', icon: Code, title: 'Website Solution', description: 'Custom, fast, clean' },
+  { id: 'system', icon: Zap, title: 'Backend Application', description: 'Admin panels & internal tools' },
+  { id: 'website', icon: Code, title: 'Website', description: 'Public-facing site' },
   { id: 'mobile', icon: Smartphone, title: 'Mobile App', description: 'iOS & Android' },
   { id: 'ai', icon: Brain, title: 'AI Integration', description: 'Intelligent automation' },
   { id: 'integration', icon: CreditCard, title: 'Integration', description: 'Connect systems & APIs' }

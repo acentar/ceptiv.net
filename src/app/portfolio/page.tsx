@@ -20,7 +20,7 @@ const projects = [
     title: 'Automated Inventory System',
     client: 'Retail Company',
     description: 'Complete inventory management automation that reduced manual work by 80% and eliminated stock discrepancies.',
-    tags: ['Web Application', 'Integration', 'Dashboard'],
+    tags: ['Backend Application', 'Integration', 'Dashboard'],
     icon: Zap,
     results: ['80% less manual work', '99.9% accuracy', '24/7 operation']
   },
@@ -28,7 +28,7 @@ const projects = [
     title: 'E-commerce Platform',
     client: 'Fashion Brand',
     description: 'High-performance e-commerce site with custom product configurator and seamless checkout experience.',
-    tags: ['Web Solution', 'E-commerce', 'Payments'],
+    tags: ['Website', 'E-commerce', 'Payments'],
     icon: Code,
     results: ['Sub-1s load time', '150% conversion increase', 'Fully mobile optimized']
   },
@@ -60,7 +60,7 @@ const projects = [
     title: 'Healthcare Portal',
     client: 'Medical Practice',
     description: 'Patient portal with appointment scheduling, telehealth integration, and secure messaging.',
-    tags: ['Web Solution', 'HIPAA Compliant', 'Telehealth'],
+    tags: ['Website', 'HIPAA Compliant', 'Telehealth'],
     icon: Code,
     results: ['60% fewer no-shows', 'Secure messaging', 'Online booking']
   }

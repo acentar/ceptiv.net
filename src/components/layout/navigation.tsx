@@ -21,8 +21,8 @@ const menuLinks = [
 ]
 
 const serviceLinks = [
-  { name: 'Web Applications', href: '/services/automation', icon: Zap },
-  { name: 'Web Solutions', href: '/services/web', icon: Code },
+  { name: 'Backend Applications', href: '/services/automation', icon: Zap },
+  { name: 'Websites', href: '/services/web', icon: Code },
   { name: 'Mobile Apps', href: '/services/mobile', icon: Smartphone },
   { name: 'AI Integrations', href: '/services/ai', icon: Brain },
   { name: 'Integrations', href: '/services/payments', icon: CreditCard },

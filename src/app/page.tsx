@@ -22,15 +22,15 @@ import {
 const services = [
   {
     icon: Zap,
-    title: 'Web Applications',
-    tagline: 'Custom apps for any purpose.',
-    description: 'From automation systems to business tools—we build custom web applications that solve your specific problems.'
+    title: 'Backend Applications',
+    tagline: 'Admin panels & internal tools.',
+    description: 'The systems that power your business—dashboards, admin panels, and internal tools built exactly how you need them.'
   },
   {
     icon: Code,
-    title: 'Web Solutions',
-    tagline: 'Clean code. Zero bloat. Maximum speed.',
-    description: 'High-performance websites with clean backends. No WordPress, no plugins—just fast, custom code.'
+    title: 'Websites',
+    tagline: 'Your public face. Fast & beautiful.',
+    description: 'High-performance public websites that look great and load fast. No WordPress, no plugins—just clean, custom code.'
   },
   {
     icon: Brain,

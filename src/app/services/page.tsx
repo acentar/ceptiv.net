@@ -20,19 +20,19 @@ const services = [
   {
     id: 'automation',
     icon: Zap,
-    title: 'Web Applications',
-    tagline: 'Custom apps for any purpose.',
-    description: 'From automation systems to business tools—we build custom web applications that solve your specific problems. No off-the-shelf software limitations.',
-    examples: ['Process automation', 'Business dashboards', 'Internal tools', 'Customer portals'],
+    title: 'Backend Applications',
+    tagline: 'Admin panels & internal tools.',
+    description: 'The systems that power your business—dashboards, admin panels, CRMs, and internal tools. Built exactly how you need them.',
+    examples: ['Admin panels', 'Business dashboards', 'Internal tools', 'Customer portals'],
     href: '/services/automation'
   },
   {
     id: 'web',
     icon: Code,
-    title: 'Web Solutions',
-    tagline: 'Clean code. Zero bloat. Maximum speed.',
-    description: 'High-performance websites with custom backends. No WordPress, no plugins, no compromise. Just fast, secure, scalable web applications.',
-    examples: ['Corporate websites', 'E-commerce platforms', 'SaaS applications', 'Web portals'],
+    title: 'Websites',
+    tagline: 'Your public face. Fast & beautiful.',
+    description: 'High-performance public websites that represent your brand. No WordPress, no plugins—just fast, secure, custom code.',
+    examples: ['Corporate websites', 'E-commerce sites', 'Landing pages', 'Marketing sites'],
     href: '/services/web'
   },
   {

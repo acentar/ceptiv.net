@@ -95,16 +95,16 @@ export default function AutomationServicePage() {
             </div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-              Web Applications
+              Backend Applications
             </h1>
 
             <p className="text-2xl text-neutral-300 mb-4 font-medium">
-              Custom apps for any purpose.
+              Admin panels & internal tools.
             </p>
 
             <p className="text-xl text-neutral-400 mb-10 max-w-2xl">
-              From automation systems to business dashboards—we build custom web applications 
-              that solve your specific problems, streamline operations, and scale with your business.
+              The systems that power your business—dashboards, admin panels, CRMs, and internal 
+              tools. Built exactly how you need them to streamline operations and scale with you.
             </p>
 
             <Button
@@ -113,7 +113,7 @@ export default function AutomationServicePage() {
               className="bg-white text-neutral-900 hover:bg-neutral-100 px-8 py-6 text-lg font-semibold"
             >
               <Link href="/start">
-                Automate Your Processes
+                Build Your System
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Link>
             </Button>
