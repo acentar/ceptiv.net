@@ -607,102 +607,90 @@ export default function Home() {
               </div>
             </motion.div>
 
-            {/* Right side - Pricing Card */}
+            {/* Right side - Pricing Cards */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
+              className="space-y-4"
             >
-              <div className="bg-white text-neutral-900 rounded-3xl p-8 lg:p-10 shadow-2xl relative overflow-hidden">
-                {/* Card accent */}
-                <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-neutral-900 via-neutral-700 to-neutral-900" />
-                
-                <div className="mb-8">
-                  <p className="text-sm font-medium text-neutral-500 uppercase tracking-wider mb-2">
-                    Example Project
-                  </p>
-                  <h3 className="text-2xl font-bold text-neutral-900">
-                    Custom Business Platform
-                  </h3>
-                </div>
-
-                {/* What's included */}
-                <div className="space-y-4 mb-8">
-                  <div className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-neutral-900 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3.5 h-3.5 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-neutral-900">Custom website designed with you</p>
-                      <p className="text-sm text-neutral-500">Designed by our UX specialist, using proven UI kits</p>
-                    </div>
+              {/* Small */}
+              <div className="bg-white text-neutral-900 rounded-2xl p-6 shadow-lg border border-neutral-200">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <p className="text-xs text-neutral-500 uppercase tracking-wider">Small</p>
+                    <p className="text-lg font-bold text-neutral-900">12 features + 1 integration</p>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-neutral-900 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3.5 h-3.5 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-neutral-900">Custom backend with 12 features</p>
-                      <p className="text-sm text-neutral-500">A medium-sized system—yours might be smaller or larger</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-neutral-900 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3.5 h-3.5 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-neutral-900">1 third-party integration</p>
-                      <p className="text-sm text-neutral-500">Payment, accounting, or any API</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-neutral-900 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3.5 h-3.5 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-neutral-900">Auto-scaling infrastructure</p>
-                      <p className="text-sm text-neutral-500">Database & storage that grows with you</p>
-                    </div>
+                  <div className="text-right">
+                    <p className="text-2xl font-bold text-neutral-900">18.000 <span className="text-sm font-normal text-neutral-500">DKK</span></p>
+                    <p className="text-sm text-neutral-500">+ 600 kr/mo</p>
                   </div>
                 </div>
-
-                {/* Pricing */}
-                <div className="border-t border-neutral-200 pt-8 mb-8">
-                  <div className="flex items-end justify-between mb-4">
-                    <div>
-                      <p className="text-sm text-neutral-500 mb-1">One-time</p>
-                      <p className="text-4xl font-bold text-neutral-900">24.000 <span className="text-xl font-normal text-neutral-500">DKK</span></p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm text-neutral-500 mb-1">Monthly</p>
-                      <p className="text-2xl font-bold text-neutral-900">900 <span className="text-base font-normal text-neutral-500">kr/mo</span></p>
-                    </div>
-                  </div>
-                  <p className="text-xs text-neutral-500">
-                    Monthly includes hosting, maintenance, support, security updates, and backups
-                  </p>
-                </div>
-
-                {/* Note */}
-                <div className="bg-neutral-50 rounded-xl p-4 mb-8">
-                  <p className="text-sm text-neutral-600">
-                    <span className="font-medium text-neutral-900">Note:</span> Email not included—we help you set up 
-                    Microsoft 365, which you pay directly to Microsoft.
-                  </p>
-                </div>
-
-                <Button
-                  asChild
-                  size="lg"
-                  className="w-full bg-neutral-900 hover:bg-neutral-800 text-white py-6 text-lg font-semibold"
-                >
-                  <Link href="/start">
-                    Get Your Custom Quote
-                    <ArrowRight className="ml-2 w-5 h-5" />
-                  </Link>
-                </Button>
               </div>
+
+              {/* Medium - Featured */}
+              <div className="bg-neutral-900 text-white rounded-2xl p-6 shadow-xl relative overflow-hidden">
+                <div className="absolute top-3 right-3 bg-white text-neutral-900 text-xs font-bold px-2 py-1 rounded">
+                  POPULAR
+                </div>
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <p className="text-xs text-neutral-400 uppercase tracking-wider">Medium</p>
+                    <p className="text-lg font-bold">24 features + 2 integrations</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-2xl font-bold">36.000 <span className="text-sm font-normal text-neutral-400">DKK</span></p>
+                    <p className="text-sm text-neutral-400">+ 900 kr/mo</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Large */}
+              <div className="bg-white text-neutral-900 rounded-2xl p-6 shadow-lg border border-neutral-200">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <p className="text-xs text-neutral-500 uppercase tracking-wider">Large</p>
+                    <p className="text-lg font-bold text-neutral-900">36 features + 3 integrations</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-2xl font-bold text-neutral-900">54.000 <span className="text-sm font-normal text-neutral-500">DKK</span></p>
+                    <p className="text-sm text-neutral-500">+ 1.200 kr/mo</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* What's always included */}
+              <div className="bg-neutral-800 text-white rounded-2xl p-6 mt-6">
+                <p className="text-sm font-medium text-neutral-300 mb-4">Every package includes:</p>
+                <div className="grid grid-cols-2 gap-3">
+                  {['UX designer consultation', 'Custom website design', 'Custom backend', 'Auto-scaling database', 'Fast hosting', 'Ongoing support'].map((item) => (
+                    <div key={item} className="flex items-center gap-2 text-sm text-neutral-300">
+                      <Check className="w-4 h-4 text-neutral-500" />
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Note */}
+              <div className="bg-neutral-700 rounded-xl p-4">
+                <p className="text-sm text-neutral-300">
+                  <span className="font-medium text-white">Note:</span> Email not included—we help you set up 
+                  Microsoft 365, which you pay directly to Microsoft.
+                </p>
+              </div>
+
+              <Button
+                asChild
+                size="lg"
+                className="w-full bg-white hover:bg-neutral-100 text-neutral-900 py-6 text-lg font-semibold border-2 border-white"
+              >
+                <Link href="/pricing">
+                  See Full Pricing
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Link>
+              </Button>
             </motion.div>
           </div>
         </div>
