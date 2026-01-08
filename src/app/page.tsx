@@ -657,13 +657,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Note */}
-              <div className="bg-neutral-800 rounded-xl p-4">
-                <p className="text-sm text-neutral-300">
-                  <span className="font-medium text-white">Note:</span> Email not included—we help you set up 
-                  Microsoft 365, which you pay directly to Microsoft.
-                </p>
-              </div>
 
               <Button
                 asChild
