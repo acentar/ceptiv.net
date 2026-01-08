@@ -24,14 +24,27 @@ Get these values from your Supabase project dashboard.
 
 For file uploads (logos, favicons) to work, you need to create and configure the storage bucket:
 
+**Recommended: Dashboard Setup**
 1. Go to your Supabase project dashboard
 2. Navigate to **Storage**
 3. Click **Create bucket**
 4. Name it: `cap_file_bucket`
-5. ✅ **Check "Public bucket"** (important for logo/favicon access!)
+5. ✅ Check "Public bucket"
 6. Click **Create bucket**
+7. **Add Required Policies:**
+   - **SELECT policy:** `Public access to cap_file_bucket files` (public)
+   - **UPDATE policy:** `Authenticated users can update cap_file_bucket files` (authenticated)
+   - **DELETE policy:** `Authenticated users can delete cap_file_bucket files` (authenticated)
 
-**Note:** Do NOT run the SQL script in `database/setup/001_create_assets_bucket.sql` as it requires admin permissions. Use the dashboard method above instead.
+**Reference Scripts:**
+- Bucket creation: `database/setup/001_create_assets_bucket.sql`
+- Policy reference: `database/setup/002_storage_policies_reference.sql`
+1. Go to **Storage** in the dashboard
+2. Click **Create bucket**
+3. Name it: `cap_file_bucket`
+4. ✅ **Check "Public bucket"** (important!)
+5. Click **Create bucket**
+6. **Important:** You'll need to manually create RLS policies (see SQL script for examples)
 
 ### Admin User Setup
 

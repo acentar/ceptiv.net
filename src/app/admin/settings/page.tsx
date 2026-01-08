@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Upload, X, Save, AlertCircle } from 'lucide-react'
+import { X, Save, AlertCircle } from 'lucide-react'
 import { uploadFile } from '@/lib/storage'
 import { supabase } from '@/lib/supabase'
 
@@ -15,10 +15,6 @@ export default function AdminSettingsPage() {
   const [lightLogoFile, setLightLogoFile] = useState<File | null>(null)
   const [faviconFile, setFaviconFile] = useState<File | null>(null)
   const [lightFaviconFile, setLightFaviconFile] = useState<File | null>(null)
-  const [logoPreview, setLogoPreview] = useState<string | null>(null)
-  const [lightLogoPreview, setLightLogoPreview] = useState<string | null>(null)
-  const [faviconPreview, setFaviconPreview] = useState<string | null>(null)
-  const [lightFaviconPreview, setLightFaviconPreview] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [connectionStatus, setConnectionStatus] = useState<'checking' | 'connected' | 'error'>('checking')
 
@@ -44,12 +40,7 @@ export default function AdminSettingsPage() {
     const file = event.target.files?.[0]
     if (file && file.type === 'image/svg+xml') {
       setLogoFile(file)
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        setLogoPreview(e.target?.result as string)
-      }
-      reader.readAsDataURL(file)
-    } else {
+    } else if (file) {
       alert('Please select an SVG file for the logo.')
     }
   }
@@ -58,12 +49,7 @@ export default function AdminSettingsPage() {
     const file = event.target.files?.[0]
     if (file && file.type === 'image/svg+xml') {
       setLightLogoFile(file)
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        setLightLogoPreview(e.target?.result as string)
-      }
-      reader.readAsDataURL(file)
-    } else {
+    } else if (file) {
       alert('Please select an SVG file for the light logo.')
     }
   }
@@ -72,12 +58,7 @@ export default function AdminSettingsPage() {
     const file = event.target.files?.[0]
     if (file && file.type === 'image/svg+xml') {
       setFaviconFile(file)
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        setFaviconPreview(e.target?.result as string)
-      }
-      reader.readAsDataURL(file)
-    } else {
+    } else if (file) {
       alert('Please select an SVG file for the favicon.')
     }
   }
@@ -86,34 +67,25 @@ export default function AdminSettingsPage() {
     const file = event.target.files?.[0]
     if (file && file.type === 'image/svg+xml') {
       setLightFaviconFile(file)
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        setLightFaviconPreview(e.target?.result as string)
-      }
-      reader.readAsDataURL(file)
-    } else {
+    } else if (file) {
       alert('Please select an SVG file for the light favicon.')
     }
   }
 
   const removeLogo = () => {
     setLogoFile(null)
-    setLogoPreview(null)
   }
 
   const removeLightLogo = () => {
     setLightLogoFile(null)
-    setLightLogoPreview(null)
   }
 
   const removeFavicon = () => {
     setFaviconFile(null)
-    setFaviconPreview(null)
   }
 
   const removeLightFavicon = () => {
     setLightFaviconFile(null)
-    setLightFaviconPreview(null)
   }
 
   const handleSave = async () => {
@@ -253,110 +225,50 @@ export default function AdminSettingsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Dark Logo */}
                 <div className="space-y-4">
-                  <Label htmlFor="logo-upload" className="text-base font-medium flex items-center space-x-2">
-                    <div className="w-4 h-4 bg-gray-900 rounded"></div>
-                    <span>Dark Logo (for light backgrounds)</span>
-                  </Label>
-                  <div className="flex items-center space-x-4">
-                    <div className="flex-1">
-                      <Input
-                        id="logo-upload"
-                        type="file"
-                        accept=".svg"
-                        onChange={handleLogoUpload}
-                        className="hidden"
-                      />
-                      <Label
-                        htmlFor="logo-upload"
-                        className="flex items-center justify-center w-full h-32 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-neutral-400 transition-colors bg-white"
-                      >
-                        {logoPreview ? (
-                          <div className="flex flex-col items-center space-y-2">
-                            <div
-                              className="w-16 h-16 bg-neutral-100 rounded flex items-center justify-center"
-                              dangerouslySetInnerHTML={{ __html: logoPreview }}
-                            />
-                            <span className="text-sm text-neutral-600">Click to change</span>
-                          </div>
-                        ) : (
-                          <div className="flex flex-col items-center space-y-2">
-                            <Upload className="w-8 h-8 text-neutral-400" />
-                            <span className="text-sm text-neutral-600">Upload dark logo (SVG)</span>
-                          </div>
-                        )}
-                      </Label>
-                    </div>
-                    {logoPreview && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={removeLogo}
-                        className="flex items-center space-x-2"
-                      >
-                        <X className="w-4 h-4" />
-                        Remove
-                      </Button>
+                  <Label className="text-base font-medium">Dark Logo</Label>
+                  <div className="space-y-2">
+                    <Input
+                      type="file"
+                      accept=".svg"
+                      onChange={handleLogoUpload}
+                    />
+                    {logoFile && (
+                      <div className="flex items-center justify-between p-2 bg-neutral-50 rounded">
+                        <span className="text-sm text-neutral-600">{logoFile.name}</span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={removeLogo}
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
                     )}
                   </div>
-                  {logoFile && (
-                    <p className="text-sm text-neutral-600">
-                      Selected: {logoFile.name}
-                    </p>
-                  )}
                 </div>
 
                 {/* Light Logo */}
                 <div className="space-y-4">
-                  <Label htmlFor="light-logo-upload" className="text-base font-medium flex items-center space-x-2">
-                    <div className="w-4 h-4 bg-white border border-gray-300 rounded"></div>
-                    <span>Light Logo (for dark backgrounds)</span>
-                  </Label>
-                  <div className="flex items-center space-x-4">
-                    <div className="flex-1">
-                      <Input
-                        id="light-logo-upload"
-                        type="file"
-                        accept=".svg"
-                        onChange={handleLightLogoUpload}
-                        className="hidden"
-                      />
-                      <Label
-                        htmlFor="light-logo-upload"
-                        className="flex items-center justify-center w-full h-32 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-neutral-400 transition-colors bg-gray-100"
-                      >
-                        {lightLogoPreview ? (
-                          <div className="flex flex-col items-center space-y-2">
-                            <div
-                              className="w-16 h-16 bg-neutral-800 rounded flex items-center justify-center"
-                              dangerouslySetInnerHTML={{ __html: lightLogoPreview }}
-                            />
-                            <span className="text-sm text-neutral-600">Click to change</span>
-                          </div>
-                        ) : (
-                          <div className="flex flex-col items-center space-y-2">
-                            <Upload className="w-8 h-8 text-neutral-400" />
-                            <span className="text-sm text-neutral-600">Upload light logo (SVG)</span>
-                          </div>
-                        )}
-                      </Label>
-                    </div>
-                    {lightLogoPreview && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={removeLightLogo}
-                        className="flex items-center space-x-2"
-                      >
-                        <X className="w-4 h-4" />
-                        Remove
-                      </Button>
+                  <Label className="text-base font-medium">Light Logo</Label>
+                  <div className="space-y-2">
+                    <Input
+                      type="file"
+                      accept=".svg"
+                      onChange={handleLightLogoUpload}
+                    />
+                    {lightLogoFile && (
+                      <div className="flex items-center justify-between p-2 bg-neutral-50 rounded">
+                        <span className="text-sm text-neutral-600">{lightLogoFile.name}</span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={removeLightLogo}
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
                     )}
                   </div>
-                  {lightLogoFile && (
-                    <p className="text-sm text-neutral-600">
-                      Selected: {lightLogoFile.name}
-                    </p>
-                  )}
                 </div>
               </div>
 
@@ -364,110 +276,50 @@ export default function AdminSettingsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Dark Favicon */}
                 <div className="space-y-4">
-                  <Label htmlFor="favicon-upload" className="text-base font-medium flex items-center space-x-2">
-                    <div className="w-4 h-4 bg-gray-900 rounded"></div>
-                    <span>Dark Favicon (for light backgrounds)</span>
-                  </Label>
-                  <div className="flex items-center space-x-4">
-                    <div className="flex-1">
-                      <Input
-                        id="favicon-upload"
-                        type="file"
-                        accept=".svg"
-                        onChange={handleFaviconUpload}
-                        className="hidden"
-                      />
-                      <Label
-                        htmlFor="favicon-upload"
-                        className="flex items-center justify-center w-full h-24 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-neutral-400 transition-colors bg-white"
-                      >
-                        {faviconPreview ? (
-                          <div className="flex flex-col items-center space-y-2">
-                            <div
-                              className="w-8 h-8 bg-neutral-100 rounded flex items-center justify-center"
-                              dangerouslySetInnerHTML={{ __html: faviconPreview }}
-                            />
-                            <span className="text-sm text-neutral-600">Click to change</span>
-                          </div>
-                        ) : (
-                          <div className="flex flex-col items-center space-y-2">
-                            <Upload className="w-6 h-6 text-neutral-400" />
-                            <span className="text-sm text-neutral-600">Upload dark favicon (SVG)</span>
-                          </div>
-                        )}
-                      </Label>
-                    </div>
-                    {faviconPreview && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={removeFavicon}
-                        className="flex items-center space-x-2"
-                      >
-                        <X className="w-4 h-4" />
-                        Remove
-                      </Button>
+                  <Label className="text-base font-medium">Dark Favicon</Label>
+                  <div className="space-y-2">
+                    <Input
+                      type="file"
+                      accept=".svg"
+                      onChange={handleFaviconUpload}
+                    />
+                    {faviconFile && (
+                      <div className="flex items-center justify-between p-2 bg-neutral-50 rounded">
+                        <span className="text-sm text-neutral-600">{faviconFile.name}</span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={removeFavicon}
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
                     )}
                   </div>
-                  {faviconFile && (
-                    <p className="text-sm text-neutral-600">
-                      Selected: {faviconFile.name}
-                    </p>
-                  )}
                 </div>
 
                 {/* Light Favicon */}
                 <div className="space-y-4">
-                  <Label htmlFor="light-favicon-upload" className="text-base font-medium flex items-center space-x-2">
-                    <div className="w-4 h-4 bg-white border border-gray-300 rounded"></div>
-                    <span>Light Favicon (for dark backgrounds)</span>
-                  </Label>
-                  <div className="flex items-center space-x-4">
-                    <div className="flex-1">
-                      <Input
-                        id="light-favicon-upload"
-                        type="file"
-                        accept=".svg"
-                        onChange={handleLightFaviconUpload}
-                        className="hidden"
-                      />
-                      <Label
-                        htmlFor="light-favicon-upload"
-                        className="flex items-center justify-center w-full h-24 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-neutral-400 transition-colors bg-gray-100"
-                      >
-                        {lightFaviconPreview ? (
-                          <div className="flex flex-col items-center space-y-2">
-                            <div
-                              className="w-8 h-8 bg-neutral-800 rounded flex items-center justify-center"
-                              dangerouslySetInnerHTML={{ __html: lightFaviconPreview }}
-                            />
-                            <span className="text-sm text-neutral-600">Click to change</span>
-                          </div>
-                        ) : (
-                          <div className="flex flex-col items-center space-y-2">
-                            <Upload className="w-6 h-6 text-neutral-400" />
-                            <span className="text-sm text-neutral-600">Upload light favicon (SVG)</span>
-                          </div>
-                        )}
-                      </Label>
-                    </div>
-                    {lightFaviconPreview && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={removeLightFavicon}
-                        className="flex items-center space-x-2"
-                      >
-                        <X className="w-4 h-4" />
-                        Remove
-                      </Button>
+                  <Label className="text-base font-medium">Light Favicon</Label>
+                  <div className="space-y-2">
+                    <Input
+                      type="file"
+                      accept=".svg"
+                      onChange={handleLightFaviconUpload}
+                    />
+                    {lightFaviconFile && (
+                      <div className="flex items-center justify-between p-2 bg-neutral-50 rounded">
+                        <span className="text-sm text-neutral-600">{lightFaviconFile.name}</span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={removeLightFavicon}
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
                     )}
                   </div>
-                  {lightFaviconFile && (
-                    <p className="text-sm text-neutral-600">
-                      Selected: {lightFaviconFile.name}
-                    </p>
-                  )}
                 </div>
               </div>
             </CardContent>
