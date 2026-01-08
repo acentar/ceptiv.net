@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { Logo } from '@/components/ui/logo'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Mail, Phone, MapPin } from 'lucide-react'
+import { ArrowRight, Mail, Phone } from 'lucide-react'
 
 const footerNavigation = {
   services: [
@@ -93,10 +93,10 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
           {/* Brand & Contact */}
           <div className="lg:col-span-2 space-y-8">
-            <p className="text-lg text-neutral-300 font-medium max-w-sm">
-              Fixed prices. Fast delivery.
+            <p className="text-xl text-neutral-300 font-medium max-w-sm leading-relaxed">
+              Go ahead, reach out.
               <br />
-              <span className="text-neutral-500">Danish craftsmanship.</span>
+              <span className="text-neutral-500">We don&apos;t bite. Much.</span>
             </p>
             
             <div className="space-y-4">
@@ -118,12 +118,6 @@ export function Footer() {
                 </div>
                 <span className="text-lg">+45 81 98 32 71</span>
               </a>
-              <div className="flex items-center gap-3 text-neutral-500">
-                <div className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center">
-                  <MapPin className="w-5 h-5" />
-                </div>
-                <span>Kongens Lyngby, Denmark</span>
-              </div>
             </div>
           </div>
 
