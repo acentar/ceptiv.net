@@ -38,7 +38,7 @@ export function Footer() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <p className="text-sm font-medium text-neutral-500 uppercase tracking-wider mb-4">
-                For startups & growing companies
+                For smaller businesses without in-house dev teams
               </p>
               <h2 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight">
                 Your dev team.
@@ -78,9 +78,9 @@ export function Footer() {
               </div>
               <div className="bg-neutral-800/30 rounded-xl p-6 border border-neutral-700/50">
                 <p className="text-neutral-400 text-sm leading-relaxed">
-                  <span className="text-white font-medium">Perfect for:</span> Startups, SMBs, and growing companies 
-                  who need professional digital solutions but don&apos;t want the cost and complexity 
-                  of an in-house development team.
+                  <span className="text-white font-medium">Perfect for:</span> Smaller businesses who need professional 
+                  digital solutions but don&apos;t have in-house developers. Get enterprise-quality 
+                  without the enterprise overhead.
                 </p>
               </div>
             </div>

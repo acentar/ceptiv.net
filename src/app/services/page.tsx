@@ -112,8 +112,8 @@ export default function ServicesPage() {
               transition={{ delay: 0.4, duration: 0.6 }}
               className="text-xl text-neutral-300 mb-10 max-w-2xl"
             >
-              We don't use templates. We don't modify existing systems. 
-              We build custom solutions from the ground up—that's how we deliver 
+              Custom solutions for smaller businesses who need real development 
+              without in-house teams. We build from the ground up—that's how we deliver 
               exceptional quality at competitive prices.
             </motion.p>
 
@@ -291,9 +291,9 @@ export default function ServicesPage() {
               </Button>
               <Button
                 asChild
-                variant="outline"
+                variant="outline-light"
                 size="lg"
-                className="border-neutral-600 text-white hover:bg-neutral-800 px-10 py-6 text-lg"
+                className="px-10 py-6 text-lg"
               >
                 <Link href="/portfolio">
                   See Our Work

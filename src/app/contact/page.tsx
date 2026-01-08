@@ -31,7 +31,8 @@ export default function ContactPage() {
               Get In Touch
             </h1>
             <p className="text-xl md:text-2xl text-neutral-200 max-w-3xl mx-auto">
-              Ready to transform your business? Let's discuss your project and create something amazing together.
+              Custom development for smaller businesses without in-house dev teams. 
+              Let's discuss your project.
             </p>
           </motion.div>
         </div>
@@ -151,7 +152,7 @@ export default function ContactPage() {
                   <h3 className="font-semibold text-neutral-900 mb-4">Quick Actions</h3>
                   <div className="space-y-3">
                     <Button variant="outline" className="w-full justify-start" asChild>
-                      <a href="/start-project">
+                      <a href="/start">
                         🚀 Start a Project
                       </a>
                     </Button>

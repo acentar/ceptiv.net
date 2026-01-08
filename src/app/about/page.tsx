@@ -94,9 +94,9 @@ export default function AboutPage() {
               transition={{ delay: 0.4, duration: 0.6 }}
               className="text-xl text-neutral-300 mb-10 max-w-2xl"
             >
-              Ceptiv is a custom development studio. We don't do templates. 
-              We don't do WordPress. We build exactly what you need, 
-              from scratch, with clean code and clear pricing.
+              Ceptiv is a custom development studio for smaller businesses 
+              who need enterprise-quality solutions without in-house dev teams. 
+              We build everything from scratch, with clean code and fixed pricing.
             </motion.p>
           </motion.div>
 
@@ -246,9 +246,9 @@ export default function AboutPage() {
               </Button>
               <Button
                 asChild
-                variant="outline"
+                variant="outline-light"
                 size="lg"
-                className="border-neutral-600 text-white hover:bg-neutral-800 px-10 py-6 text-lg"
+                className="px-10 py-6 text-lg"
               >
                 <Link href="/contact">
                   Contact Us

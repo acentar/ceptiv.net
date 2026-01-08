@@ -136,7 +136,7 @@ export default function PricingPage() {
               transition={{ delay: 0.5, duration: 0.6 }}
               className="text-neutral-500 text-sm"
             >
-              Designed for startups & SMBs who need professional solutions without in-house developers
+              Designed for smaller businesses who need professional solutions without in-house dev teams
             </motion.p>
           </motion.div>
 
