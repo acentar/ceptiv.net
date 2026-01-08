@@ -115,7 +115,7 @@ const faqs = [
   },
   {
     question: 'Can I cancel the subscription?',
-    answer: 'Yes, you can cancel anytime with 30 days notice. You own your code and data. We\'ll help you transition if needed. No lock-in contracts.'
+    answer: 'Yes, you can cancel anytime with 30 days notice. You own your code and data, and we\'ll help you transition if needed. However, because we invest heavily in building long-term relationships (and price our one-time fees accordingly), early cancellation within the first 12 months incurs a one-time fee: 9.000 DKK (Small), 12.000 DKK (Medium), or 15.000 DKK (Large). After 12 months, you can cancel freely with no penalty. This keeps things fair for everyone.'
   },
   {
     question: 'What about email and Microsoft 365?',
