@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { Logo } from '@/components/ui/logo'
-import { Facebook, Twitter, Linkedin, Github } from 'lucide-react'
 
 const footerNavigation = {
   services: [
@@ -39,20 +38,6 @@ export function Footer() {
               <p>CVR: 37576476</p>
               <p>Maglebjergvej 6</p>
               <p>2800 Kongens Lyngby, Danmark</p>
-            </div>
-            <div className="flex space-x-4 pt-2">
-              <a href="#" className="text-neutral-400 hover:text-white transition-colors">
-                <Facebook className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-neutral-400 hover:text-white transition-colors">
-                <Twitter className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-neutral-400 hover:text-white transition-colors">
-                <Linkedin className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-neutral-400 hover:text-white transition-colors">
-                <Github className="w-5 h-5" />
-              </a>
             </div>
           </div>
 
