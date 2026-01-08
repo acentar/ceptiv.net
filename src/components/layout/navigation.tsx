@@ -1,206 +1,296 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Logo } from '@/components/ui/logo'
 import { Button } from '@/components/ui/button'
-import { Menu, X, ChevronDown } from 'lucide-react'
+import { Menu, X, ArrowRight, Zap, Code, Smartphone, Brain, CreditCard, Palette, Mail, Phone } from 'lucide-react'
 
-const navigation = [
+// Pages with dark hero sections that need transparent nav
+const darkHeroPages = ['/', '/services', '/about', '/portfolio', '/pricing']
+
+const menuLinks = [
   { name: 'Home', href: '/' },
-  { name: 'About', href: '/about' },
-  {
-    name: 'Services',
-    href: '/services',
-    dropdown: [
-      { name: 'System Applications & Automation', href: '/services#automation' },
-      { name: 'Website Solutions', href: '/services#websites' },
-      { name: 'Custom Designs', href: '/services#design' },
-      { name: 'Integrations & APIs', href: '/services#integrations' },
-      { name: 'AI Integrations', href: '/services#ai' },
-      { name: 'Mobile Apps', href: '/services#mobile' },
-      { name: 'High-End UX', href: '/services#ux' },
-      { name: 'Payment Systems', href: '/services#payments' },
-    ]
-  },
+  { name: 'Services', href: '/services' },
   { name: 'Portfolio', href: '/portfolio' },
+  { name: 'About', href: '/about' },
   { name: 'Pricing', href: '/pricing' },
-  { name: 'Blog', href: '/blog' },
   { name: 'Contact', href: '/contact' },
 ]
 
+const serviceLinks = [
+  { name: 'System Automation', href: '/services/automation', icon: Zap },
+  { name: 'Web Solutions', href: '/services/web', icon: Code },
+  { name: 'Mobile Apps', href: '/services/mobile', icon: Smartphone },
+  { name: 'AI Integrations', href: '/services/ai', icon: Brain },
+  { name: 'Payment Systems', href: '/services/payments', icon: CreditCard },
+  { name: 'UX Design', href: '/services/ux', icon: Palette },
+]
+
 export function Navigation() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [hasScrolled, setHasScrolled] = useState(false)
   const pathname = usePathname()
 
-  const toggleDropdown = (name: string) => {
-    setActiveDropdown(activeDropdown === name ? null : name)
-  }
+  // Check if current page has a dark hero
+  const hasDarkHero = darkHeroPages.includes(pathname)
+
+  // Handle scroll for sticky nav transformation
+  useEffect(() => {
+    const handleScroll = () => {
+      setHasScrolled(window.scrollY > 50)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  // Close menu on route change
+  useEffect(() => {
+    setIsMenuOpen(false)
+  }, [pathname])
+
+  // Prevent body scroll when menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isMenuOpen])
+
+  // Determine nav styles based on scroll and page type
+  const isTransparent = hasDarkHero && !hasScrolled && !isMenuOpen
+  const navBg = isTransparent ? 'bg-transparent' : 'bg-white/95 backdrop-blur-md'
+  const navBorder = isTransparent ? 'border-transparent' : 'border-neutral-200'
+  const textColor = isTransparent ? 'text-white' : 'text-neutral-900'
+  const logoVariant = isTransparent ? 'light' : 'dark'
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <Link href="/" className="flex-shrink-0">
-            <Logo width={120} height={32} />
-          </Link>
+    <>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navBg} border-b ${navBorder}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16 lg:h-20">
+            {/* Logo */}
+            <Link href="/" className="flex-shrink-0 relative z-50">
+              <Logo width={100} height={28} variant={logoVariant} textFallback="Ceptiv" />
+            </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            {navigation.map((item) => (
-              <div key={item.name} className="relative">
-                {item.dropdown ? (
-                  <div>
-                    <button
-                      onClick={() => toggleDropdown(item.name)}
-                      className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                        pathname.startsWith(item.href)
-                          ? 'text-blue-600 bg-blue-50'
-                          : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
-                      }`}
-                    >
-                      <span>{item.name}</span>
-                      <ChevronDown className={`w-4 h-4 transition-transform ${activeDropdown === item.name ? 'rotate-180' : ''}`} />
-                    </button>
-
-                    <AnimatePresence>
-                      {activeDropdown === item.name && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          className="absolute left-0 mt-2 w-64 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50"
-                        >
-                          <div className="py-1">
-                            {item.dropdown.map((subItem) => (
-                              <Link
-                                key={subItem.name}
-                                href={subItem.href}
-                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600"
-                                onClick={() => setActiveDropdown(null)}
-                              >
-                                {subItem.name}
-                              </Link>
-                            ))}
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                ) : (
-                  <Link
-                    href={item.href}
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                      pathname === item.href
-                        ? 'text-blue-600 bg-blue-50'
-                        : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
-                    }`}
-                  >
-                    {item.name}
+            {/* Right side: Start Project + Menu */}
+            <div className="flex items-center space-x-4">
+              {/* Start Project Button - Desktop */}
+              <div className="hidden sm:block">
+                <Button
+                  asChild
+                  className={`transition-all duration-300 ${
+                    isTransparent
+                      ? 'bg-white text-neutral-900 hover:bg-neutral-100'
+                      : 'bg-neutral-900 text-white hover:bg-neutral-800'
+                  }`}
+                >
+                  <Link href="/start">
+                    Start Project
+                    <ArrowRight className="w-4 h-4 ml-2" />
                   </Link>
-                )}
+                </Button>
               </div>
-            ))}
-          </div>
 
-          {/* CTA Button */}
-          <div className="hidden md:block">
-            <Button asChild className="bg-orange-500 hover:bg-orange-600 text-white">
-              <Link href="/start-project">
-                Start Your Project
-              </Link>
-            </Button>
-          </div>
-
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </Button>
+              {/* Menu Button */}
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className={`relative z-50 p-2 rounded-lg transition-colors ${
+                  isMenuOpen
+                    ? 'text-white'
+                    : isTransparent
+                    ? 'text-white hover:bg-white/10'
+                    : 'text-neutral-900 hover:bg-neutral-100'
+                }`}
+                aria-label="Toggle menu"
+              >
+                <AnimatePresence mode="wait">
+                  {isMenuOpen ? (
+                    <motion.div
+                      key="close"
+                      initial={{ rotate: -90, opacity: 0 }}
+                      animate={{ rotate: 0, opacity: 1 }}
+                      exit={{ rotate: 90, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <X className="w-6 h-6" />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="menu"
+                      initial={{ rotate: 90, opacity: 0 }}
+                      animate={{ rotate: 0, opacity: 1 }}
+                      exit={{ rotate: -90, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Menu className="w-6 h-6" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </button>
+            </div>
           </div>
         </div>
+      </nav>
 
-        {/* Mobile Navigation */}
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden border-t border-gray-200"
-            >
-              <div className="px-2 pt-2 pb-3 space-y-1">
-                {navigation.map((item) => (
-                  <div key={item.name}>
-                    {item.dropdown ? (
-                      <div>
-                        <button
-                          onClick={() => toggleDropdown(item.name)}
-                          className="w-full flex items-center justify-between px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md"
+      {/* Full Screen Menu Overlay */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-40 bg-neutral-900"
+          >
+            <div className="h-full overflow-y-auto pt-20 lg:pt-24">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+                <div className="grid lg:grid-cols-2 gap-12 lg:gap-24">
+                  {/* Main Navigation Links */}
+                  <div>
+                    <motion.p
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 }}
+                      className="text-neutral-500 text-sm font-medium mb-6"
+                    >
+                      NAVIGATION
+                    </motion.p>
+                    <nav className="space-y-2">
+                      {menuLinks.map((link, index) => (
+                        <motion.div
+                          key={link.name}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.15 + index * 0.05 }}
                         >
-                          {item.name}
-                          <ChevronDown className={`w-4 h-4 transition-transform ${activeDropdown === item.name ? 'rotate-180' : ''}`} />
-                        </button>
-                        <AnimatePresence>
-                          {activeDropdown === item.name && (
-                            <motion.div
-                              initial={{ opacity: 0, height: 0 }}
-                              animate={{ opacity: 1, height: 'auto' }}
-                              exit={{ opacity: 0, height: 0 }}
-                              className="ml-4 space-y-1"
-                            >
-                              {item.dropdown.map((subItem) => (
-                                <Link
-                                  key={subItem.name}
-                                  href={subItem.href}
-                                  className="block px-3 py-2 text-sm text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md"
-                                  onClick={() => {
-                                    setIsOpen(false)
-                                    setActiveDropdown(null)
-                                  }}
-                                >
-                                  {subItem.name}
-                                </Link>
-                              ))}
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </div>
-                    ) : (
-                      <Link
-                        href={item.href}
-                        className={`block px-3 py-2 rounded-md text-base font-medium ${
-                          pathname === item.href
-                            ? 'text-blue-600 bg-blue-50'
-                            : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
-                        }`}
-                        onClick={() => setIsOpen(false)}
-                      >
-                        {item.name}
-                      </Link>
-                    )}
+                          <Link
+                            href={link.href}
+                            className={`group flex items-center justify-between py-3 border-b border-neutral-800 transition-colors ${
+                              pathname === link.href
+                                ? 'text-white'
+                                : 'text-neutral-400 hover:text-white'
+                            }`}
+                          >
+                            <span className="text-2xl lg:text-4xl font-bold">{link.name}</span>
+                            <ArrowRight className="w-6 h-6 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                          </Link>
+                        </motion.div>
+                      ))}
+                    </nav>
                   </div>
-                ))}
-                <div className="pt-4">
-                  <Button asChild className="w-full bg-orange-500 hover:bg-orange-600 text-white">
-                    <Link href="/start-project" onClick={() => setIsOpen(false)}>
-                      Start Your Project
-                    </Link>
-                  </Button>
+
+                  {/* Services & Contact */}
+                  <div className="space-y-12">
+                    {/* Services */}
+                    <div>
+                      <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                        className="text-neutral-500 text-sm font-medium mb-6"
+                      >
+                        SERVICES
+                      </motion.p>
+                      <div className="grid grid-cols-2 gap-4">
+                        {serviceLinks.map((service, index) => (
+                          <motion.div
+                            key={service.name}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.35 + index * 0.05 }}
+                          >
+                            <Link
+                              href={service.href}
+                              className="flex items-center space-x-3 p-3 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors group"
+                            >
+                              <service.icon className="w-5 h-5" />
+                              <span className="text-sm font-medium">{service.name}</span>
+                            </Link>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Contact */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.5 }}
+                    >
+                      <p className="text-neutral-500 text-sm font-medium mb-6">
+                        GET IN TOUCH
+                      </p>
+                      <div className="space-y-4">
+                        <a
+                          href="mailto:hello@ceptiv.net"
+                          className="flex items-center space-x-3 text-neutral-400 hover:text-white transition-colors"
+                        >
+                          <Mail className="w-5 h-5" />
+                          <span>hello@ceptiv.net</span>
+                        </a>
+                        <a
+                          href="tel:+4512345678"
+                          className="flex items-center space-x-3 text-neutral-400 hover:text-white transition-colors"
+                        >
+                          <Phone className="w-5 h-5" />
+                          <span>+45 12 34 56 78</span>
+                        </a>
+                      </div>
+                    </motion.div>
+
+                    {/* CTA */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.6 }}
+                    >
+                      <Button
+                        asChild
+                        size="lg"
+                        className="w-full sm:w-auto bg-white text-neutral-900 hover:bg-neutral-100"
+                      >
+                        <Link href="/start">
+                          Start Your Project
+                          <ArrowRight className="w-5 h-5 ml-2" />
+                        </Link>
+                      </Button>
+                    </motion.div>
+                  </div>
                 </div>
+
+                {/* Bottom Section */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.7 }}
+                  className="mt-16 pt-8 border-t border-neutral-800"
+                >
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0 text-neutral-500 text-sm">
+                    <p>© {new Date().getFullYear()} Ceptiv. All rights reserved.</p>
+                    <div className="flex space-x-6">
+                      <Link href="/privacy" className="hover:text-white transition-colors">
+                        Privacy
+                      </Link>
+                      <Link href="/terms" className="hover:text-white transition-colors">
+                        Terms
+                      </Link>
+                    </div>
+                  </div>
+                </motion.div>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </nav>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   )
 }

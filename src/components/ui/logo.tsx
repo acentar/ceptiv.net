@@ -82,10 +82,12 @@ export function Logo({
 
   if (!logoUrl) {
     // Fallback text logo if no image is available
+    // Use variant to determine text color
+    const textColorClass = variant === 'light' ? 'text-white' : 'text-neutral-900'
     return (
       <div
-        className={`flex items-center font-bold text-lg ${className}`}
-        style={{ fontSize: height * 0.6 }}
+        className={`flex items-center font-bold tracking-tight ${textColorClass} ${className}`}
+        style={{ fontSize: height * 0.7 }}
       >
         {textFallback}
       </div>

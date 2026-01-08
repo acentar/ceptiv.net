@@ -1,207 +1,162 @@
 'use client'
 
-import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Badge } from '@/components/ui/badge'
+import { Card, CardContent } from '@/components/ui/card'
 import {
   Zap,
   Code,
   Smartphone,
   Brain,
-  Shield,
+  CreditCard,
   Palette,
   ArrowRight,
-  CheckCircle,
-  Star,
-  TrendingUp
+  ArrowDown,
+  Check
 } from 'lucide-react'
 
 const services = [
   {
     id: 'automation',
     icon: Zap,
-    title: 'System Applications & Automation',
-    shortDesc: 'Custom apps that automate manual processes into seamless workflows.',
-    fullDesc: 'We develop custom applications that transform manual, repetitive processes into intelligent, automated workflows. From inventory management to customer onboarding, we build solutions that save time and reduce errors.',
-    features: [
-      'Process analysis and optimization',
-      'Custom workflow automation',
-      'Integration with existing systems',
-      'Real-time monitoring and reporting',
-      'Scalable cloud infrastructure'
-    ],
-    technologies: ['Node.js', 'Python', 'React', 'PostgreSQL', 'Redis'],
-    benefits: ['70% reduction in manual tasks', '99% accuracy improvement', '24/7 operation capability']
+    title: 'System Automation',
+    tagline: 'Kill manual processes. Forever.',
+    description: 'We build custom applications that transform repetitive manual tasks into seamless automated workflows. From data entry to complex business logic.',
+    examples: ['Inventory management', 'Customer onboarding', 'Reporting dashboards', 'Workflow orchestration'],
+    href: '/services/automation'
   },
   {
-    id: 'websites',
+    id: 'web',
     icon: Code,
-    title: 'Website Solutions',
-    shortDesc: 'High-performance sites with clean backends—no WordPress bloat.',
-    fullDesc: 'We build lightning-fast, scalable websites using modern technologies. Clean backends, optimized frontends, and exceptional user experiences that convert visitors into customers.',
-    features: [
-      'Modern React/Next.js frontend',
-      'Optimized backend APIs',
-      'SEO-friendly architecture',
-      'Mobile-first responsive design',
-      'Performance monitoring'
-    ],
-    technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Vercel'],
-    benefits: ['Sub-1-second load times', '100% mobile optimized', 'SEO-ready structure']
-  },
-  {
-    id: 'design',
-    icon: Palette,
-    title: 'Custom Designs',
-    shortDesc: 'Unique, client-tailored designs that stand out.',
-    fullDesc: 'Every brand is unique. We collaborate with you to create custom designs that perfectly capture your brand identity and resonate with your target audience.',
-    features: [
-      'Brand identity development',
-      'Custom UI/UX design',
-      'Interactive prototypes',
-      'Design system creation',
-      'User research and testing'
-    ],
-    technologies: ['Figma', 'Adobe Creative Suite', 'Framer', 'Principle'],
-    benefits: ['Unique brand identity', 'Improved user engagement', 'Higher conversion rates']
-  },
-  {
-    id: 'integrations',
-    icon: Shield,
-    title: 'Integrations & APIs',
-    shortDesc: 'Expertly connect your systems; just provide an API, and we\'ll make them talk.',
-    fullDesc: 'Seamless system integration is our specialty. Whether you need to connect CRMs, ERPs, payment systems, or custom APIs, we make disparate systems work together flawlessly.',
-    features: [
-      'API design and development',
-      'Third-party service integration',
-      'Webhook implementation',
-      'Data synchronization',
-      'Error handling and monitoring'
-    ],
-    technologies: ['REST APIs', 'GraphQL', 'Webhooks', 'OAuth', 'JWT'],
-    benefits: ['Unified data flow', 'Automated processes', 'Real-time updates']
-  },
-  {
-    id: 'ai',
-    icon: Brain,
-    title: 'AI Integrations',
-    shortDesc: 'Leverage cutting-edge AI APIs for chatbots, analytics, and more.',
-    fullDesc: 'Transform your business with artificial intelligence. We integrate the latest AI technologies to add intelligence to your applications, from chatbots to predictive analytics.',
-    features: [
-      'OpenAI GPT integration',
-      'Google AI Gemini',
-      'Anthropic Claude',
-      'AWS Bedrock',
-      'Azure OpenAI',
-      'Hugging Face models',
-      'Stability AI image generation',
-      'ElevenLabs voice AI'
-    ],
-    technologies: ['Python', 'OpenAI API', 'TensorFlow', 'LangChain', 'Pinecone'],
-    benefits: ['Intelligent automation', 'Enhanced user experiences', 'Data-driven insights']
+    title: 'Web Solutions',
+    tagline: 'Clean code. Zero bloat. Maximum speed.',
+    description: 'High-performance websites with custom backends. No WordPress, no plugins, no compromise. Just fast, secure, scalable web applications.',
+    examples: ['Corporate websites', 'E-commerce platforms', 'SaaS applications', 'Web portals'],
+    href: '/services/web'
   },
   {
     id: 'mobile',
     icon: Smartphone,
     title: 'Mobile Apps',
-    shortDesc: 'Custom iOS and Android apps built with Expo for cross-platform efficiency.',
-    fullDesc: 'Native-quality mobile experiences without the complexity. We build cross-platform apps using Expo that deliver native performance on both iOS and Android.',
-    features: [
-      'Cross-platform development',
-      'Native performance optimization',
-      'App Store deployment',
-      'Push notifications',
-      'Offline functionality'
-    ],
-    technologies: ['React Native', 'Expo', 'TypeScript', 'Native modules'],
-    benefits: ['50% faster development', 'Unified codebase', 'Native performance']
+    tagline: 'iOS & Android. One codebase. Full power.',
+    description: 'Cross-platform mobile applications built with Expo. Native performance, unified development, seamless deployment to both app stores.',
+    examples: ['Customer-facing apps', 'Internal tools', 'Field service apps', 'Social platforms'],
+    href: '/services/mobile'
   },
   {
-    id: 'ux',
-    icon: Star,
-    title: 'High-End UX',
-    shortDesc: 'With deep UX expertise, we create intuitive experiences that delight users.',
-    fullDesc: 'User experience is at the heart of everything we build. Our deep expertise in UX research, design, and testing ensures your applications are not just functional, but delightful to use.',
-    features: [
-      'User research and testing',
-      'Usability testing',
-      'Accessibility compliance',
-      'Interaction design',
-      'User journey mapping'
-    ],
-    technologies: ['Figma', 'Maze', 'Hotjar', 'Google Analytics', 'WCAG standards'],
-    benefits: ['Improved user satisfaction', 'Higher engagement rates', 'Reduced support requests']
+    id: 'ai',
+    icon: Brain,
+    title: 'AI Integrations',
+    tagline: 'Intelligent systems that learn and adapt.',
+    description: 'We integrate cutting-edge AI into your applications. From GPT-powered assistants to custom machine learning models.',
+    examples: ['AI chatbots', 'Document processing', 'Predictive analytics', 'Content generation'],
+    href: '/services/ai'
   },
   {
     id: 'payments',
-    icon: Shield,
+    icon: CreditCard,
     title: 'Payment Systems',
-    shortDesc: 'Seamless integration of any payment gateway.',
-    fullDesc: 'Secure, reliable payment processing is critical for modern businesses. We integrate with all major payment providers and have ready-to-use modules for Stripe, MobilePay, and Dinero.',
-    features: [
-      'Stripe integration',
-      'MobilePay setup',
-      'Dinero accounting sync',
-      'Payment security (PCI compliance)',
-      'Subscription management',
-      'Multi-currency support'
-    ],
-    technologies: ['Stripe API', 'MobilePay API', 'Dinero API', 'Webhooks', 'Encryption'],
-    benefits: ['Secure transactions', 'Global payment acceptance', 'Automated reconciliation']
+    tagline: 'Stripe, MobilePay, Dinero. Ready to go.',
+    description: 'Seamless payment integrations with our pre-built modules. Subscriptions, one-time payments, invoicing, and more.',
+    examples: ['Subscription billing', 'Marketplace payments', 'Invoice automation', 'Multi-currency'],
+    href: '/services/payments'
+  },
+  {
+    id: 'ux',
+    icon: Palette,
+    title: 'UX Design',
+    tagline: 'Interfaces that users love.',
+    description: 'Custom user experience design created in collaboration with you. Research-backed, tested, and refined to perfection.',
+    examples: ['Interface design', 'User research', 'Prototyping', 'Design systems'],
+    href: '/services/ux'
   }
 ]
 
-const testimonials = [
-  {
-    name: 'Sarah Chen',
-    company: 'TechFlow Inc.',
-    text: 'Ceptiv automated our entire inventory process, reducing manual work by 80%. Their AI integration for demand forecasting has been game-changing.',
-    rating: 5
-  },
-  {
-    name: 'Marcus Johnson',
-    company: 'RetailPlus',
-    text: 'The mobile app they built increased our customer engagement by 150%. Clean code, beautiful design, and excellent performance.',
-    rating: 5
-  },
-  {
-    name: 'Emma Davis',
-    company: 'FinanceCorp',
-    text: 'Their payment integration expertise saved us months of development time. Secure, reliable, and perfectly integrated with our existing systems.',
-    rating: 5
-  }
+const differentiators = [
+  { title: 'No Templates', desc: 'Everything is designed and built specifically for you' },
+  { title: 'No Plugins', desc: 'Clean, custom code that does exactly what you need' },
+  { title: 'No Surprises', desc: 'Fixed-price quotes with everything included' },
+  { title: 'No Lock-in', desc: 'You own your code, data, and infrastructure' }
 ]
 
 export default function ServicesPage() {
-  const [selectedService, setSelectedService] = useState(services[0])
-
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="bg-neutral-900 text-white py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative min-h-[80vh] bg-neutral-900 text-white overflow-hidden flex items-center">
+        {/* Background */}
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-neutral-800 via-neutral-900 to-black"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-neutral-700/20 rounded-full blur-3xl animate-pulse"></div>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center"
+            transition={{ duration: 0.8 }}
+            className="max-w-4xl"
           >
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Our Services
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+              className="text-neutral-400 text-lg mb-6 font-medium tracking-wide"
+            >
+              WHAT WE BUILD
+            </motion.p>
+
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
+              Custom digital systems.
+              <br />
+              <span className="text-neutral-400">
+                Built exactly for you.
+              </span>
             </h1>
-            <p className="text-xl md:text-2xl text-neutral-200 max-w-3xl mx-auto">
-              From automation to AI, we build anything you can imagine.
-              Custom solutions tailored to your unique needs.
-            </p>
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.6 }}
+              className="text-xl text-neutral-300 mb-10 max-w-2xl"
+            >
+              We don't use templates or off-the-shelf solutions. 
+              Every project is designed and developed from scratch to match your exact requirements.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.6 }}
+            >
+              <Button
+                asChild
+                size="lg"
+                className="bg-white text-neutral-900 hover:bg-neutral-100 px-8 py-6 text-lg font-semibold"
+              >
+                <Link href="/start">
+                  Start Your Project
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Link>
+              </Button>
+            </motion.div>
+          </motion.div>
+
+          {/* Scroll indicator */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2, duration: 0.6 }}
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center text-neutral-500"
+          >
+            <span className="text-sm mb-2">Explore services</span>
+            <ArrowDown className="w-5 h-5 animate-bounce" />
           </motion.div>
         </div>
       </section>
 
-      {/* Services Overview */}
+      {/* Services Grid */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -212,14 +167,14 @@ export default function ServicesPage() {
             className="text-center mb-16"
           >
             <h2 className="text-3xl lg:text-5xl font-bold text-neutral-900 mb-6">
-              What We Build
+              Six Core Capabilities
             </h2>
             <p className="text-xl text-neutral-600 max-w-3xl mx-auto">
-              Comprehensive solutions across the digital spectrum
+              Each service area represents deep expertise we've developed across hundreds of projects.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, index) => (
               <motion.div
                 key={service.id}
@@ -228,189 +183,130 @@ export default function ServicesPage() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card
-                  className={`h-full cursor-pointer transition-all duration-300 hover:shadow-lg ${
-                    selectedService.id === service.id ? 'ring-2 ring-blue-500 shadow-lg' : ''
-                  }`}
-                  onClick={() => setSelectedService(service)}
-                >
-                  <CardContent className="p-6 text-center">
-                    <div className="text-neutral-700 mb-4 flex justify-center">
-                      <service.icon className="w-12 h-12" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-neutral-900 mb-3">
-                      {service.title}
-                    </h3>
-                    <p className="text-neutral-600 text-sm">
-                      {service.shortDesc}
-                    </p>
-                  </CardContent>
-                </Card>
+                <Link href={service.href}>
+                  <Card className="h-full border-neutral-200 hover:border-neutral-900 transition-all duration-300 group cursor-pointer hover:shadow-xl">
+                    <CardContent className="p-8">
+                      <div className="text-neutral-900 mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <service.icon className="w-12 h-12" strokeWidth={1.5} />
+                      </div>
+                      <h3 className="text-2xl font-bold text-neutral-900 mb-2">
+                        {service.title}
+                      </h3>
+                      <p className="text-neutral-500 text-sm font-medium mb-4">
+                        {service.tagline}
+                      </p>
+                      <p className="text-neutral-600 mb-6">
+                        {service.description}
+                      </p>
+                      <div className="space-y-2 mb-6">
+                        {service.examples.map((example, i) => (
+                          <div key={i} className="flex items-center text-sm text-neutral-500">
+                            <Check className="w-4 h-4 mr-2 text-neutral-400" />
+                            {example}
+                          </div>
+                        ))}
+                      </div>
+                      <div className="flex items-center text-neutral-900 font-medium group-hover:underline">
+                        Learn more
+                        <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
               </motion.div>
             ))}
           </div>
-
-          {/* Detailed Service View */}
-          <motion.div
-            key={selectedService.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="bg-neutral-50 rounded-2xl p-8 md:p-12"
-          >
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2">
-                <div className="flex items-center mb-6">
-                  <div className="text-neutral-700 mr-4">
-                    <selectedService.icon className="w-16 h-16" />
-                  </div>
-                  <div>
-                    <h3 className="text-3xl font-bold text-neutral-900">
-                      {selectedService.title}
-                    </h3>
-                    <p className="text-lg text-neutral-600">
-                      {selectedService.shortDesc}
-                    </p>
-                  </div>
-                </div>
-
-                <p className="text-gray-700 text-lg mb-8">
-                  {selectedService.fullDesc}
-                </p>
-
-                <div className="mb-8">
-                  <h4 className="text-xl font-semibold text-neutral-900 mb-4">Key Features</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {selectedService.features.map((feature, index) => (
-                      <div key={index} className="flex items-center">
-                        <CheckCircle className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
-                        <span className="text-gray-700">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="mb-8">
-                  <h4 className="text-xl font-semibold text-neutral-900 mb-4">Technologies</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedService.technologies.map((tech) => (
-                      <Badge key={tech} variant="secondary">
-                        {tech}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="text-xl font-semibold text-neutral-900 mb-4">Benefits</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {selectedService.benefits.map((benefit, index) => (
-                      <div key={index} className="bg-white p-4 rounded-lg shadow-sm">
-                        <TrendingUp className="w-6 h-6 text-green-500 mb-2" />
-                        <p className="text-gray-700 font-medium">{benefit}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="lg:col-span-1">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Ready to Get Started?</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-neutral-600 mb-6">
-                      Let's discuss how {selectedService.title.toLowerCase()} can transform your business.
-                    </p>
-                    <Button asChild className="w-full bg-blue-600 hover:bg-blue-700">
-                      <Link href="/start-project">
-                        Start Your Project
-                        <ArrowRight className="ml-2 w-4 h-4" />
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          </motion.div>
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* Differentiators */}
       <section className="py-24 bg-neutral-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl lg:text-5xl font-bold text-neutral-900 mb-6">
-              What Our Clients Say
-            </h2>
-            <p className="text-xl text-neutral-600 max-w-3xl mx-auto">
-              Real results from real businesses
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={testimonial.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-3xl lg:text-5xl font-bold text-neutral-900 mb-6">
+                Why Ceptiv?
+              </h2>
+              <p className="text-xl text-neutral-600 mb-8">
+                We're not a typical agency. We don't sell hours. 
+                We sell results—and we guarantee them with fixed pricing.
+              </p>
+              <Button
+                asChild
+                size="lg"
+                className="bg-neutral-900 hover:bg-neutral-800 text-white"
               >
-                <Card className="h-full">
-                  <CardContent className="p-6">
-                    <div className="flex mb-4">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
-                      ))}
-                    </div>
-                    <p className="text-gray-700 mb-6 italic">
-                      "{testimonial.text}"
-                    </p>
-                    <div>
-                      <div className="font-semibold text-neutral-900">{testimonial.name}</div>
-                      <div className="text-neutral-600">{testimonial.company}</div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+                <Link href="/about">
+                  Learn About Us
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Link>
+              </Button>
+            </motion.div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {differentiators.map((item, index) => (
+                <motion.div
+                  key={item.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="bg-white p-6 rounded-xl shadow-sm"
+                >
+                  <div className="w-10 h-10 bg-neutral-900 rounded-lg flex items-center justify-center mb-4">
+                    <Check className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="font-bold text-neutral-900 mb-2">{item.title}</h3>
+                  <p className="text-neutral-600 text-sm">{item.desc}</p>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-neutral-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section className="py-24 bg-neutral-900 text-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">
-              Ready to Build Something Amazing?
+            <h2 className="text-3xl lg:text-5xl font-bold mb-6">
+              Ready to build something great?
             </h2>
-            <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Let's discuss which services align with your goals and create a custom solution that drives real results.
+            <p className="text-xl text-neutral-300 mb-10 max-w-2xl mx-auto">
+              Tell us about your project and we'll provide a fixed-price proposal within 24 hours.
             </p>
-            <Button
-              asChild
-              size="lg"
-              className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 text-lg"
-            >
-              <Link href="/start-project">
-                Get Your Free Consultation
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Link>
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                asChild
+                size="lg"
+                className="bg-white text-neutral-900 hover:bg-neutral-100 px-10 py-6 text-lg font-semibold"
+              >
+                <Link href="/start">
+                  Start Your Project
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Link>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="border-neutral-600 text-white hover:bg-neutral-800 px-10 py-6 text-lg"
+              >
+                <Link href="/portfolio">
+                  See Our Work
+                </Link>
+              </Button>
+            </div>
           </motion.div>
         </div>
       </section>

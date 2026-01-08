@@ -4,245 +4,126 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import {
-  Check,
   ArrowRight,
-  DollarSign,
-  Clock,
-  Shield,
-  Zap,
-  Users,
-  Star
+  ArrowDown,
+  Check,
+  HelpCircle
 } from 'lucide-react'
 
-const pricingTiers = [
-  {
-    name: 'Starter',
-    price: '2,500',
-    description: 'Perfect for small projects and MVPs',
-    features: [
-      'Project planning & requirements',
-      'Basic web application',
-      'Mobile responsive design',
-      '3 months support',
-      'Source code delivery'
-    ],
-    popular: false
-  },
-  {
-    name: 'Professional',
-    price: '7,500',
-    description: 'Most popular choice for growing businesses',
-    features: [
-      'Everything in Starter',
-      'Advanced features & integrations',
-      'Database design & setup',
-      'API development',
-      '6 months support',
-      'Performance optimization',
-      'Security implementation'
-    ],
-    popular: true
-  },
-  {
-    name: 'Enterprise',
-    price: '15,000+',
-    description: 'Comprehensive solutions for large projects',
-    features: [
-      'Everything in Professional',
-      'Custom architecture design',
-      'Advanced AI integrations',
-      'Multi-platform deployment',
-      '12 months support',
-      'Team training',
-      'Priority response',
-      'Custom SLAs'
-    ],
-    popular: false
-  }
-]
-
-const comparisonData = [
-  {
-    feature: 'Traditional Agencies',
-    ceptiv: 'Low starting fee + transparent subscription',
-    traditional: 'High upfront costs, hidden fees, complex contracts'
-  },
-  {
-    feature: 'Project Timeline',
-    ceptiv: '2-12 weeks delivery',
-    traditional: '3-12+ months'
-  },
-  {
-    feature: 'Support & Maintenance',
-    ceptiv: 'Included in subscription',
-    traditional: 'Separate monthly fees'
-  },
-  {
-    feature: 'Technology Stack',
-    ceptiv: 'Modern, scalable technologies',
-    traditional: 'Often outdated or overcomplicated'
-  },
-  {
-    feature: 'Communication',
-    ceptiv: 'Direct access to developers',
-    traditional: 'Through account managers'
-  },
-  {
-    feature: 'Scalability',
-    ceptiv: 'Built for growth',
-    traditional: 'Often requires complete rebuild'
-  }
+const includedFeatures = [
+  'Custom development',
+  'Hosting & infrastructure',
+  'Ongoing maintenance',
+  'Security updates',
+  'Performance monitoring',
+  'Bug fixes',
+  'Priority support',
+  'Regular backups'
 ]
 
 const faqs = [
   {
-    question: 'What\'s included in the starting fee?',
-    answer: 'The starting fee covers project planning, design, development, testing, and deployment. It\'s a one-time payment that gets your project built and launched.'
+    question: 'How does the fixed pricing work?',
+    answer: 'After you describe your project, we provide a detailed proposal with a fixed starting fee and monthly subscription. No hourly billing, no surprise invoices. You know exactly what you\'re paying before we start.'
   },
   {
-    question: 'What does the subscription cover?',
-    answer: 'The subscription includes ongoing support, maintenance, updates, bug fixes, and feature enhancements. It ensures your application continues to work perfectly and stays up-to-date.'
+    question: 'What\'s included in the monthly subscription?',
+    answer: 'Everything to keep your system running: hosting, maintenance, security updates, bug fixes, monitoring, backups, and priority support. It\'s like having a dedicated team for a fraction of the cost.'
   },
   {
-    question: 'Can I cancel the subscription anytime?',
-    answer: 'Yes, you can cancel your subscription at any time. We believe in building long-term relationships, not trapping clients with contracts.'
+    question: 'Can I cancel the subscription?',
+    answer: 'Yes, you can cancel anytime. You own your code and data. We\'ll help you transition to self-hosting or another provider if needed. No lock-in, ever.'
   },
   {
-    question: 'What if my project grows beyond the initial scope?',
-    answer: 'That\'s great! We design all our solutions to be scalable. Additional features can be added through the subscription or additional projects.'
+    question: 'How long does a typical project take?',
+    answer: 'It depends on scope. Simple projects take 2-4 weeks. Complex systems take 2-3 months. We\'ll give you a clear timeline in your proposal, and we stick to it.'
   },
   {
-    question: 'Do you offer payment plans?',
-    answer: 'Yes, we offer flexible payment arrangements. Contact us to discuss payment plans that work for your budget.'
+    question: 'Do you work with international clients?',
+    answer: 'Absolutely. We work with clients across 12+ countries. We communicate in English and adapt to your timezone for meetings.'
+  },
+  {
+    question: 'What if I need changes after launch?',
+    answer: 'Small changes and improvements are included in your subscription. For major new features, we\'ll provide a separate fixed-price quote.'
   }
 ]
 
 export default function PricingPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="bg-neutral-900 text-white py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative min-h-[70vh] bg-neutral-900 text-white overflow-hidden flex items-center">
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_center_top,_var(--tw-gradient-stops))] from-neutral-800 via-neutral-900 to-black"></div>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center"
+            transition={{ duration: 0.8 }}
+            className="max-w-4xl mx-auto text-center"
           >
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Transparent Pricing,
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+              className="text-neutral-400 text-lg mb-6 font-medium tracking-wide"
+            >
+              PRICING
+            </motion.p>
+
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
+              One price.
               <br />
-              <span className="text-orange-300">No Surprises</span>
+              <span className="text-neutral-400">
+                Everything included.
+              </span>
             </h1>
-            <p className="text-xl md:text-2xl text-green-100 max-w-3xl mx-auto mb-8">
-              Low starting fee + subscription model = One price for everything.
-              No hidden costs, unlimited support, and scalable growth.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <div className="flex items-center space-x-2 text-white">
-                <DollarSign className="w-6 h-6" />
-                <span className="text-lg font-semibold">Fixed Starting Fee</span>
-              </div>
-              <div className="flex items-center space-x-2 text-white">
-                <Shield className="w-6 h-6" />
-                <span className="text-lg font-semibold">Everything Included</span>
-              </div>
-              <div className="flex items-center space-x-2 text-white">
-                <Zap className="w-6 h-6" />
-                <span className="text-lg font-semibold">No Hidden Costs</span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
 
-      {/* Pricing Tiers */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-6">
-              Choose Your Starting Point
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Fixed prices for complete solutions. No hourly rates, no surprises.
-            </p>
-          </motion.div>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.6 }}
+              className="text-xl text-neutral-300 mb-10 max-w-2xl mx-auto"
+            >
+              Low starting fee + predictable monthly subscription. 
+              No hidden costs. No hourly billing. No surprises.
+            </motion.p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {pricingTiers.map((tier, index) => (
-              <motion.div
-                key={tier.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.6 }}
+            >
+              <Button
+                asChild
+                size="lg"
+                className="bg-white text-neutral-900 hover:bg-neutral-100 px-8 py-6 text-lg font-semibold"
               >
-                <Card className={`h-full ${tier.popular ? 'ring-2 ring-blue-500 shadow-lg' : ''}`}>
-                  <CardHeader className="text-center pb-8">
-                    {tier.popular && (
-                      <Badge className="mb-4 bg-blue-500 hover:bg-blue-600">
-                        Most Popular
-                      </Badge>
-                    )}
-                    <CardTitle className="text-2xl">{tier.name}</CardTitle>
-                    <div className="mt-4">
-                      <span className="text-4xl font-bold">${tier.price}</span>
-                      <span className="text-gray-600 ml-1">starting fee</span>
-                    </div>
-                    <p className="text-gray-600 mt-2">{tier.description}</p>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-3 mb-8">
-                      {tier.features.map((feature, i) => (
-                        <li key={i} className="flex items-center">
-                          <Check className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
-                          <span className="text-gray-700">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <Button
-                      asChild
-                      className={`w-full ${tier.popular ? 'bg-blue-600 hover:bg-blue-700' : ''}`}
-                    >
-                      <Link href="/start-project">
-                        Get Started
-                        <ArrowRight className="ml-2 w-4 h-4" />
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
+                <Link href="/start">
+                  Get Your Quote
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Link>
+              </Button>
+            </motion.div>
+          </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mt-16"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1, duration: 0.6 }}
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center text-neutral-500"
           >
-            <p className="text-gray-600 mb-4">
-              All packages include ongoing subscription for support and updates
-            </p>
-            <p className="text-sm text-gray-500">
-              Need a custom solution? <Link href="/start-project" className="text-blue-600 hover:underline">Contact us</Link> for a personalized quote.
-            </p>
+            <ArrowDown className="w-5 h-5 animate-bounce" />
           </motion.div>
         </div>
       </section>
 
-      {/* Subscription Model */}
-      <section className="py-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* How It Works */}
+      <section className="py-24 bg-white">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -250,59 +131,36 @@ export default function PricingPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-6">
-              Subscription Model Explained
+            <h2 className="text-3xl lg:text-5xl font-bold text-neutral-900 mb-6">
+              Simple, Transparent Pricing
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              One payment covers everything - development, hosting, support, and updates
+            <p className="text-xl text-neutral-600 max-w-3xl mx-auto">
+              Every project gets a custom quote based on your specific needs. Here's how it works:
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
             >
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">What's Included</h3>
-              <div className="space-y-4">
-                <div className="flex items-start">
-                  <Check className="w-6 h-6 text-green-500 mr-3 mt-1 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Ongoing Support</h4>
-                    <p className="text-gray-600">24/7 technical support and bug fixes</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <Check className="w-6 h-6 text-green-500 mr-3 mt-1 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Feature Updates</h4>
-                    <p className="text-gray-600">Regular updates and new features</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <Check className="w-6 h-6 text-green-500 mr-3 mt-1 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Security Updates</h4>
-                    <p className="text-gray-600">Latest security patches and improvements</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <Check className="w-6 h-6 text-green-500 mr-3 mt-1 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Performance Monitoring</h4>
-                    <p className="text-gray-600">Uptime monitoring and optimization</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <Check className="w-6 h-6 text-green-500 mr-3 mt-1 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Hosting & Maintenance</h4>
-                    <p className="text-gray-600">Server costs and infrastructure maintenance</p>
-                  </div>
-                </div>
-              </div>
+              <Card className="h-full border-2 border-neutral-900">
+                <CardHeader>
+                  <CardTitle className="text-2xl">Starting Fee</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-4xl font-bold text-neutral-900 mb-4">Custom</p>
+                  <p className="text-neutral-600 mb-6">
+                    A one-time fee that covers design, development, testing, and launch. 
+                    You know exactly what you're paying before we start.
+                  </p>
+                  <p className="text-sm text-neutral-500">
+                    Typical range: €2,000 - €50,000+ depending on scope
+                  </p>
+                </CardContent>
+              </Card>
             </motion.div>
 
             <motion.div
@@ -310,87 +168,49 @@ export default function PricingPage() {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
-              className="bg-white p-8 rounded-lg shadow-lg"
             >
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">How It Works</h3>
-              <div className="space-y-6">
-                <div className="flex items-start">
-                  <div className="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center font-bold mr-4 flex-shrink-0">1</div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Fixed Starting Fee</h4>
-                    <p className="text-gray-600">One-time payment gets your project built and deployed</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <div className="bg-green-100 text-green-600 rounded-full w-8 h-8 flex items-center justify-center font-bold mr-4 flex-shrink-0">2</div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Ongoing Subscription</h4>
-                    <p className="text-gray-600">Monthly fee covers all maintenance, support, and updates</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <div className="bg-purple-100 text-purple-600 rounded-full w-8 h-8 flex items-center justify-center font-bold mr-4 flex-shrink-0">3</div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Scale as You Grow</h4>
-                    <p className="text-gray-600">Add features or increase limits anytime</p>
-                  </div>
-                </div>
-              </div>
+              <Card className="h-full border-2 border-neutral-900">
+                <CardHeader>
+                  <CardTitle className="text-2xl">Monthly Subscription</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-4xl font-bold text-neutral-900 mb-4">Custom</p>
+                  <p className="text-neutral-600 mb-6">
+                    Covers hosting, maintenance, support, and everything else. 
+                    One predictable monthly payment.
+                  </p>
+                  <p className="text-sm text-neutral-500">
+                    Typical range: €200 - €2,000+/month depending on scope
+                  </p>
+                </CardContent>
+              </Card>
             </motion.div>
           </div>
-        </div>
-      </section>
-
-      {/* Comparison Table */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-6">
-              Ceptiv vs Traditional Agencies
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              See why businesses choose our transparent model
-            </p>
-          </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
+            className="bg-neutral-50 rounded-2xl p-8"
           >
-            <div className="overflow-hidden bg-white shadow-lg rounded-lg">
-              <div className="px-4 py-5 sm:p-6">
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="font-semibold text-gray-900">Feature</div>
-                  <div className="font-semibold text-blue-600">Ceptiv</div>
-                  <div className="font-semibold text-gray-600">Traditional Agencies</div>
+            <h3 className="text-xl font-bold text-neutral-900 mb-6 text-center">
+              What's Included in Every Subscription
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {includedFeatures.map((feature, index) => (
+                <div key={index} className="flex items-center">
+                  <Check className="w-5 h-5 text-neutral-900 mr-2 flex-shrink-0" />
+                  <span className="text-neutral-700">{feature}</span>
                 </div>
-              </div>
-              <div className="border-t border-gray-200">
-                {comparisonData.map((item, index) => (
-                  <div key={index} className="px-4 py-4 sm:px-6 even:bg-gray-50">
-                    <div className="grid grid-cols-3 gap-4">
-                      <div className="text-sm font-medium text-gray-900">{item.feature}</div>
-                      <div className="text-sm text-green-600 font-medium">{item.ceptiv}</div>
-                      <div className="text-sm text-red-600">{item.traditional}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              ))}
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section className="py-24 bg-gray-50">
+      {/* FAQ */}
+      <section className="py-24 bg-neutral-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -399,12 +219,9 @@ export default function PricingPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+            <h2 className="text-3xl lg:text-5xl font-bold text-neutral-900 mb-6">
               Frequently Asked Questions
             </h2>
-            <p className="text-xl text-gray-600">
-              Everything you need to know about our pricing model
-            </p>
           </motion.div>
 
           <div className="space-y-6">
@@ -413,17 +230,18 @@ export default function PricingPage() {
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                transition={{ duration: 0.5, delay: index * 0.05 }}
                 viewport={{ once: true }}
               >
                 <Card>
                   <CardContent className="p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                      {faq.question}
-                    </h3>
-                    <p className="text-gray-600">
-                      {faq.answer}
-                    </p>
+                    <div className="flex items-start">
+                      <HelpCircle className="w-6 h-6 text-neutral-400 mr-4 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <h3 className="font-bold text-neutral-900 mb-2">{faq.question}</h3>
+                        <p className="text-neutral-600">{faq.answer}</p>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -432,28 +250,28 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="py-24 bg-neutral-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      {/* CTA */}
+      <section className="py-24 bg-neutral-900 text-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">
-              Ready to Get Started?
+            <h2 className="text-3xl lg:text-5xl font-bold mb-6">
+              Ready for your custom quote?
             </h2>
-            <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Get your fixed-price quote within 24 hours. No commitments, just honest conversation about your project.
+            <p className="text-xl text-neutral-300 mb-10 max-w-2xl mx-auto">
+              Tell us about your project and we'll provide a detailed, fixed-price proposal within 24 hours.
             </p>
             <Button
               asChild
               size="lg"
-              className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 text-lg"
+              className="bg-white text-neutral-900 hover:bg-neutral-100 px-10 py-6 text-lg font-semibold"
             >
-              <Link href="/start-project">
-                Start Your Project
+              <Link href="/start">
+                Get Your Quote
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Link>
             </Button>
