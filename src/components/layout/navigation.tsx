@@ -238,11 +238,11 @@ export function Navigation() {
                           <span>hello@ceptiv.net</span>
                         </a>
                         <a
-                          href="tel:+4512345678"
+                          href="tel:+4581983271"
                           className="flex items-center space-x-3 text-neutral-400 hover:text-white transition-colors"
                         >
                           <Phone className="w-5 h-5" />
-                          <span>+45 12 34 56 78</span>
+                          <span>+45 81 98 32 71</span>
                         </a>
                       </div>
                     </motion.div>

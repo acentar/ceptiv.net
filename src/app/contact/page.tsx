@@ -128,8 +128,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-neutral-900">Call Us</h3>
-                    <p className="text-neutral-600">+1 (234) 567-8900</p>
-                    <p className="text-sm text-neutral-500">Mon-Fri, 9AM-6PM EST</p>
+                    <p className="text-neutral-600">+45 81 98 32 71</p>
+                    <p className="text-sm text-neutral-500">Mon-Fri, 9AM-5PM CET</p>
                   </div>
                 </div>
 

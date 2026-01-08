@@ -104,10 +104,10 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="tel:+1234567890"
+                  href="tel:+4581983271"
                   className="text-neutral-400 hover:text-white transition-colors text-sm"
                 >
-                  +1 (234) 567-8900
+                  +45 81 98 32 71
                 </a>
               </li>
               {footerNavigation.legal.map((item) => (
