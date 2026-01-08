@@ -1,13 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Upload, X, Save } from 'lucide-react'
+import { Upload, X, Save, AlertCircle } from 'lucide-react'
 import { uploadFile } from '@/lib/storage'
+import { supabase } from '@/lib/supabase'
 
 export default function AdminSettingsPage() {
   const [logoFile, setLogoFile] = useState<File | null>(null)
@@ -15,6 +16,25 @@ export default function AdminSettingsPage() {
   const [logoPreview, setLogoPreview] = useState<string | null>(null)
   const [faviconPreview, setFaviconPreview] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
+  const [connectionStatus, setConnectionStatus] = useState<'checking' | 'connected' | 'error'>('checking')
+
+  useEffect(() => {
+    // Check Supabase connection
+    const checkConnection = async () => {
+      try {
+        const { error } = await supabase.from('cap_settings').select('count').limit(1)
+        if (error && error.code !== 'PGRST116') { // PGRST116 is "no rows returned"
+          setConnectionStatus('error')
+        } else {
+          setConnectionStatus('connected')
+        }
+      } catch (err) {
+        setConnectionStatus('error')
+      }
+    }
+
+    checkConnection()
+  }, [])
 
   const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -61,35 +81,47 @@ export default function AdminSettingsPage() {
       // Upload logo if selected
       if (logoFile) {
         const logoPath = `branding/logo-${Date.now()}.svg`
+        console.log('Attempting to upload logo:', logoPath)
+
         const { url: logoUrl, error: logoError } = await uploadFile(logoFile, 'assets', logoPath)
 
         if (logoError) {
-          alert(`Failed to upload logo: ${logoError}`)
+          console.error('Logo upload error:', logoError)
+          alert(`Failed to upload logo: ${logoError}\n\nMake sure the 'assets' bucket exists in Supabase Storage and is set to public.`)
           setSaving(false)
           return
         }
 
-        console.log('Logo uploaded:', logoUrl)
+        console.log('Logo uploaded successfully:', logoUrl)
+        alert(`Logo uploaded successfully!\nURL: ${logoUrl}`)
       }
 
       // Upload favicon if selected
       if (faviconFile) {
         const faviconPath = `branding/favicon-${Date.now()}.svg`
+        console.log('Attempting to upload favicon:', faviconPath)
+
         const { url: faviconUrl, error: faviconError } = await uploadFile(faviconFile, 'assets', faviconPath)
 
         if (faviconError) {
-          alert(`Failed to upload favicon: ${faviconError}`)
+          console.error('Favicon upload error:', faviconError)
+          alert(`Failed to upload favicon: ${faviconError}\n\nMake sure the 'assets' bucket exists in Supabase Storage and is set to public.`)
           setSaving(false)
           return
         }
 
-        console.log('Favicon uploaded:', faviconUrl)
+        console.log('Favicon uploaded successfully:', faviconUrl)
+        alert(`Favicon uploaded successfully!\nURL: ${faviconUrl}`)
       }
 
-      alert('Settings saved successfully!')
+      if (!logoFile && !faviconFile) {
+        alert('No files selected for upload.')
+      } else {
+        alert('Settings saved successfully!')
+      }
     } catch (error) {
-      alert('An error occurred while saving settings.')
       console.error('Save error:', error)
+      alert('An unexpected error occurred while saving settings. Check the browser console for details.')
     } finally {
       setSaving(false)
     }
@@ -112,11 +144,33 @@ export default function AdminSettingsPage() {
         </TabsList>
 
         <TabsContent value="branding" className="space-y-6">
+          {connectionStatus === 'error' && (
+            <Card className="border-red-200 bg-red-50">
+              <CardContent className="pt-6">
+                <div className="flex items-center space-x-2 text-red-700">
+                  <AlertCircle className="h-4 w-4" />
+                  <span className="text-sm font-medium">
+                    Database connection issue detected. File uploads may not work.
+                  </span>
+                </div>
+                <p className="text-xs text-red-600 mt-1">
+                  Make sure you've run the database migrations and created the assets storage bucket.
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
           <Card>
             <CardHeader>
               <CardTitle>Logo & Favicon</CardTitle>
               <CardDescription>
                 Upload your brand logo and favicon. SVG files are recommended for scalability.
+                {connectionStatus === 'connected' && (
+                  <span className="text-green-600 text-sm"> ✓ Storage ready</span>
+                )}
+                {connectionStatus === 'checking' && (
+                  <span className="text-gray-500 text-sm"> Checking storage...</span>
+                )}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">

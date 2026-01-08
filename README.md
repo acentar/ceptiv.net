@@ -20,6 +20,21 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 
 Get these values from your Supabase project dashboard.
 
+### Storage Bucket Setup
+
+For file uploads (logos, favicons) to work, you need to create and configure the storage bucket:
+
+1. Go to your Supabase project dashboard
+2. Navigate to **Storage**
+3. Click **Create bucket**
+4. Name it: `assets`
+5. Check **Public bucket** (important!)
+6. Click **Create bucket**
+
+Alternatively, run the setup script:
+1. Go to **SQL Editor**
+2. Run: `database/setup/001_create_assets_bucket.sql`
+
 ### Admin User Setup
 
 To create the default admin user, run the database migration script:
