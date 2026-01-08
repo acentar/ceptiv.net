@@ -15,7 +15,8 @@ import {
   ArrowDown,
   Workflow,
   Rocket,
-  HeartHandshake
+  HeartHandshake,
+  Sparkles
 } from 'lucide-react'
 
 const services = [
@@ -159,88 +160,204 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] bg-neutral-900 text-white overflow-hidden flex items-center">
-        {/* Animated mesh background */}
+      <section className="relative min-h-screen bg-neutral-900 text-white overflow-hidden">
+        {/* Dynamic background */}
         <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-neutral-800 via-neutral-900 to-black"></div>
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-neutral-700/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-1/3 right-1/4 w-[500px] h-[500px] bg-neutral-600/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(120,119,198,0.15),transparent)]"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_80%_at_100%_50%,rgba(120,119,198,0.1),transparent)]"></div>
+          {/* Grid pattern */}
+          <div 
+            className="absolute inset-0 opacity-[0.03]"
+            style={{
+              backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+              backgroundSize: '60px 60px'
+            }}
+          ></div>
         </div>
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="max-w-4xl"
-          >
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
-              className="text-neutral-400 text-lg mb-6 font-medium tracking-wide"
-            >
-              CUSTOM DEVELOPMENT STUDIO
-            </motion.p>
-            
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
-              We don't build websites.
-              <br />
-              <span className="text-neutral-400">
-                We build systems that transform how you work.
-              </span>
-          </h1>
-            
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4, duration: 0.6 }}
-              className="text-xl text-neutral-300 mb-10 max-w-2xl"
-            >
-              Everything built from scratch. Zero templates. Zero plugins.
-              That's how we deliver great solutions at competitive prices.
-            </motion.p>
-            
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
+          <div className="grid lg:grid-cols-2 gap-16 items-center min-h-[70vh]">
+            {/* Left column - Main content */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.6 }}
-              className="flex flex-col sm:flex-row gap-4"
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
             >
-              <Button
-                asChild
-                size="lg"
-                className="bg-white text-neutral-900 hover:bg-neutral-100 px-8 py-6 text-lg font-semibold"
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.5 }}
+                className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-full px-4 py-2 mb-8"
               >
-                <Link href="/start">
-                  Get a Fixed Price in 24h
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="border-neutral-600 text-white hover:bg-neutral-800 px-8 py-6 text-lg"
+                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                <span className="text-sm text-neutral-300">For startups & growing companies</span>
+              </motion.div>
+              
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-[1.1] tracking-tight">
+                Your dev team.
+                <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-neutral-200 to-neutral-400">
+                  Without the overhead.
+                </span>
+              </h1>
+              
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3, duration: 0.6 }}
+                className="text-lg md:text-xl text-neutral-400 mb-8 max-w-xl leading-relaxed"
               >
-                <Link href="/portfolio">
-                  See Our Work
-                </Link>
-              </Button>
+                We build custom web applications from scratch. You get a complete 
+                solution—designed, developed, and maintained—for a fixed monthly price. 
+                No hiring. No surprises.
+              </motion.p>
+              
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.6 }}
+                className="flex flex-col sm:flex-row gap-4 mb-12"
+              >
+                <Button
+                  asChild
+                  size="lg"
+                  className="bg-white text-neutral-900 hover:bg-neutral-100 px-8 py-6 text-lg font-semibold group"
+                >
+                  <Link href="/start">
+                    Start Your Project
+                    <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="ghost"
+                  size="lg"
+                  className="text-white hover:bg-white/10 px-8 py-6 text-lg"
+                >
+                  <Link href="/pricing">
+                    View Pricing
+                  </Link>
+                </Button>
+              </motion.div>
+
+              {/* Trust indicators */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.7, duration: 0.6 }}
+                className="flex flex-wrap gap-6 text-sm text-neutral-500"
+              >
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-green-400" />
+                  <span>Fixed pricing</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-green-400" />
+                  <span>24h quote delivery</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-green-400" />
+                  <span>Built from scratch</span>
+                </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-          
-          {/* Scroll indicator */}
+
+            {/* Right column - Stats & Visual */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="relative hidden lg:block"
+            >
+              {/* Floating cards */}
+              <div className="relative h-[500px]">
+                {/* Main stat card */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5, duration: 0.6 }}
+                  className="absolute top-0 right-0 bg-white text-neutral-900 rounded-2xl p-8 shadow-2xl w-72"
+                >
+                  <div className="text-5xl font-bold mb-2">40+</div>
+                  <div className="text-neutral-600 font-medium">Integrations built</div>
+                  <div className="text-sm text-neutral-400 mt-2">Stripe, Dinero, e-conomic, QuickPay & more</div>
+                </motion.div>
+
+                {/* Secondary card */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7, duration: 0.6 }}
+                  className="absolute top-40 left-0 bg-neutral-800 border border-neutral-700 rounded-2xl p-6 shadow-xl w-64"
+                >
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 bg-neutral-700 rounded-lg flex items-center justify-center">
+                      <Code className="w-5 h-5 text-neutral-300" />
+                    </div>
+                    <div>
+                      <div className="text-white font-semibold">From 18.000 DKK</div>
+                      <div className="text-neutral-400 text-sm">+ 600 kr/month</div>
+                    </div>
+                  </div>
+                  <div className="text-sm text-neutral-400">
+                    Complete web application with custom design & backend
+                  </div>
+                </motion.div>
+
+                {/* Third floating element */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.9, duration: 0.6 }}
+                  className="absolute bottom-20 right-8 bg-gradient-to-br from-neutral-800 to-neutral-900 border border-neutral-700 rounded-2xl p-6 shadow-xl w-56"
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <Sparkles className="w-5 h-5 text-neutral-400" />
+                    <span className="text-white font-medium">Zero templates</span>
+                  </div>
+                  <p className="text-sm text-neutral-400">
+                    Every line of code written specifically for your project
+                  </p>
+                </motion.div>
+
+                {/* Decorative elements */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] border border-neutral-800 rounded-full opacity-30"></div>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] border border-neutral-800 rounded-full opacity-20"></div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Bottom stats bar - Mobile friendly */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2, duration: 0.6 }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center text-neutral-500"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1, duration: 0.6 }}
+            className="lg:hidden mt-12 grid grid-cols-3 gap-4"
           >
-            <span className="text-sm mb-2">Scroll to explore</span>
-            <ArrowDown className="w-5 h-5 animate-bounce" />
+            <div className="text-center p-4 bg-white/5 rounded-xl border border-white/10">
+              <div className="text-2xl font-bold text-white">40+</div>
+              <div className="text-xs text-neutral-400">Integrations</div>
+            </div>
+            <div className="text-center p-4 bg-white/5 rounded-xl border border-white/10">
+              <div className="text-2xl font-bold text-white">24h</div>
+              <div className="text-xs text-neutral-400">Quote delivery</div>
+            </div>
+            <div className="text-center p-4 bg-white/5 rounded-xl border border-white/10">
+              <div className="text-2xl font-bold text-white">100%</div>
+              <div className="text-xs text-neutral-400">Fixed price</div>
+            </div>
           </motion.div>
         </div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2, duration: 0.6 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center text-neutral-500"
+        >
+          <ArrowDown className="w-5 h-5 animate-bounce" />
+        </motion.div>
       </section>
 
       {/* What We Actually Do Section */}
