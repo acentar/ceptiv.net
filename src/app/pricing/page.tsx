@@ -16,27 +16,27 @@ import {
 
 const packages = [
   {
-    name: 'Core',
+    name: 'Small',
     features: 12,
     integrations: 1,
-    oneTime: '24.000',
-    monthly: '900',
+    oneTime: '18.000',
+    monthly: '600',
     popular: false,
   },
   {
-    name: 'Growth',
+    name: 'Medium',
     features: 24,
-    integrations: 3,
-    oneTime: '45.000',
-    monthly: '1.500',
+    integrations: 2,
+    oneTime: '36.000',
+    monthly: '900',
     popular: true,
   },
   {
-    name: 'Complete',
+    name: 'Large',
     features: 36,
-    integrations: 6,
-    oneTime: '64.000',
-    monthly: '2.200',
+    integrations: 3,
+    oneTime: '54.000',
+    monthly: '1.200',
     popular: false,
   },
 ]
@@ -61,7 +61,7 @@ const faqs = [
   },
   {
     question: 'What if I don\'t use all my features at launch?',
-    answer: 'Unused features roll over! If your Core package includes 12 features but you only need 8 at launch, you keep those 4 for later. Use them when you\'re ready to expand—no extra cost.'
+    answer: 'Unused features roll over! If your Small package includes 12 features but you only need 8 at launch, you keep those 4 for later. Use them when you\'re ready to expand—no extra cost.'
   },
   {
     question: 'What if I need more features later?',
