@@ -14,13 +14,25 @@ import {
   Rocket,
   TrendingUp,
   Building2,
-  Plus
+  Plus,
+  Crown
 } from 'lucide-react'
 
 const packages = [
   {
-    name: 'Foundation',
+    name: 'Starter',
     icon: Zap,
+    description: 'MVP or simple internal tool',
+    features: 10,
+    integrations: 0,
+    oneTime: '21.000',
+    monthly: '600',
+    popular: false,
+    perFeature: '2.100',
+  },
+  {
+    name: 'Foundation',
+    icon: Rocket,
     description: 'Simple projects with core functionality',
     features: 20,
     integrations: 1,
@@ -31,7 +43,7 @@ const packages = [
   },
   {
     name: 'Business',
-    icon: Rocket,
+    icon: TrendingUp,
     description: 'Most common for growing SMBs',
     features: 40,
     integrations: 3,
@@ -42,7 +54,7 @@ const packages = [
   },
   {
     name: 'Professional',
-    icon: TrendingUp,
+    icon: Building2,
     description: 'Complex systems with multiple modules',
     features: 60,
     integrations: 6,
@@ -53,7 +65,7 @@ const packages = [
   },
   {
     name: 'Premium',
-    icon: Building2,
+    icon: Crown,
     description: 'Full-scale business platforms',
     features: 80,
     integrations: 10,
@@ -177,7 +189,7 @@ export default function PricingPage() {
       {/* Pricing Cards */}
       <section className="py-24 bg-neutral-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             {packages.map((pkg, index) => (
               <motion.div
                 key={pkg.name}
@@ -238,7 +250,7 @@ export default function PricingPage() {
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-neutral-600">API integrations</span>
-                        <span className="font-bold text-neutral-900">Up to {pkg.integrations}</span>
+                        <span className="font-bold text-neutral-900">{pkg.integrations === 0 ? 'None' : `Up to ${pkg.integrations}`}</span>
                       </div>
                     </div>
 
