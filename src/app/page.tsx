@@ -150,14 +150,6 @@ const marqueeRow2 = [
   ...integrationPlatforms.workspace,
 ]
 
-const processSteps = [
-  { step: '01', title: 'Discover', description: 'You tell us the problem' },
-  { step: '02', title: 'Design', description: 'We design it together' },
-  { step: '03', title: 'Develop', description: 'We build it custom' },
-  { step: '04', title: 'Deploy', description: 'We launch it seamlessly' },
-  { step: '05', title: 'Evolve', description: 'We maintain & improve' }
-]
-
 const includedFeatures = [
   'Development', 'Hosting', 'Maintenance', 'Support',
   'Updates', 'Security', 'Backups', 'Monitoring'
@@ -669,50 +661,6 @@ export default function Home() {
                 </Link>
               </Button>
             </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* How We Work */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl lg:text-5xl font-bold text-neutral-900 mb-6">
-              How We Work
-            </h2>
-            <p className="text-xl text-neutral-600 max-w-3xl mx-auto">
-              A proven process that delivers results, on time, every time.
-            </p>
-          </motion.div>
-
-          <div className="relative">
-            {/* Timeline line */}
-            <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-0.5 bg-neutral-200 -translate-y-1/2"></div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
-              {processSteps.map((step, index) => (
-                <motion.div
-                  key={step.step}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  className="text-center relative"
-                >
-                  <div className="relative z-10 w-16 h-16 bg-neutral-900 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
-                    {step.step}
-                  </div>
-                  <h3 className="text-lg font-bold text-neutral-900 mb-2">{step.title}</h3>
-                  <p className="text-neutral-600 text-sm">{step.description}</p>
-                </motion.div>
-              ))}
-            </div>
           </div>
         </div>
       </section>
