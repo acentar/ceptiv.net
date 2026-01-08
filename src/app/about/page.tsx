@@ -29,7 +29,7 @@ const values = [
   {
     icon: Users,
     title: 'Partnership',
-    description: 'We're not vendors—we're partners invested in your success.'
+    description: "We're not vendors—we're partners invested in your success."
   },
   {
     icon: Target,
