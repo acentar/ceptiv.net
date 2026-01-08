@@ -629,19 +629,16 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Medium - Featured */}
-              <div className="bg-neutral-900 text-white rounded-2xl p-6 shadow-xl relative overflow-hidden">
-                <div className="absolute top-3 right-3 bg-white text-neutral-900 text-xs font-bold px-2 py-1 rounded">
-                  POPULAR
-                </div>
+              {/* Medium */}
+              <div className="bg-neutral-100 text-neutral-900 rounded-2xl p-6 shadow-lg border border-neutral-200">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <p className="text-xs text-neutral-400 uppercase tracking-wider">Medium</p>
-                    <p className="text-lg font-bold">24 features + 2 integrations</p>
+                    <p className="text-xs text-neutral-500 uppercase tracking-wider">Medium</p>
+                    <p className="text-lg font-bold text-neutral-900">24 features + 2 integrations</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-bold">36.000 <span className="text-sm font-normal text-neutral-400">DKK</span></p>
-                    <p className="text-sm text-neutral-400">+ 900 kr/mo</p>
+                    <p className="text-2xl font-bold text-neutral-900">36.000 <span className="text-sm font-normal text-neutral-500">DKK</span></p>
+                    <p className="text-sm text-neutral-500">+ 900 kr/mo</p>
                   </div>
                 </div>
               </div>
