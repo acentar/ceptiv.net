@@ -11,10 +11,12 @@ import {
   Check,
   HelpCircle,
   Building2,
-  Plus
+  Plus,
+  Globe,
+  Smartphone
 } from 'lucide-react'
 
-const packages = [
+const webPackages = [
   {
     name: 'Small',
     features: 12,
@@ -41,7 +43,34 @@ const packages = [
   },
 ]
 
-const allIncluded = [
+const mobilePackages = [
+  {
+    name: 'Small',
+    features: 12,
+    integrations: 1,
+    oneTime: '28.000',
+    monthly: '1.200',
+    popular: false,
+  },
+  {
+    name: 'Medium',
+    features: 24,
+    integrations: 2,
+    oneTime: '48.000',
+    monthly: '1.800',
+    popular: true,
+  },
+  {
+    name: 'Large',
+    features: 36,
+    integrations: 3,
+    oneTime: '72.000',
+    monthly: '2.400',
+    popular: false,
+  },
+]
+
+const webIncluded = [
   'UX designer consultation',
   'Custom website design',
   'Custom backend system',
@@ -52,6 +81,19 @@ const allIncluded = [
   'Regular backups',
   'Maintenance & updates',
   'Priority support',
+]
+
+const mobileIncluded = [
+  'UX designer consultation',
+  'Custom app design',
+  'iOS & Android apps',
+  'Backend system',
+  'Push notifications',
+  'App store deployment',
+  'Security & encryption',
+  'Regular updates',
+  'Maintenance & support',
+  'App store compliance',
 ]
 
 const faqs = [
@@ -87,6 +129,10 @@ const faqs = [
 
 export default function PricingPage() {
   const [hoveredPackage, setHoveredPackage] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<'web' | 'mobile'>('web')
+  
+  const packages = activeTab === 'web' ? webPackages : mobilePackages
+  const included = activeTab === 'web' ? webIncluded : mobileIncluded
 
   return (
     <div className="min-h-screen bg-white">
@@ -154,6 +200,55 @@ export default function PricingPage() {
       {/* Pricing Cards */}
       <section className="py-24 bg-neutral-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Tab Switcher */}
+          <div className="flex justify-center mb-12">
+            <div className="inline-flex bg-neutral-200 rounded-xl p-1.5">
+              <button
+                onClick={() => setActiveTab('web')}
+                className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all ${
+                  activeTab === 'web'
+                    ? 'bg-white text-neutral-900 shadow-sm'
+                    : 'text-neutral-600 hover:text-neutral-900'
+                }`}
+              >
+                <Globe className="w-5 h-5" />
+                Web Projects
+              </button>
+              <button
+                onClick={() => setActiveTab('mobile')}
+                className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all ${
+                  activeTab === 'mobile'
+                    ? 'bg-white text-neutral-900 shadow-sm'
+                    : 'text-neutral-600 hover:text-neutral-900'
+                }`}
+              >
+                <Smartphone className="w-5 h-5" />
+                Native Apps
+              </button>
+            </div>
+          </div>
+
+          {/* Tab Description */}
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="text-center mb-12"
+          >
+            {activeTab === 'web' ? (
+              <p className="text-neutral-600 max-w-2xl mx-auto">
+                Websites, backend applications, admin panels, and web-based tools. 
+                Everything runs in the browser—no app store required.
+              </p>
+            ) : (
+              <p className="text-neutral-600 max-w-2xl mx-auto">
+                iOS & Android apps built with React Native. Published to both app stores 
+                with push notifications, offline support, and native performance.
+              </p>
+            )}
+          </motion.div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {packages.map((pkg, index) => (
               <motion.div
@@ -317,7 +412,7 @@ export default function PricingPage() {
           </motion.div>
 
           <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
-            {allIncluded.map((feature, index) => (
+            {included.map((feature, index) => (
               <motion.div
                 key={feature}
                 initial={{ opacity: 0, y: 20 }}
