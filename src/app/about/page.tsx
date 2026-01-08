@@ -144,18 +144,22 @@ export default function AboutPage() {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl lg:text-5xl font-bold text-neutral-900 mb-8">
-              The Problem We Saw
+              Why We Only Build From Scratch
             </h2>
             <div className="prose prose-lg max-w-none text-neutral-600">
               <p className="text-xl mb-6">
-                Too many businesses are stuck with bloated WordPress sites, 
-                overpriced agencies that bill by the hour, and systems that 
-                barely do what they were promised to do.
+                We've seen what happens when agencies take on projects that involve 
+                modifying existing codebases: budgets explode, timelines slip, and 
+                everyone ends up frustrated.
               </p>
               <p className="text-xl mb-6">
-                We started Ceptiv to offer something different: 
-                <strong className="text-neutral-900"> custom solutions at fixed prices</strong>, 
-                built by people who actually care about the craft.
+                Working with code we didn't build is expensive and unpredictable.
+                That's why we made a decision: <strong className="text-neutral-900">we only build from scratch</strong>.
+              </p>
+              <p className="text-xl mb-6">
+                This lets us leverage our pre-built integrations, proven patterns, and 
+                deep expertise. The result? High-quality solutions delivered faster and 
+                at <strong className="text-neutral-900">fixed prices you know upfront</strong>.
               </p>
               <p className="text-xl">
                 Every project gets our full attention. Every line of code is written 

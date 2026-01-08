@@ -11,7 +11,6 @@ import {
   Smartphone, 
   Brain, 
   CreditCard,
-  Palette,
   Check,
   ArrowDown,
   Workflow,
@@ -49,12 +48,6 @@ const services = [
     title: 'Payment Systems',
     tagline: 'Stripe, MobilePay, Dinero. Ready to go.',
     description: 'Seamless payment integrations with our pre-built modules. Subscriptions, invoicing, and more.'
-  },
-  {
-    icon: Palette,
-    title: 'UX Design',
-    tagline: 'Interfaces that users love.',
-    description: 'Custom designs created together with you. High-end user experiences backed by years of expertise.'
   }
 ]
 
@@ -123,8 +116,8 @@ export default function Home() {
               transition={{ delay: 0.4, duration: 0.6 }}
               className="text-xl text-neutral-300 mb-10 max-w-2xl"
             >
-              Automate manual processes. Integrate with any system. 
-              Deploy AI that actually works. All custom. All yours.
+              Everything built from scratch. Zero templates. Zero plugins.
+              That's how we deliver great solutions at competitive prices.
             </motion.p>
             
             <motion.div

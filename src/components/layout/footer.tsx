@@ -4,15 +4,16 @@ import { Facebook, Twitter, Linkedin, Github } from 'lucide-react'
 
 const footerNavigation = {
   services: [
-    { name: 'System Applications & Automation', href: '/services#automation' },
-    { name: 'Website Solutions', href: '/services#websites' },
-    { name: 'AI Integrations', href: '/services#ai' },
-    { name: 'Mobile Apps', href: '/services#mobile' },
+    { name: 'System Automation', href: '/services/automation' },
+    { name: 'Web Solutions', href: '/services/web' },
+    { name: 'Mobile Apps', href: '/services/mobile' },
+    { name: 'AI Integrations', href: '/services/ai' },
+    { name: 'Payment Systems', href: '/services/payments' },
   ],
   company: [
     { name: 'About Us', href: '/about' },
     { name: 'Portfolio', href: '/portfolio' },
-    { name: 'Blog', href: '/blog' },
+    { name: 'Pricing', href: '/pricing' },
     { name: 'Contact', href: '/contact' },
   ],
   legal: [
@@ -30,8 +31,8 @@ export function Footer() {
           <div className="space-y-4">
             <Logo width={120} height={32} variant="light" />
             <p className="text-neutral-400 text-sm">
-              Revolutionizing Digital Solutions with Custom Automation and Innovation.
-              We build anything from automated systems to AI-powered apps.
+              Custom digital solutions built from scratch. No templates, no plugins—just 
+              clean code tailored to your exact needs at fixed prices.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-neutral-400 hover:text-white transition-colors">

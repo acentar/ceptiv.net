@@ -10,10 +10,10 @@ import {
   Smartphone,
   Brain,
   CreditCard,
-  Palette,
   ArrowRight,
   ArrowDown,
-  Check
+  Check,
+  Palette
 } from 'lucide-react'
 
 const services = [
@@ -61,23 +61,14 @@ const services = [
     description: 'Seamless payment integrations with our pre-built modules. Subscriptions, one-time payments, invoicing, and more.',
     examples: ['Subscription billing', 'Marketplace payments', 'Invoice automation', 'Multi-currency'],
     href: '/services/payments'
-  },
-  {
-    id: 'ux',
-    icon: Palette,
-    title: 'UX Design',
-    tagline: 'Interfaces that users love.',
-    description: 'Custom user experience design created in collaboration with you. Research-backed, tested, and refined to perfection.',
-    examples: ['Interface design', 'User research', 'Prototyping', 'Design systems'],
-    href: '/services/ux'
   }
 ]
 
 const differentiators = [
+  { title: 'From Scratch Only', desc: 'We build new systems, not modify existing code' },
   { title: 'No Templates', desc: 'Everything is designed and built specifically for you' },
-  { title: 'No Plugins', desc: 'Clean, custom code that does exactly what you need' },
-  { title: 'No Surprises', desc: 'Fixed-price quotes with everything included' },
-  { title: 'No Lock-in', desc: 'You own your code, data, and infrastructure' }
+  { title: 'Pre-built Modules', desc: 'Years of integrations ready to deploy instantly' },
+  { title: 'Fixed Pricing', desc: 'Know exactly what you pay before we start' }
 ]
 
 export default function ServicesPage() {
@@ -108,10 +99,10 @@ export default function ServicesPage() {
             </motion.p>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
-              Custom digital systems.
+              Built from scratch.
               <br />
               <span className="text-neutral-400">
-                Built exactly for you.
+                Exactly as you need it.
               </span>
             </h1>
 
@@ -121,8 +112,9 @@ export default function ServicesPage() {
               transition={{ delay: 0.4, duration: 0.6 }}
               className="text-xl text-neutral-300 mb-10 max-w-2xl"
             >
-              We don't use templates or off-the-shelf solutions. 
-              Every project is designed and developed from scratch to match your exact requirements.
+              We don't use templates. We don't modify existing systems. 
+              We build custom solutions from the ground up—that's how we deliver 
+              exceptional quality at competitive prices.
             </motion.p>
 
             <motion.div
@@ -167,10 +159,11 @@ export default function ServicesPage() {
             className="text-center mb-16"
           >
             <h2 className="text-3xl lg:text-5xl font-bold text-neutral-900 mb-6">
-              Six Core Capabilities
+              Five Core Capabilities
             </h2>
             <p className="text-xl text-neutral-600 max-w-3xl mx-auto">
               Each service area represents deep expertise we've developed across hundreds of projects.
+              Every solution includes custom UX design as part of the build.
             </p>
           </motion.div>
 

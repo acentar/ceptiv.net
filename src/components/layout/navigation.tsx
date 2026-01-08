@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Logo } from '@/components/ui/logo'
 import { Button } from '@/components/ui/button'
-import { Menu, X, ArrowRight, Zap, Code, Smartphone, Brain, CreditCard, Palette, Mail, Phone } from 'lucide-react'
+import { Menu, X, ArrowRight, Zap, Code, Smartphone, Brain, CreditCard, Mail, Phone } from 'lucide-react'
 
 // Pages with dark hero sections that need transparent nav
 const darkHeroPages = ['/', '/services', '/about', '/portfolio', '/pricing']
@@ -26,7 +26,6 @@ const serviceLinks = [
   { name: 'Mobile Apps', href: '/services/mobile', icon: Smartphone },
   { name: 'AI Integrations', href: '/services/ai', icon: Brain },
   { name: 'Payment Systems', href: '/services/payments', icon: CreditCard },
-  { name: 'UX Design', href: '/services/ux', icon: Palette },
 ]
 
 export function Navigation() {

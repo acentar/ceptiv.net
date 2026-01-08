@@ -16,7 +16,6 @@ import {
   Smartphone,
   Brain,
   CreditCard,
-  Palette,
   Check,
   Clock,
   Rocket,
@@ -27,10 +26,15 @@ import {
   Building2,
   User,
   CheckCircle2,
-  PartyPopper
+  PartyPopper,
+  Plus,
+  Layers,
+  AlertCircle,
+  Link2
 } from 'lucide-react'
 
-type ProjectType = 'system' | 'website' | 'mobile' | 'ai' | 'payments' | 'ux'
+type ProjectApproach = 'new' | 'existing' | null
+type ProjectType = 'system' | 'website' | 'mobile' | 'ai' | 'payments'
 
 interface ProjectTypeOption {
   id: ProjectType
@@ -44,8 +48,7 @@ const projectTypes: ProjectTypeOption[] = [
   { id: 'website', icon: Code, title: 'Website Solution', description: 'Custom, fast, clean' },
   { id: 'mobile', icon: Smartphone, title: 'Mobile App', description: 'iOS & Android' },
   { id: 'ai', icon: Brain, title: 'AI Integration', description: 'Intelligent automation' },
-  { id: 'payments', icon: CreditCard, title: 'Payment System', description: 'Stripe, MobilePay, etc.' },
-  { id: 'ux', icon: Palette, title: 'UX Design', description: 'Interface design only' }
+  { id: 'payments', icon: CreditCard, title: 'Payment System', description: 'Stripe, MobilePay, etc.' }
 ]
 
 const aiCapabilities = [
@@ -67,14 +70,15 @@ const paymentMethods = [
   'Marketplace payments'
 ]
 
-const existingSystems = [
+const integrationsNeeded = [
   'Microsoft 365',
   'Google Workspace',
   'Salesforce',
   'HubSpot',
   'Custom ERP',
   'Excel/Sheets',
-  'Other'
+  'Existing Database',
+  'Other API'
 ]
 
 const timelineOptions = [
@@ -91,9 +95,11 @@ const budgetRanges = {
 
 export default function StartProjectPage() {
   const [currentStep, setCurrentStep] = useState(1)
+  const [projectApproach, setProjectApproach] = useState<ProjectApproach>(null)
+  const [understandsApproach, setUnderstandsApproach] = useState(false)
   const [selectedTypes, setSelectedTypes] = useState<ProjectType[]>([])
   const [projectDescription, setProjectDescription] = useState('')
-  const [selectedSystems, setSelectedSystems] = useState<string[]>([])
+  const [selectedIntegrations, setSelectedIntegrations] = useState<string[]>([])
   const [selectedAiCapabilities, setSelectedAiCapabilities] = useState<string[]>([])
   const [selectedPaymentMethods, setSelectedPaymentMethods] = useState<string[]>([])
   const [teamSize, setTeamSize] = useState('')
@@ -109,7 +115,7 @@ export default function StartProjectPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
 
-  const totalSteps = 5
+  const totalSteps = 6
 
   const toggleProjectType = (type: ProjectType) => {
     setSelectedTypes(prev => 
@@ -134,12 +140,17 @@ export default function StartProjectPage() {
   const canProceed = () => {
     switch (currentStep) {
       case 1:
-        return selectedTypes.length > 0
+        return projectApproach !== null
       case 2:
-        return projectDescription.length > 10
+        if (projectApproach === 'existing') {
+          return understandsApproach
+        }
+        return selectedTypes.length > 0
       case 3:
-        return timeline !== ''
+        return projectDescription.length > 10
       case 4:
+        return timeline !== ''
+      case 5:
         return name !== '' && email !== ''
       default:
         return true
@@ -149,14 +160,13 @@ export default function StartProjectPage() {
   const handleSubmit = async () => {
     setIsSubmitting(true)
     
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 2000))
     
-    // In production, you would send this data to your backend
     const formData = {
+      projectApproach,
       projectTypes: selectedTypes,
       description: projectDescription,
-      existingSystems: selectedSystems,
+      integrations: selectedIntegrations,
       aiCapabilities: selectedAiCapabilities,
       paymentMethods: selectedPaymentMethods,
       teamSize,
@@ -232,18 +242,16 @@ export default function StartProjectPage() {
               <ul className="text-left space-y-2 text-neutral-600">
                 <li className="flex items-center">
                   <Check className="w-4 h-4 mr-2 text-neutral-900" />
+                  {projectApproach === 'new' ? 'Building from scratch' : 'Separate system with API'}
+                </li>
+                <li className="flex items-center">
+                  <Check className="w-4 h-4 mr-2 text-neutral-900" />
                   {selectedTypes.map(t => projectTypes.find(pt => pt.id === t)?.title).join(' + ')}
                 </li>
                 <li className="flex items-center">
                   <Check className="w-4 h-4 mr-2 text-neutral-900" />
                   Timeline: {timelineOptions.find(t => t.id === timeline)?.label}
                 </li>
-                {startingBudget && (
-                  <li className="flex items-center">
-                    <Check className="w-4 h-4 mr-2 text-neutral-900" />
-                    Budget: {startingBudget} starting + {monthlyBudget}/month
-                  </li>
-                )}
               </ul>
             </CardContent>
           </Card>
@@ -283,7 +291,7 @@ export default function StartProjectPage() {
       {/* Step Content */}
       <div className="max-w-4xl mx-auto px-4 py-12">
         <AnimatePresence mode="wait">
-          {/* Step 1: Project Type */}
+          {/* Step 1: New or Existing */}
           {currentStep === 1 && (
             <motion.div
               key="step1"
@@ -293,10 +301,209 @@ export default function StartProjectPage() {
               transition={{ duration: 0.3 }}
             >
               <h1 className="text-3xl lg:text-4xl font-bold text-neutral-900 mb-4">
+                What's the situation?
+              </h1>
+              <p className="text-lg text-neutral-600 mb-8">
+                This helps us understand how we can best help you.
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card
+                  className={`cursor-pointer transition-all duration-200 ${
+                    projectApproach === 'new'
+                      ? 'border-neutral-900 bg-neutral-900 text-white'
+                      : 'border-neutral-200 hover:border-neutral-400'
+                  }`}
+                  onClick={() => setProjectApproach('new')}
+                >
+                  <CardContent className="p-8">
+                    <div className="flex items-start justify-between mb-6">
+                      <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${
+                        projectApproach === 'new' ? 'bg-white/20' : 'bg-neutral-100'
+                      }`}>
+                        <Plus className={`w-7 h-7 ${projectApproach === 'new' ? 'text-white' : 'text-neutral-900'}`} />
+                      </div>
+                      {projectApproach === 'new' && (
+                        <CheckCircle2 className="w-6 h-6 text-white" />
+                      )}
+                    </div>
+                    <h3 className="font-bold text-xl mb-2">Build from scratch</h3>
+                    <p className={projectApproach === 'new' ? 'text-neutral-300' : 'text-neutral-600'}>
+                      I need a completely new digital solution built from the ground up.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <Card
+                  className={`cursor-pointer transition-all duration-200 ${
+                    projectApproach === 'existing'
+                      ? 'border-neutral-900 bg-neutral-900 text-white'
+                      : 'border-neutral-200 hover:border-neutral-400'
+                  }`}
+                  onClick={() => setProjectApproach('existing')}
+                >
+                  <CardContent className="p-8">
+                    <div className="flex items-start justify-between mb-6">
+                      <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${
+                        projectApproach === 'existing' ? 'bg-white/20' : 'bg-neutral-100'
+                      }`}>
+                        <Layers className={`w-7 h-7 ${projectApproach === 'existing' ? 'text-white' : 'text-neutral-900'}`} />
+                      </div>
+                      {projectApproach === 'existing' && (
+                        <CheckCircle2 className="w-6 h-6 text-white" />
+                      )}
+                    </div>
+                    <h3 className="font-bold text-xl mb-2">Add to existing system</h3>
+                    <p className={projectApproach === 'existing' ? 'text-neutral-300' : 'text-neutral-600'}>
+                      I have an existing system and need new features or functionality.
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Step 2: Explanation for existing OR Project Types for new */}
+          {currentStep === 2 && projectApproach === 'existing' && (
+            <motion.div
+              key="step2-existing"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="flex items-center mb-6">
+                <AlertCircle className="w-8 h-8 text-neutral-600 mr-3" />
+                <h1 className="text-3xl lg:text-4xl font-bold text-neutral-900">
+                  Important: How we work
+                </h1>
+              </div>
+              
+              <Card className="mb-8 border-neutral-300">
+                <CardContent className="p-8">
+                  <h2 className="text-xl font-bold text-neutral-900 mb-4">
+                    We don't work on existing codebases.
+                  </h2>
+                  <p className="text-neutral-600 mb-6">
+                    Here's why: Working with code we didn't build is expensive and unpredictable. 
+                    Every project involves understanding unfamiliar structures, dealing with legacy decisions, 
+                    and navigating undocumented quirks. This makes projects take longer and cost more.
+                  </p>
+                  <p className="text-neutral-600 mb-6">
+                    By building everything from scratch, we leverage our pre-built modules, proven patterns, 
+                    and deep expertise. This is how we deliver high-quality solutions at competitive prices.
+                  </p>
+                  
+                  <div className="bg-neutral-50 rounded-xl p-6 border border-neutral-200">
+                    <div className="flex items-center mb-4">
+                      <Link2 className="w-6 h-6 text-neutral-900 mr-3" />
+                      <h3 className="font-bold text-neutral-900">What we CAN do for you:</h3>
+                    </div>
+                    <p className="text-neutral-600 mb-4">
+                      We can build what you need as a <strong>separate, standalone system</strong> that connects 
+                      to your existing solution via API. We'll create a fully documented API that your 
+                      current system can integrate with.
+                    </p>
+                    <ul className="space-y-2 text-neutral-600">
+                      <li className="flex items-center">
+                        <Check className="w-4 h-4 mr-2 text-neutral-900" />
+                        Clean, new codebase that we maintain
+                      </li>
+                      <li className="flex items-center">
+                        <Check className="w-4 h-4 mr-2 text-neutral-900" />
+                        Fully documented REST or GraphQL API
+                      </li>
+                      <li className="flex items-center">
+                        <Check className="w-4 h-4 mr-2 text-neutral-900" />
+                        Your existing system connects to our API
+                      </li>
+                      <li className="flex items-center">
+                        <Check className="w-4 h-4 mr-2 text-neutral-900" />
+                        Same great pricing as our other projects
+                      </li>
+                    </ul>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <div className="mb-8">
+                <button
+                  type="button"
+                  onClick={() => setUnderstandsApproach(!understandsApproach)}
+                  className={`flex items-center space-x-3 px-6 py-4 rounded-lg transition-colors ${
+                    understandsApproach
+                      ? 'bg-neutral-900 text-white'
+                      : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
+                  }`}
+                >
+                  <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
+                    understandsApproach ? 'border-white' : 'border-neutral-400'
+                  }`}>
+                    {understandsApproach && <Check className="w-3 h-3" />}
+                  </div>
+                  <span className="font-medium">
+                    I understand. Let's build a separate system with API connectivity.
+                  </span>
+                </button>
+              </div>
+
+              {understandsApproach && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <h2 className="text-xl font-bold text-neutral-900 mb-4">
+                    What are we building?
+                  </h2>
+                  <p className="text-neutral-600 mb-6">
+                    Select all that apply for your new standalone system.
+                  </p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {projectTypes.map((type) => (
+                      <Card
+                        key={type.id}
+                        className={`cursor-pointer transition-all duration-200 ${
+                          selectedTypes.includes(type.id)
+                            ? 'border-neutral-900 bg-neutral-900 text-white'
+                            : 'border-neutral-200 hover:border-neutral-400'
+                        }`}
+                        onClick={() => toggleProjectType(type.id)}
+                      >
+                        <CardContent className="p-6">
+                          <div className="flex items-start justify-between mb-4">
+                            <type.icon className={`w-8 h-8 ${selectedTypes.includes(type.id) ? 'text-white' : 'text-neutral-900'}`} />
+                            {selectedTypes.includes(type.id) && (
+                              <CheckCircle2 className="w-6 h-6 text-white" />
+                            )}
+                          </div>
+                          <h3 className="font-bold text-lg mb-1">{type.title}</h3>
+                          <p className={selectedTypes.includes(type.id) ? 'text-neutral-300' : 'text-neutral-600'}>
+                            {type.description}
+                          </p>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </motion.div>
+          )}
+
+          {currentStep === 2 && projectApproach === 'new' && (
+            <motion.div
+              key="step2-new"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <h1 className="text-3xl lg:text-4xl font-bold text-neutral-900 mb-4">
                 What are we building together?
               </h1>
               <p className="text-lg text-neutral-600 mb-8">
-                Select all that apply. We often combine multiple solutions.
+                Select all that apply. We often combine multiple solutions into one system.
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -328,10 +535,10 @@ export default function StartProjectPage() {
             </motion.div>
           )}
 
-          {/* Step 2: Project Details */}
-          {currentStep === 2 && (
+          {/* Step 3: Project Details */}
+          {currentStep === 3 && (
             <motion.div
-              key="step2"
+              key="step3"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
@@ -358,29 +565,30 @@ export default function StartProjectPage() {
                   />
                 </div>
 
-                {selectedTypes.includes('system') && (
-                  <div>
-                    <Label className="text-base font-medium mb-4 block">
-                      What systems do you currently use?
-                    </Label>
-                    <div className="flex flex-wrap gap-3">
-                      {existingSystems.map((system) => (
-                        <button
-                          key={system}
-                          type="button"
-                          onClick={() => toggleArrayItem(system, selectedSystems, setSelectedSystems)}
-                          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                            selectedSystems.includes(system)
-                              ? 'bg-neutral-900 text-white'
-                              : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
-                          }`}
-                        >
-                          {system}
-                        </button>
-                      ))}
-                    </div>
+                <div>
+                  <Label className="text-base font-medium mb-4 block">
+                    {projectApproach === 'existing' 
+                      ? 'What systems does this need to integrate with?'
+                      : 'Any existing systems this needs to connect to?'
+                    }
+                  </Label>
+                  <div className="flex flex-wrap gap-3">
+                    {integrationsNeeded.map((system) => (
+                      <button
+                        key={system}
+                        type="button"
+                        onClick={() => toggleArrayItem(system, selectedIntegrations, setSelectedIntegrations)}
+                        className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                          selectedIntegrations.includes(system)
+                            ? 'bg-neutral-900 text-white'
+                            : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
+                        }`}
+                      >
+                        {system}
+                      </button>
+                    ))}
                   </div>
-                )}
+                </div>
 
                 {selectedTypes.includes('ai') && (
                   <div>
@@ -455,10 +663,10 @@ export default function StartProjectPage() {
             </motion.div>
           )}
 
-          {/* Step 3: Timeline & Budget */}
-          {currentStep === 3 && (
+          {/* Step 4: Timeline & Budget */}
+          {currentStep === 4 && (
             <motion.div
-              key="step3"
+              key="step4"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
@@ -565,10 +773,10 @@ export default function StartProjectPage() {
             </motion.div>
           )}
 
-          {/* Step 4: Contact Information */}
-          {currentStep === 4 && (
+          {/* Step 5: Contact Information */}
+          {currentStep === 5 && (
             <motion.div
-              key="step4"
+              key="step5"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
@@ -643,10 +851,10 @@ export default function StartProjectPage() {
             </motion.div>
           )}
 
-          {/* Step 5: Review & Submit */}
-          {currentStep === 5 && (
+          {/* Step 6: Review & Submit */}
+          {currentStep === 6 && (
             <motion.div
-              key="step5"
+              key="step6"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
@@ -660,6 +868,18 @@ export default function StartProjectPage() {
               </p>
 
               <div className="space-y-6">
+                <Card>
+                  <CardContent className="p-6">
+                    <h3 className="font-bold text-neutral-900 mb-4">Project Approach</h3>
+                    <p className="text-neutral-600">
+                      {projectApproach === 'new' 
+                        ? '✓ Building from scratch'
+                        : '✓ Separate system with API connectivity to existing solution'
+                      }
+                    </p>
+                  </CardContent>
+                </Card>
+
                 <Card>
                   <CardContent className="p-6">
                     <h3 className="font-bold text-neutral-900 mb-4">Project Types</h3>
