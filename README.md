@@ -39,6 +39,7 @@ For file uploads (logos, favicons) to work, you need to create and configure the
 **Reference Scripts:**
 - Bucket creation: `database/setup/001_create_assets_bucket.sql`
 - Policy reference: `database/setup/002_storage_policies_reference.sql`
+- Manual SQL commands: `database/setup/003_manual_policy_commands.sql`
 1. Go to **Storage** in the dashboard
 2. Click **Create bucket**
 3. Name it: `cap_file_bucket`
