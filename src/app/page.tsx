@@ -109,6 +109,13 @@ const integrationPlatforms = {
     { name: 'Heyloyalty', category: 'Marketing' },
     { name: 'cvr.dev', category: 'Data' },
   ],
+  sms: [
+    { name: 'Twilio', category: 'SMS' },
+    { name: 'MessageBird', category: 'SMS' },
+    { name: 'Vonage', category: 'SMS' },
+    { name: 'Plivo', category: 'SMS' },
+    { name: 'GatewayAPI', category: 'SMS' },
+  ],
 }
 
 // Flatten for marquee rows
@@ -116,6 +123,7 @@ const marqueeRow1 = [
   ...integrationPlatforms.payments,
   ...integrationPlatforms.accounting,
   ...integrationPlatforms.ai.slice(0, 4),
+  ...integrationPlatforms.sms,
 ]
 
 const marqueeRow2 = [
