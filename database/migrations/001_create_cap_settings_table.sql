@@ -18,6 +18,7 @@ INSERT INTO cap_settings (key, value, value_type, category, description, is_publ
 ('site_title', 'Ceptiv.net', 'string', 'branding', 'The main title of the website', true),
 ('site_description', 'A modern web application', 'string', 'branding', 'Brief description of the website', true),
 ('logo_url', NULL, 'string', 'branding', 'URL to the site logo (SVG)', true),
+('light_logo_url', NULL, 'string', 'branding', 'URL to the light site logo (SVG)', true),
 ('favicon_url', NULL, 'string', 'branding', 'URL to the site favicon (SVG)', true),
 ('admin_email', 'admin@ceptiv.net', 'string', 'system', 'Primary admin contact email', false),
 ('maintenance_mode', 'false', 'boolean', 'system', 'Whether the site is in maintenance mode', true),

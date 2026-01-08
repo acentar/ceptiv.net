@@ -8,47 +8,59 @@ interface LogoProps {
   width?: number
   height?: number
   variant?: 'dark' | 'light' | 'auto'
+  textFallback?: string
 }
 
-export function Logo({ className = '', width = 120, height = 40, variant = 'auto' }: LogoProps) {
+export function Logo({
+  className = '',
+  width = 120,
+  height = 40,
+  variant = 'auto',
+  textFallback = 'Ceptiv'
+}: LogoProps) {
   const [logoUrl, setLogoUrl] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const fetchLogo = async () => {
+    const fetchLogoFromSettings = async () => {
       try {
-        // Determine which logo variant to use
-        let logoPath = ''
+        // Determine which logo setting to fetch based on variant
+        let settingKey = ''
         if (variant === 'dark') {
-          logoPath = 'branding/logo-dark.svg'
+          settingKey = 'logo_url'
         } else if (variant === 'light') {
-          logoPath = 'branding/logo-light.svg'
+          settingKey = 'light_logo_url'
         } else {
-          // Auto mode - could be enhanced to detect theme
-          // For now, default to dark logo
-          logoPath = 'branding/logo-dark.svg'
+          // Auto mode - prefer dark logo, fallback to light
+          settingKey = 'logo_url'
         }
 
-        // Try to get the logo from Supabase storage
-        const { data } = supabase.storage
-          .from('cap_file_bucket')
-          .getPublicUrl(logoPath)
+        // Fetch logo URL from settings table
+        const { data, error } = await supabase
+          .from('cap_settings')
+          .select('value')
+          .eq('key', settingKey)
+          .single()
 
-        if (data?.publicUrl) {
-          // Verify the file exists by making a HEAD request
-          const response = await fetch(data.publicUrl, { method: 'HEAD' })
+        if (error) {
+          console.warn('Error fetching logo setting:', error)
+        } else if (data?.value) {
+          // Verify the logo URL is accessible
+          const response = await fetch(data.value, { method: 'HEAD' })
           if (response.ok) {
-            setLogoUrl(data.publicUrl)
+            setLogoUrl(data.value)
+          } else {
+            console.warn('Logo URL not accessible:', data.value)
           }
         }
       } catch (error) {
-        console.warn('Logo not found:', error)
+        console.warn('Error fetching logo:', error)
       } finally {
         setLoading(false)
       }
     }
 
-    fetchLogo()
+    fetchLogoFromSettings()
   }, [variant])
 
   if (loading) {
@@ -64,8 +76,11 @@ export function Logo({ className = '', width = 120, height = 40, variant = 'auto
   if (!logoUrl) {
     // Fallback text logo if no image is available
     return (
-      <div className={`flex items-center font-bold text-lg ${className}`}>
-        Ceptiv.net
+      <div
+        className={`flex items-center font-bold text-lg ${className}`}
+        style={{ fontSize: height * 0.6 }}
+      >
+        {textFallback}
       </div>
     )
   }
@@ -73,7 +88,7 @@ export function Logo({ className = '', width = 120, height = 40, variant = 'auto
   return (
     <img
       src={logoUrl}
-      alt="Ceptiv.net Logo"
+      alt={`${textFallback} Logo`}
       width={width}
       height={height}
       className={className}
