@@ -313,7 +313,7 @@ export default function Home() {
                 >
                   <div className="flex items-center gap-2 mb-3">
                     <Sparkles className="w-5 h-5 text-neutral-400" />
-                    <span className="text-white font-medium">Zero templates</span>
+                    <span className="text-white font-medium">100% Custom</span>
                   </div>
                   <p className="text-sm text-neutral-400">
                     Every line of code written specifically for your project
