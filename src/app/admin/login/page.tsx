@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
 import { Button } from '@/components/ui/button'
@@ -13,8 +13,44 @@ export default function AdminLoginPage() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const { signIn } = useAuth()
+  const [debug, setDebug] = useState('')
+
+  let authContext
+  try {
+    authContext = useAuth()
+  } catch (err) {
+    console.error('Auth context error:', err)
+    setDebug(`Auth context error: ${err}`)
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-neutral-50 px-4">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-red-600">Authentication Error</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-red-600">{debug}</p>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const { signIn, user, loading: authLoading } = authContext
   const router = useRouter()
+
+  useEffect(() => {
+    if (!authLoading && user) {
+      router.push('/admin/dashboard')
+    }
+  }, [user, authLoading, router])
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-neutral-50">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-neutral-900"></div>
+      </div>
+    )
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -39,6 +75,11 @@ export default function AdminLoginPage() {
           <CardDescription className="text-center">
             Enter your credentials to access the admin panel
           </CardDescription>
+          {process.env.NODE_ENV === 'development' && (
+            <div className="text-xs text-gray-500 mt-2">
+              Auth loading: {authLoading ? 'true' : 'false'} | User: {user ? 'logged in' : 'not logged in'}
+            </div>
+          )}
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
