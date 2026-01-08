@@ -1,64 +1,117 @@
 'use client'
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import {
   ArrowRight,
   ArrowDown,
   Check,
-  HelpCircle
+  HelpCircle,
+  Zap,
+  Rocket,
+  TrendingUp,
+  Building2,
+  Plus
 } from 'lucide-react'
 
-const includedFeatures = [
-  'Custom development',
-  'Hosting & infrastructure',
-  'Ongoing maintenance',
-  'Security updates',
-  'Performance monitoring',
-  'Bug fixes',
+const packages = [
+  {
+    name: 'Starter',
+    icon: Zap,
+    description: 'Perfect for startups and small projects',
+    features: 12,
+    integrations: 1,
+    oneTime: '24.000',
+    monthly: '900',
+    popular: false,
+  },
+  {
+    name: 'Growth',
+    icon: Rocket,
+    description: 'For growing businesses with more needs',
+    features: 24,
+    integrations: 3,
+    oneTime: '48.000',
+    monthly: '1.500',
+    popular: true,
+  },
+  {
+    name: 'Scale',
+    icon: TrendingUp,
+    description: 'For established companies scaling up',
+    features: 36,
+    integrations: 6,
+    oneTime: '72.000',
+    monthly: '2.200',
+    popular: false,
+  },
+  {
+    name: 'Enterprise',
+    icon: Building2,
+    description: 'Full-scale digital transformation',
+    features: 48,
+    integrations: 10,
+    oneTime: '96.000',
+    monthly: '3.000',
+    popular: false,
+  },
+]
+
+const allIncluded = [
+  'UX designer consultation',
+  'Custom website design',
+  'Custom backend system',
+  'Data storage',
+  'Auto-scaling database',
+  'Fast server hosting',
+  'Security & SSL',
+  'Regular backups',
+  'Maintenance & updates',
   'Priority support',
-  'Regular backups'
 ]
 
 const faqs = [
   {
-    question: 'How does the fixed pricing work?',
-    answer: 'After you describe your project, we provide a detailed proposal with a fixed starting fee and monthly subscription. No hourly billing, no surprise invoices. You know exactly what you\'re paying before we start.'
+    question: 'What counts as a "feature"?',
+    answer: 'A feature is a distinct piece of functionality—like user authentication, a dashboard, payment processing, email notifications, or a reporting module. We\'ll help you identify exactly how many features your project needs during our consultation.'
+  },
+  {
+    question: 'What if I need more features later?',
+    answer: 'That\'s the beauty of our model! Additional features are 3.000 DKK each, added to your one-time fee. Your monthly subscription may increase slightly depending on complexity. We grow with you.'
   },
   {
     question: 'What\'s included in the monthly subscription?',
-    answer: 'Everything to keep your system running: hosting, maintenance, security updates, bug fixes, monitoring, backups, and priority support. It\'s like having a dedicated team for a fraction of the cost.'
+    answer: 'Everything to keep your system running: hosting, maintenance, security updates, bug fixes, monitoring, backups, and priority support. Think of it as your outsourced tech department.'
   },
   {
     question: 'Can I cancel the subscription?',
-    answer: 'Yes, you can cancel anytime. You own your code and data. We\'ll help you transition to self-hosting or another provider if needed. No lock-in, ever.'
+    answer: 'Yes, you can cancel anytime with 30 days notice. You own your code and data. We\'ll help you transition if needed. No lock-in contracts.'
   },
   {
-    question: 'How long does a typical project take?',
-    answer: 'It depends on scope. Simple projects take 2-4 weeks. Complex systems take 2-3 months. We\'ll give you a clear timeline in your proposal, and we stick to it.'
+    question: 'What about email and Microsoft 365?',
+    answer: 'Email hosting is not included—we help you set up Microsoft 365 or Google Workspace, which you pay directly to Microsoft/Google. This gives you enterprise-grade email at the best price.'
   },
   {
-    question: 'Do you work with international clients?',
-    answer: 'Absolutely. We work with clients across 12+ countries. We communicate in English and adapt to your timezone for meetings.'
-  },
-  {
-    question: 'What if I need changes after launch?',
-    answer: 'Small changes and improvements are included in your subscription. For major new features, we\'ll provide a separate fixed-price quote.'
+    question: 'How long does development take?',
+    answer: 'Starter projects: 3-4 weeks. Growth: 6-8 weeks. Scale: 10-12 weeks. Enterprise: 12-16 weeks. We provide exact timelines in your proposal.'
   }
 ]
 
 export default function PricingPage() {
+  const [hoveredPackage, setHoveredPackage] = useState<string | null>(null)
+
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative min-h-[70vh] bg-neutral-900 text-white overflow-hidden flex items-center">
+      <section className="relative min-h-[60vh] bg-neutral-900 text-white overflow-hidden flex items-center">
         <div className="absolute inset-0">
           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_center_top,_var(--tw-gradient-stops))] from-neutral-800 via-neutral-900 to-black"></div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -71,14 +124,14 @@ export default function PricingPage() {
               transition={{ delay: 0.2, duration: 0.6 }}
               className="text-neutral-400 text-lg mb-6 font-medium tracking-wide"
             >
-              PRICING
+              SUBSCRIPTION PACKAGES
             </motion.p>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
-              One price.
+              Your tech team.
               <br />
               <span className="text-neutral-400">
-                Everything included.
+                One predictable price.
               </span>
             </h1>
 
@@ -86,28 +139,20 @@ export default function PricingPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.6 }}
-              className="text-xl text-neutral-300 mb-10 max-w-2xl mx-auto"
+              className="text-xl text-neutral-300 mb-6 max-w-2xl mx-auto"
             >
-              Low starting fee + predictable monthly subscription. 
-              No hidden costs. No hourly billing. No surprises.
+              One-time setup + monthly subscription. We build it, host it, maintain it, 
+              and evolve it with you. Pay per feature when you need more.
             </motion.p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.6 }}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.6 }}
+              className="text-neutral-500 text-sm"
             >
-              <Button
-                asChild
-                size="lg"
-                className="bg-white text-neutral-900 hover:bg-neutral-100 px-8 py-6 text-lg font-semibold"
-              >
-                <Link href="/start">
-                  Get Your Quote
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Link>
-              </Button>
-            </motion.div>
+              Designed for startups & SMBs who need professional solutions without in-house developers
+            </motion.p>
           </motion.div>
 
           <motion.div
@@ -121,7 +166,112 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* How It Works */}
+      {/* Pricing Cards */}
+      <section className="py-24 bg-neutral-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {packages.map((pkg, index) => (
+              <motion.div
+                key={pkg.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                onMouseEnter={() => setHoveredPackage(pkg.name)}
+                onMouseLeave={() => setHoveredPackage(null)}
+              >
+                <Card className={`h-full relative overflow-hidden transition-all duration-300 ${
+                  pkg.popular 
+                    ? 'border-2 border-neutral-900 shadow-xl scale-105' 
+                    : 'border border-neutral-200 hover:border-neutral-400 hover:shadow-lg'
+                }`}>
+                  {pkg.popular && (
+                    <div className="absolute top-0 left-0 right-0 bg-neutral-900 text-white text-center py-2 text-sm font-medium">
+                      Most Popular
+                    </div>
+                  )}
+                  <CardContent className={`p-8 ${pkg.popular ? 'pt-14' : ''}`}>
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                        pkg.popular ? 'bg-neutral-900 text-white' : 'bg-neutral-100 text-neutral-700'
+                      }`}>
+                        <pkg.icon className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-neutral-900">{pkg.name}</h3>
+                      </div>
+                    </div>
+
+                    <p className="text-neutral-600 text-sm mb-6 min-h-[40px]">
+                      {pkg.description}
+                    </p>
+
+                    {/* Pricing */}
+                    <div className="mb-6 pb-6 border-b border-neutral-200">
+                      <div className="mb-4">
+                        <p className="text-xs text-neutral-500 uppercase tracking-wider mb-1">One-time</p>
+                        <p className="text-3xl font-bold text-neutral-900">
+                          {pkg.oneTime} <span className="text-base font-normal text-neutral-500">DKK</span>
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-neutral-500 uppercase tracking-wider mb-1">Monthly</p>
+                        <p className="text-2xl font-bold text-neutral-900">
+                          {pkg.monthly} <span className="text-base font-normal text-neutral-500">kr/mo</span>
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Features count */}
+                    <div className="space-y-4 mb-8">
+                      <div className="flex items-center justify-between">
+                        <span className="text-neutral-600">Backend features</span>
+                        <span className="font-bold text-neutral-900">{pkg.features}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-neutral-600">API integrations</span>
+                        <span className="font-bold text-neutral-900">Up to {pkg.integrations}</span>
+                      </div>
+                    </div>
+
+                    <Button
+                      asChild
+                      className={`w-full py-6 ${
+                        pkg.popular 
+                          ? 'bg-neutral-900 hover:bg-neutral-800 text-white' 
+                          : 'bg-white border-2 border-neutral-900 text-neutral-900 hover:bg-neutral-50'
+                      }`}
+                    >
+                      <Link href="/start">
+                        Get Started
+                        <ArrowRight className="ml-2 w-4 h-4" />
+                      </Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Additional features note */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="mt-12 text-center"
+          >
+            <div className="inline-flex items-center gap-3 bg-white border border-neutral-200 rounded-full px-6 py-3">
+              <Plus className="w-5 h-5 text-neutral-700" />
+              <span className="text-neutral-700">
+                Need more features? <span className="font-bold text-neutral-900">3.000 DKK</span> per additional feature
+              </span>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* What's Included */}
       <section className="py-24 bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -132,80 +282,92 @@ export default function PricingPage() {
             className="text-center mb-16"
           >
             <h2 className="text-3xl lg:text-5xl font-bold text-neutral-900 mb-6">
-              Simple, Transparent Pricing
+              Everything Included
             </h2>
             <p className="text-xl text-neutral-600 max-w-3xl mx-auto">
-              Every project gets a custom quote based on your specific needs. Here's how it works:
+              Every package includes these essentials. No hidden costs, no add-ons required.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <Card className="h-full border-2 border-neutral-900">
-                <CardHeader>
-                  <CardTitle className="text-2xl">Starting Fee</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-4xl font-bold text-neutral-900 mb-4">Custom</p>
-                  <p className="text-neutral-600 mb-6">
-                    A one-time fee that covers design, development, testing, and launch. 
-                    You know exactly what you're paying before we start.
-                  </p>
-                  <p className="text-sm text-neutral-500">
-                    Typical range: €2,000 - €50,000+ depending on scope
-                  </p>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <Card className="h-full border-2 border-neutral-900">
-                <CardHeader>
-                  <CardTitle className="text-2xl">Monthly Subscription</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-4xl font-bold text-neutral-900 mb-4">Custom</p>
-                  <p className="text-neutral-600 mb-6">
-                    Covers hosting, maintenance, support, and everything else. 
-                    One predictable monthly payment.
-                  </p>
-                  <p className="text-sm text-neutral-500">
-                    Typical range: €200 - €2,000+/month depending on scope
-                  </p>
-                </CardContent>
-              </Card>
-            </motion.div>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+            {allIncluded.map((feature, index) => (
+              <motion.div
+                key={feature}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
+                viewport={{ once: true }}
+                className="bg-neutral-50 rounded-xl p-6 text-center"
+              >
+                <Check className="w-8 h-8 text-neutral-900 mx-auto mb-3" />
+                <p className="text-sm font-medium text-neutral-700">{feature}</p>
+              </motion.div>
+            ))}
           </div>
+        </div>
+      </section>
 
+      {/* How It Works */}
+      <section className="py-24 bg-neutral-900 text-white">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="bg-neutral-50 rounded-2xl p-8"
+            className="text-center mb-16"
           >
-            <h3 className="text-xl font-bold text-neutral-900 mb-6 text-center">
-              What's Included in Every Subscription
-            </h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {includedFeatures.map((feature, index) => (
-                <div key={index} className="flex items-center">
-                  <Check className="w-5 h-5 text-neutral-900 mr-2 flex-shrink-0" />
-                  <span className="text-neutral-700">{feature}</span>
-                </div>
-              ))}
-            </div>
+            <h2 className="text-3xl lg:text-5xl font-bold mb-6">
+              The Subscription Model
+            </h2>
+            <p className="text-xl text-neutral-400 max-w-3xl mx-auto">
+              We don&apos;t just build and leave. We become your tech partner.
+            </p>
           </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="text-center"
+            >
+              <div className="text-6xl font-bold text-neutral-700 mb-4">01</div>
+              <h3 className="text-xl font-bold mb-3">We Build</h3>
+              <p className="text-neutral-400">
+                Pay the one-time fee. We design and build your complete solution with our UX specialist.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="text-center"
+            >
+              <div className="text-6xl font-bold text-neutral-700 mb-4">02</div>
+              <h3 className="text-xl font-bold mb-3">We Run</h3>
+              <p className="text-neutral-400">
+                Monthly subscription covers hosting, maintenance, support, and security. You focus on business.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              viewport={{ once: true }}
+              className="text-center"
+            >
+              <div className="text-6xl font-bold text-neutral-700 mb-4">03</div>
+              <h3 className="text-xl font-bold mb-3">We Evolve</h3>
+              <p className="text-neutral-400">
+                Need new features? Pay per feature and we add them. Your system grows with your business.
+              </p>
+            </motion.div>
+          </div>
         </div>
       </section>
 
@@ -220,11 +382,11 @@ export default function PricingPage() {
             className="text-center mb-16"
           >
             <h2 className="text-3xl lg:text-5xl font-bold text-neutral-900 mb-6">
-              Frequently Asked Questions
+              Common Questions
             </h2>
           </motion.div>
 
-          <div className="space-y-6">
+          <div className="space-y-4">
             {faqs.map((faq, index) => (
               <motion.div
                 key={index}
@@ -233,10 +395,10 @@ export default function PricingPage() {
                 transition={{ duration: 0.5, delay: index * 0.05 }}
                 viewport={{ once: true }}
               >
-                <Card>
+                <Card className="border-neutral-200">
                   <CardContent className="p-6">
                     <div className="flex items-start">
-                      <HelpCircle className="w-6 h-6 text-neutral-400 mr-4 mt-0.5 flex-shrink-0" />
+                      <HelpCircle className="w-5 h-5 text-neutral-400 mr-4 mt-0.5 flex-shrink-0" />
                       <div>
                         <h3 className="font-bold text-neutral-900 mb-2">{faq.question}</h3>
                         <p className="text-neutral-600">{faq.answer}</p>
@@ -251,7 +413,7 @@ export default function PricingPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-24 bg-neutral-900 text-white">
+      <section className="py-24 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -259,19 +421,19 @@ export default function PricingPage() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl lg:text-5xl font-bold mb-6">
-              Ready for your custom quote?
+            <h2 className="text-3xl lg:text-5xl font-bold text-neutral-900 mb-6">
+              Not sure which package?
             </h2>
-            <p className="text-xl text-neutral-300 mb-10 max-w-2xl mx-auto">
-              Tell us about your project and we'll provide a detailed, fixed-price proposal within 24 hours.
+            <p className="text-xl text-neutral-600 mb-10 max-w-2xl mx-auto">
+              Tell us about your project. We&apos;ll recommend the right package and give you a detailed quote within 24 hours.
             </p>
             <Button
               asChild
               size="lg"
-              className="bg-white text-neutral-900 hover:bg-neutral-100 px-10 py-6 text-lg font-semibold"
+              className="bg-neutral-900 hover:bg-neutral-800 text-white px-10 py-6 text-lg font-semibold"
             >
               <Link href="/start">
-                Get Your Quote
+                Get Your Custom Quote
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Link>
             </Button>
