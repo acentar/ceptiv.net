@@ -295,7 +295,7 @@ export default function PricingPage() {
                     {/* Features count */}
                     <div className="space-y-4 mb-8">
                       <div className="flex items-center justify-between">
-                        <span className="text-neutral-600">Backend features</span>
+                        <span className="text-neutral-600">{activeTab === 'web' ? 'Backend features' : 'App features'}</span>
                         <span className="font-bold text-neutral-900">{pkg.features}</span>
                       </div>
                       <div className="flex items-center justify-between">
