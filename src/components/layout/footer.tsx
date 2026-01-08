@@ -29,21 +29,21 @@ export function Footer() {
           {/* Company Info */}
           <div className="space-y-4">
             <Logo width={120} height={32} variant="light" />
-            <p className="text-gray-400 text-sm">
+            <p className="text-neutral-400 text-sm">
               Revolutionizing Digital Solutions with Custom Automation and Innovation.
               We build anything from automated systems to AI-powered apps.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="#" className="text-neutral-400 hover:text-white transition-colors">
                 <Facebook className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="#" className="text-neutral-400 hover:text-white transition-colors">
                 <Twitter className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="#" className="text-neutral-400 hover:text-white transition-colors">
                 <Linkedin className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="#" className="text-neutral-400 hover:text-white transition-colors">
                 <Github className="w-5 h-5" />
               </a>
             </div>
@@ -57,7 +57,7 @@ export function Footer() {
                 <li key={item.name}>
                   <Link
                     href={item.href}
-                    className="text-gray-400 hover:text-white transition-colors text-sm"
+                    className="text-neutral-400 hover:text-white transition-colors text-sm"
                   >
                     {item.name}
                   </Link>
@@ -74,7 +74,7 @@ export function Footer() {
                 <li key={item.name}>
                   <Link
                     href={item.href}
-                    className="text-gray-400 hover:text-white transition-colors text-sm"
+                    className="text-neutral-400 hover:text-white transition-colors text-sm"
                   >
                     {item.name}
                   </Link>
@@ -90,7 +90,7 @@ export function Footer() {
               <li>
                 <a
                   href="mailto:hello@ceptiv.net"
-                  className="text-gray-400 hover:text-white transition-colors text-sm"
+                  className="text-neutral-400 hover:text-white transition-colors text-sm"
                 >
                   hello@ceptiv.net
                 </a>
@@ -98,7 +98,7 @@ export function Footer() {
               <li>
                 <a
                   href="tel:+1234567890"
-                  className="text-gray-400 hover:text-white transition-colors text-sm"
+                  className="text-neutral-400 hover:text-white transition-colors text-sm"
                 >
                   +1 (234) 567-8900
                 </a>
@@ -107,7 +107,7 @@ export function Footer() {
                 <li key={item.name}>
                   <Link
                     href={item.href}
-                    className="text-gray-400 hover:text-white transition-colors text-sm"
+                    className="text-neutral-400 hover:text-white transition-colors text-sm"
                   >
                     {item.name}
                   </Link>
@@ -117,11 +117,11 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-gray-400 text-sm">
+        <div className="border-t border-neutral-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <p className="text-neutral-400 text-sm">
             © {new Date().getFullYear()} Ceptiv. All rights reserved.
           </p>
-          <p className="text-gray-400 text-sm mt-2 md:mt-0">
+          <p className="text-neutral-400 text-sm mt-2 md:mt-0">
             Built with ❤️ for digital innovation
           </p>
         </div>

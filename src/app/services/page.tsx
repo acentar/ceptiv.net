@@ -182,7 +182,7 @@ export default function ServicesPage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-600 to-green-600 text-white py-24">
+      <section className="bg-neutral-900 text-white py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -193,7 +193,7 @@ export default function ServicesPage() {
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Our Services
             </h1>
-            <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto">
+            <p className="text-xl md:text-2xl text-neutral-200 max-w-3xl mx-auto">
               From automation to AI, we build anything you can imagine.
               Custom solutions tailored to your unique needs.
             </p>
@@ -211,10 +211,10 @@ export default function ServicesPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-3xl lg:text-5xl font-bold text-neutral-900 mb-6">
               What We Build
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-neutral-600 max-w-3xl mx-auto">
               Comprehensive solutions across the digital spectrum
             </p>
           </motion.div>
@@ -235,13 +235,13 @@ export default function ServicesPage() {
                   onClick={() => setSelectedService(service)}
                 >
                   <CardContent className="p-6 text-center">
-                    <div className="text-blue-600 mb-4 flex justify-center">
+                    <div className="text-neutral-700 mb-4 flex justify-center">
                       <service.icon className="w-12 h-12" />
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                    <h3 className="text-lg font-semibold text-neutral-900 mb-3">
                       {service.title}
                     </h3>
-                    <p className="text-gray-600 text-sm">
+                    <p className="text-neutral-600 text-sm">
                       {service.shortDesc}
                     </p>
                   </CardContent>
@@ -256,19 +256,19 @@ export default function ServicesPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="bg-gray-50 rounded-2xl p-8 md:p-12"
+            className="bg-neutral-50 rounded-2xl p-8 md:p-12"
           >
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2">
                 <div className="flex items-center mb-6">
-                  <div className="text-blue-600 mr-4">
+                  <div className="text-neutral-700 mr-4">
                     <selectedService.icon className="w-16 h-16" />
                   </div>
                   <div>
-                    <h3 className="text-3xl font-bold text-gray-900">
+                    <h3 className="text-3xl font-bold text-neutral-900">
                       {selectedService.title}
                     </h3>
-                    <p className="text-lg text-gray-600">
+                    <p className="text-lg text-neutral-600">
                       {selectedService.shortDesc}
                     </p>
                   </div>
@@ -279,7 +279,7 @@ export default function ServicesPage() {
                 </p>
 
                 <div className="mb-8">
-                  <h4 className="text-xl font-semibold text-gray-900 mb-4">Key Features</h4>
+                  <h4 className="text-xl font-semibold text-neutral-900 mb-4">Key Features</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {selectedService.features.map((feature, index) => (
                       <div key={index} className="flex items-center">
@@ -291,7 +291,7 @@ export default function ServicesPage() {
                 </div>
 
                 <div className="mb-8">
-                  <h4 className="text-xl font-semibold text-gray-900 mb-4">Technologies</h4>
+                  <h4 className="text-xl font-semibold text-neutral-900 mb-4">Technologies</h4>
                   <div className="flex flex-wrap gap-2">
                     {selectedService.technologies.map((tech) => (
                       <Badge key={tech} variant="secondary">
@@ -302,7 +302,7 @@ export default function ServicesPage() {
                 </div>
 
                 <div>
-                  <h4 className="text-xl font-semibold text-gray-900 mb-4">Benefits</h4>
+                  <h4 className="text-xl font-semibold text-neutral-900 mb-4">Benefits</h4>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {selectedService.benefits.map((benefit, index) => (
                       <div key={index} className="bg-white p-4 rounded-lg shadow-sm">
@@ -320,7 +320,7 @@ export default function ServicesPage() {
                     <CardTitle>Ready to Get Started?</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-600 mb-6">
+                    <p className="text-neutral-600 mb-6">
                       Let's discuss how {selectedService.title.toLowerCase()} can transform your business.
                     </p>
                     <Button asChild className="w-full bg-blue-600 hover:bg-blue-700">
@@ -338,7 +338,7 @@ export default function ServicesPage() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-24 bg-gray-50">
+      <section className="py-24 bg-neutral-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -347,10 +347,10 @@ export default function ServicesPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-3xl lg:text-5xl font-bold text-neutral-900 mb-6">
               What Our Clients Say
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-neutral-600 max-w-3xl mx-auto">
               Real results from real businesses
             </p>
           </motion.div>
@@ -375,8 +375,8 @@ export default function ServicesPage() {
                       "{testimonial.text}"
                     </p>
                     <div>
-                      <div className="font-semibold text-gray-900">{testimonial.name}</div>
-                      <div className="text-gray-600">{testimonial.company}</div>
+                      <div className="font-semibold text-neutral-900">{testimonial.name}</div>
+                      <div className="text-neutral-600">{testimonial.company}</div>
                     </div>
                   </CardContent>
                 </Card>

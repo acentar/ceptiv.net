@@ -251,15 +251,15 @@ export default function AdminSettingsPage() {
 
         <TabsContent value="branding" className="space-y-6">
           {connectionStatus === 'error' && (
-            <Card className="border-red-200 bg-red-50">
+            <Card className="border-neutral-200 bg-neutral-50">
               <CardContent className="pt-6">
-                <div className="flex items-center space-x-2 text-red-700">
+                <div className="flex items-center space-x-2 text-neutral-900">
                   <AlertCircle className="h-4 w-4" />
                   <span className="text-sm font-medium">
                     Database connection issue detected. File uploads may not work.
                   </span>
                 </div>
-                <p className="text-xs text-red-600 mt-1">
+                <p className="text-xs text-neutral-700 mt-1">
                   Make sure you've run the database migrations and created the assets storage bucket.
                 </p>
               </CardContent>
@@ -272,10 +272,10 @@ export default function AdminSettingsPage() {
               <CardDescription>
                 Upload both dark and light variants of your logo and favicon for optimal display on different backgrounds. SVG files are recommended for scalability.
                 {connectionStatus === 'connected' && (
-                  <span className="text-green-600 text-sm"> ✓ Storage ready</span>
+                  <span className="text-neutral-700 text-sm"> ✓ Storage ready</span>
                 )}
                 {connectionStatus === 'checking' && (
-                  <span className="text-gray-500 text-sm"> Checking storage...</span>
+                  <span className="text-neutral-500 text-sm"> Checking storage...</span>
                 )}
               </CardDescription>
             </CardHeader>

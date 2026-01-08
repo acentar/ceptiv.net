@@ -30,7 +30,7 @@ export default function ContactPage() {
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Get In Touch
             </h1>
-            <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto">
+            <p className="text-xl md:text-2xl text-neutral-200 max-w-3xl mx-auto">
               Ready to transform your business? Let's discuss your project and create something amazing together.
             </p>
           </motion.div>
@@ -112,35 +112,35 @@ export default function ContactPage() {
               {/* Contact Methods */}
               <div className="space-y-6">
                 <div className="flex items-start space-x-4">
-                  <div className="bg-blue-100 p-3 rounded-lg">
-                    <Mail className="w-6 h-6 text-blue-600" />
+                  <div className="bg-neutral-100 p-3 rounded-lg">
+                    <Mail className="w-6 h-6 text-neutral-700" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">Email Us</h3>
-                    <p className="text-gray-600">hello@ceptiv.net</p>
-                    <p className="text-sm text-gray-500">We'll respond within 24 hours</p>
+                    <h3 className="font-semibold text-neutral-900">Email Us</h3>
+                    <p className="text-neutral-600">hello@ceptiv.net</p>
+                    <p className="text-sm text-neutral-500">We'll respond within 24 hours</p>
                   </div>
                 </div>
 
                 <div className="flex items-start space-x-4">
-                  <div className="bg-green-100 p-3 rounded-lg">
-                    <Phone className="w-6 h-6 text-green-600" />
+                  <div className="bg-neutral-100 p-3 rounded-lg">
+                    <Phone className="w-6 h-6 text-neutral-700" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">Call Us</h3>
-                    <p className="text-gray-600">+1 (234) 567-8900</p>
-                    <p className="text-sm text-gray-500">Mon-Fri, 9AM-6PM EST</p>
+                    <h3 className="font-semibold text-neutral-900">Call Us</h3>
+                    <p className="text-neutral-600">+1 (234) 567-8900</p>
+                    <p className="text-sm text-neutral-500">Mon-Fri, 9AM-6PM EST</p>
                   </div>
                 </div>
 
                 <div className="flex items-start space-x-4">
-                  <div className="bg-purple-100 p-3 rounded-lg">
-                    <Clock className="w-6 h-6 text-purple-600" />
+                  <div className="bg-neutral-100 p-3 rounded-lg">
+                    <Clock className="w-6 h-6 text-neutral-700" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">Response Time</h3>
-                    <p className="text-gray-600">24 hours guaranteed</p>
-                    <p className="text-sm text-gray-500">Most inquiries answered within 4 hours</p>
+                    <h3 className="font-semibold text-neutral-900">Response Time</h3>
+                    <p className="text-neutral-600">24 hours guaranteed</p>
+                    <p className="text-sm text-neutral-500">Most inquiries answered within 4 hours</p>
                   </div>
                 </div>
               </div>
@@ -148,7 +148,7 @@ export default function ContactPage() {
               {/* Quick Actions */}
               <Card>
                 <CardContent className="p-6">
-                  <h3 className="font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                  <h3 className="font-semibold text-neutral-900 mb-4">Quick Actions</h3>
                   <div className="space-y-3">
                     <Button variant="outline" className="w-full justify-start" asChild>
                       <a href="/start-project">
