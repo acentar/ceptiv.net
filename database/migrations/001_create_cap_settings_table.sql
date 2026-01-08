@@ -32,7 +32,10 @@ CREATE INDEX IF NOT EXISTS idx_cap_settings_category ON cap_settings(category);
 -- Enable Row Level Security
 ALTER TABLE cap_settings ENABLE ROW LEVEL SECURITY;
 
--- Create policies for admin access
+-- Create policies for admin access (drop existing first to avoid conflicts)
+DROP POLICY IF EXISTS "Allow authenticated users to read public settings" ON cap_settings;
+DROP POLICY IF EXISTS "Allow authenticated users to update settings" ON cap_settings;
+
 CREATE POLICY "Allow authenticated users to read public settings" ON cap_settings
     FOR SELECT USING (is_public = true OR auth.role() = 'authenticated');
 
