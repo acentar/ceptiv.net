@@ -29,6 +29,13 @@ Example table names:
 - `cap_posts` (instead of `posts`)
 - `cap_comments` (instead of `comments`)
 
+**Database Scripts:** All database migration scripts and SQL files must be prefixed with a 3-digit number for proper ordering and versioning.
+
+Example script names:
+- `001_create_cap_users_table.sql`
+- `002_add_cap_posts_table.sql`
+- `003_create_cap_comments_table.sql`
+
 ## Development
 
 Run the development server:
