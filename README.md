@@ -28,12 +28,10 @@ For file uploads (logos, favicons) to work, you need to create and configure the
 2. Navigate to **Storage**
 3. Click **Create bucket**
 4. Name it: `assets`
-5. Check **Public bucket** (important!)
+5. ✅ **Check "Public bucket"** (important for logo/favicon access!)
 6. Click **Create bucket**
 
-Alternatively, run the setup script:
-1. Go to **SQL Editor**
-2. Run: `database/setup/001_create_assets_bucket.sql`
+**Note:** Do NOT run the SQL script in `database/setup/001_create_assets_bucket.sql` as it requires admin permissions. Use the dashboard method above instead.
 
 ### Admin User Setup
 

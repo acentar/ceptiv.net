@@ -87,7 +87,7 @@ export default function AdminSettingsPage() {
 
         if (logoError) {
           console.error('Logo upload error:', logoError)
-          alert(`Failed to upload logo: ${logoError}\n\nMake sure the 'assets' bucket exists in Supabase Storage and is set to public.`)
+          alert(`Failed to upload logo: ${logoError}\n\nTroubleshooting:\n1. Make sure the 'assets' bucket exists in Supabase Storage\n2. Ensure the bucket is set to 'Public'\n3. Check that you're logged in as an authenticated user`)
           setSaving(false)
           return
         }
@@ -105,7 +105,7 @@ export default function AdminSettingsPage() {
 
         if (faviconError) {
           console.error('Favicon upload error:', faviconError)
-          alert(`Failed to upload favicon: ${faviconError}\n\nMake sure the 'assets' bucket exists in Supabase Storage and is set to public.`)
+          alert(`Failed to upload favicon: ${faviconError}\n\nTroubleshooting:\n1. Make sure the 'assets' bucket exists in Supabase Storage\n2. Ensure the bucket is set to 'Public'\n3. Check that you're logged in as an authenticated user`)
           setSaving(false)
           return
         }
