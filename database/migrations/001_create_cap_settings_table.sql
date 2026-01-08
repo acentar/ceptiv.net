@@ -51,7 +51,9 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
--- Create trigger for updated_at
+-- Create trigger for updated_at (drop existing first)
+DROP TRIGGER IF EXISTS update_cap_settings_updated_at ON cap_settings;
+
 CREATE TRIGGER update_cap_settings_updated_at
     BEFORE UPDATE ON cap_settings
     FOR EACH ROW
