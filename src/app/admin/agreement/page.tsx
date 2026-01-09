@@ -36,6 +36,7 @@ export default function AdminAgreementPage() {
   const [template, setTemplate] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
+  const [showPreview, setShowPreview] = useState(false)
 
   useEffect(() => {
     const fetchTemplate = async () => {
@@ -305,6 +306,71 @@ Date: __________________
     }
   }
 
+  const generatePreview = () => {
+    // Sample data for preview
+    const sampleData = {
+      current_date: new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }),
+      client_name: 'John Smith',
+      client_email: 'john.smith@company.com',
+      client_company: 'ABC Solutions Ltd.',
+      client_phone: '+45 12 34 56 78',
+      client_title: 'CEO',
+      project_description: 'Custom web application for managing customer relationships and sales processes. The application should include user authentication, dashboard analytics, customer management, and integration with existing CRM systems.',
+      project_types: 'Backend Application, Website, Mobile App',
+      selected_integrations: 'Stripe Payment Processing, Google Analytics, Mailchimp Email Marketing',
+      ai_capabilities: 'AI-powered lead scoring, automated email responses, predictive analytics',
+      team_size: '5-10 people',
+      package_name: 'Large',
+      package_features: '36',
+      package_integrations: '3',
+      package_onetime: '54,000',
+      package_monthly: '1,200',
+      timeline: '3-4 Months',
+      timeline_description: 'Development will take approximately 3-4 months from project kickoff, including 2 weeks for planning, 8 weeks for development, 2 weeks for testing, and 1 week for deployment.',
+      additional_features: 'Advanced reporting dashboard (+15,000 DKK), Custom API integrations (+25,000 DKK)',
+      additional_features_cost: '40,000 DKK',
+      early_cancellation_fee: '15,000 DKK',
+      monthly_support_hours: '20',
+      company_name: 'Ceptiv ApS',
+      company_cvr: '37576476',
+      company_address: 'Maglebjergvej 6, 2800 Kongens Lyngby, Denmark',
+      company_email: 'dv@ceptiv.net',
+      company_phone: '+45 81 98 32 71',
+      project_start_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })
+    }
+
+    let preview = template
+
+    // Replace all variables with sample data
+    Object.entries(sampleData).forEach(([key, value]) => {
+      const regex = new RegExp(`{{${key}}}`, 'g')
+      preview = preview.replace(regex, value)
+    })
+
+    return preview
+  }
+
+  const formatPreview = (text: string) => {
+    // Basic markdown-like formatting for preview
+    return text
+      .replace(/^### (.*$)/gim, '<h3 class="text-lg font-bold text-neutral-900 mt-6 mb-3">$1</h3>')
+      .replace(/^## (.*$)/gim, '<h2 class="text-xl font-bold text-neutral-900 mt-8 mb-4">$1</h2>')
+      .replace(/^# (.*$)/gim, '<h1 class="text-2xl font-bold text-neutral-900 mt-8 mb-6">$1</h1>')
+      .replace(/\*\*(.*)\*\*/gim, '<strong class="font-bold">$1</strong>')
+      .replace(/\*(.*)\*/gim, '<em class="italic">$1</em>')
+      .replace(/^---$/gim, '<hr class="my-6 border-neutral-300">')
+      .replace(/\n\n/g, '</p><p class="mb-4">')
+      .replace(/\n/g, '<br>')
+  }
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -503,12 +569,17 @@ Date: __________________
             <CardHeader>
               <CardTitle className="text-lg">Preview & Export</CardTitle>
               <CardDescription>
-                Test your template with sample data.
+                Test your template with sample data and export for use.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <Button variant="outline" size="sm" className="w-full">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => setShowPreview(true)}
+                >
                   <Eye className="w-4 h-4 mr-2" />
                   Preview Template
                 </Button>
@@ -522,6 +593,40 @@ Date: __________________
           </Card>
         </div>
       </div>
+
+      {/* Preview Modal */}
+      {showPreview && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            <div className="flex items-center justify-between p-6 border-b border-neutral-200">
+              <h2 className="text-xl font-bold text-neutral-900">Agreement Preview</h2>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowPreview(false)}
+                className="text-neutral-500 hover:text-neutral-700"
+              >
+                ✕
+              </Button>
+            </div>
+            <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+              <div className="bg-neutral-50 p-8 rounded-lg border border-neutral-200">
+                <div
+                  className="prose prose-sm max-w-none"
+                  dangerouslySetInnerHTML={{
+                    __html: formatPreview(generatePreview())
+                  }}
+                />
+              </div>
+            </div>
+            <div className="flex justify-end p-6 border-t border-neutral-200 bg-neutral-50">
+              <Button onClick={() => setShowPreview(false)}>
+                Close Preview
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
