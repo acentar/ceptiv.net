@@ -371,6 +371,58 @@ Date: __________________
 
         {/* Variables Reference */}
         <div className="space-y-6">
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="text-lg">Template Formatting Guide</CardTitle>
+              <CardDescription>
+                Use Markdown formatting to create professional-looking agreements.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4 text-sm">
+                <div>
+                  <h4 className="font-semibold text-neutral-900 mb-2">Headlines & Structure</h4>
+                  <div className="space-y-1 text-xs bg-neutral-50 p-3 rounded">
+                    <div><code className="bg-white px-1 py-0.5 rounded"># Title</code> → Main title (large, bold)</div>
+                    <div><code className="bg-white px-1 py-0.5 rounded">## Title</code> → Section header (large, bold)</div>
+                    <div><code className="bg-white px-1 py-0.5 rounded">### Title</code> → Subsection header (medium, bold)</div>
+                    <div><code className="bg-white px-1 py-0.5 rounded">#### Title</code> → Sub-subsection header (smaller, bold)</div>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold text-neutral-900 mb-2">Text Formatting</h4>
+                  <div className="space-y-1 text-xs bg-neutral-50 p-3 rounded">
+                    <div><code className="bg-white px-1 py-0.5 rounded">**bold text**</code> → <strong>bold text</strong></div>
+                    <div><code className="bg-white px-1 py-0.5 rounded">*italic text*</code> → <em>italic text</em></div>
+                    <div><code className="bg-white px-1 py-0.5 rounded">{'{variable}'}</code> → replaced with actual values</div>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold text-neutral-900 mb-2">Lists & Structure</h4>
+                  <div className="space-y-1 text-xs bg-neutral-50 p-3 rounded">
+                    <div><code className="bg-white px-1 py-0.5 rounded">1. Item</code> → Numbered list</div>
+                    <div><code className="bg-white px-1 py-0.5 rounded">- Item</code> → Bullet list</div>
+                    <div><code className="bg-white px-1 py-0.5 rounded">---</code> → Horizontal line separator</div>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold text-neutral-900 mb-2">Best Practices</h4>
+                  <ul className="text-xs space-y-1 text-neutral-700">
+                    <li>• Use # only once for the main agreement title</li>
+                    <li>• Use ## for main sections (1. PROJECT OVERVIEW, 2. SERVICES, etc.)</li>
+                    <li>• Use ### for subsections within each main section</li>
+                    <li>• Add empty lines between sections for readability</li>
+                    <li>• Use **bold** for important terms, company names, dates</li>
+                    <li>• Always use variables like {'{client_name}'} for dynamic content</li>
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           <Card>
             <CardHeader>
               <CardTitle className="text-lg">Available Variables</CardTitle>
