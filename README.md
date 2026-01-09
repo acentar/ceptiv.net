@@ -79,6 +79,43 @@ The Grok system prompt is defined in `src/lib/grok-system-prompt.ts` and include
 - 🔄 **Connecting**: Loading spinner during validation
 - ❌ **Error**: Red indicator when connection fails
 
+### Google Analytics Integration
+
+**Google Analytics 4** integration for comprehensive website tracking and analytics.
+
+#### Configuration
+- **Admin Panel**: `/admin/integrations/google-analytics`
+- **Supported Versions**: Google Analytics 4 (GA4) and Universal Analytics (UA)
+- **Settings Storage**: `cap_settings` table with keys `ga_enabled` and `ga_tracking_id`
+
+#### Features
+- **Real-time user tracking** and behavior analysis
+- **Event and conversion tracking** for user interactions
+- **Audience segmentation** and user flow analysis
+- **E-commerce tracking** for sales and revenue metrics
+- **Custom dimensions and metrics** for advanced reporting
+
+#### Setup Steps
+1. Create a Google Analytics 4 property at [analytics.google.com](https://analytics.google.com)
+2. Copy your Measurement ID (format: G-XXXXXXXXXX)
+3. Go to Admin Panel → Integrations → Configure (Google Analytics card)
+4. Toggle "Enable Google Analytics" on
+5. Enter your Measurement ID and click "Validate" to check format
+6. Save configuration
+
+#### Tracking ID Formats
+- **GA4**: `G-XXXXXXXXXX` (recommended)
+- **Universal Analytics**: `UA-XXXXXXXXX-X` (legacy support)
+
+#### Database Requirements
+- Uses existing `cap_settings` table (no additional migrations needed)
+- Stores: `ga_enabled` ('true'/'false'), `ga_tracking_id` (tracking ID string)
+
+#### Implementation Notes
+- Tracking code is automatically injected when enabled
+- Supports both client-side and server-side tracking
+- Respects user privacy and consent requirements
+
 ---
 
 ## Critical Information for AI Assistants

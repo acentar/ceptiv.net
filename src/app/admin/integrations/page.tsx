@@ -5,12 +5,14 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Zap, Settings, CheckCircle, XCircle } from 'lucide-react'
+import { Zap, Settings, CheckCircle, XCircle, BarChart3 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
 export default function AdminIntegrationsPage() {
   const [grokEnabled, setGrokEnabled] = useState(false)
   const [grokConnected, setGrokConnected] = useState(false)
+  const [gaEnabled, setGaEnabled] = useState(false)
+  const [gaTrackingId, setGaTrackingId] = useState('')
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -29,8 +31,23 @@ export default function AdminIntegrationsPage() {
           .eq('key', 'grok_api_key')
           .single()
 
+        // Fetch Google Analytics settings
+        const { data: gaEnabledData } = await supabase
+          .from('cap_settings')
+          .select('value')
+          .eq('key', 'ga_enabled')
+          .single()
+
+        const { data: gaTrackingIdData } = await supabase
+          .from('cap_settings')
+          .select('value')
+          .eq('key', 'ga_tracking_id')
+          .single()
+
         setGrokEnabled(grokEnabledData?.value === 'true')
         setGrokConnected(!!grokApiKeyData?.value)
+        setGaEnabled(gaEnabledData?.value === 'true')
+        setGaTrackingId(gaTrackingIdData?.value || '')
       } catch (error) {
         console.error('Error fetching integrations:', error)
       } finally {
@@ -86,6 +103,49 @@ export default function AdminIntegrationsPage() {
               </div>
               <Button asChild size="sm">
                 <Link href="/admin/integrations/grok">
+                  <Settings className="w-4 h-4 mr-2" />
+                  Configure
+                </Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Google Analytics Integration Card */}
+        <Card className="relative">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-neutral-100 rounded-lg">
+                  <BarChart3 className="w-6 h-6 text-neutral-600" />
+                </div>
+                <div>
+                  <CardTitle className="text-lg">Google Analytics</CardTitle>
+                  <CardDescription>Google Analytics 4</CardDescription>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                {gaTrackingId && gaEnabled ? (
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                ) : (
+                  <XCircle className="w-5 h-5 text-neutral-400" />
+                )}
+                <Badge variant={gaEnabled ? "default" : "secondary"}>
+                  {gaEnabled ? 'Enabled' : 'Disabled'}
+                </Badge>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-neutral-600 mb-4">
+              Track website traffic, user behavior, and conversion metrics with Google Analytics 4.
+            </p>
+            <div className="flex items-center justify-between">
+              <div className="text-xs text-neutral-500">
+                {gaTrackingId ? `ID: ${gaTrackingId}` : 'Not configured'}
+              </div>
+              <Button asChild size="sm">
+                <Link href="/admin/integrations/google-analytics">
                   <Settings className="w-4 h-4 mr-2" />
                   Configure
                 </Link>
