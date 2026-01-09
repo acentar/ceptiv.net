@@ -1,12 +1,11 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Logo } from '@/components/ui/logo'
-import { Button } from '@/components/ui/button'
 import { 
   LayoutDashboard, 
   FolderKanban, 
@@ -15,20 +14,16 @@ import {
   CreditCard,
   LogOut,
   Settings,
-  Bell
+  ChevronDown
 } from 'lucide-react'
 import { useClientAuth } from '@/lib/client-auth'
 
 const navigation = [
-  { name: 'Dashboard', href: '/client/dashboard', icon: LayoutDashboard },
+  { name: 'Account', href: '/client/dashboard', icon: LayoutDashboard },
   { name: 'Projects', href: '/client/dashboard/projects', icon: FolderKanban },
-  { name: 'Feature Requests', href: '/client/dashboard/features', icon: Sparkles },
+  { name: 'Features', href: '/client/dashboard/features', icon: Sparkles },
   { name: 'Invoices', href: '/client/dashboard/invoices', icon: FileText },
   { name: 'Subscription', href: '/client/dashboard/subscription', icon: CreditCard },
-]
-
-const bottomNavigation = [
-  { name: 'Settings', href: '/client/dashboard/settings', icon: Settings },
 ]
 
 export default function ClientDashboardLayout({
@@ -39,12 +34,24 @@ export default function ClientDashboardLayout({
   const router = useRouter()
   const pathname = usePathname()
   const { client, isAuthenticated, isLoading, logout } = useClientAuth()
+  const [showMenu, setShowMenu] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       router.push('/client/login')
     }
   }, [isAuthenticated, isLoading, router])
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowMenu(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   const handleLogout = () => {
     logout()
@@ -53,7 +60,7 @@ export default function ClientDashboardLayout({
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-neutral-900"></div>
       </div>
     )
@@ -66,17 +73,17 @@ export default function ClientDashboardLayout({
   return (
     <div className="min-h-screen bg-white flex">
       {/* Left Sidebar */}
-      <aside className="w-72 bg-neutral-50 border-r border-neutral-200 flex flex-col fixed h-full">
+      <aside className="w-64 flex flex-col fixed h-full">
         {/* Logo */}
-        <div className="p-8 pb-6">
+        <div className="p-8">
           <Link href="/">
-            <Logo width={120} height={34} variant="dark" textFallback="Ceptiv" />
+            <Logo width={100} height={28} variant="dark" textFallback="Ceptiv" />
           </Link>
         </div>
 
-        {/* Main Navigation */}
+        {/* Navigation */}
         <nav className="flex-1 px-4">
-          <ul className="space-y-1">
+          <ul className="space-y-0.5">
             {navigation.map((item) => {
               const isActive = pathname === item.href || 
                 (item.href !== '/client/dashboard' && pathname.startsWith(item.href))
@@ -84,45 +91,16 @@ export default function ClientDashboardLayout({
               return (
                 <li key={item.name}>
                   <Link href={item.href}>
-                    <motion.div
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl text-[15px] font-medium transition-all ${
-                        isActive 
-                          ? 'bg-white text-neutral-900 shadow-sm border border-neutral-200' 
-                          : 'text-neutral-600 hover:text-neutral-900 hover:bg-white/50'
-                      }`}
-                      whileHover={{ x: isActive ? 0 : 4 }}
-                      transition={{ duration: 0.15 }}
-                    >
-                      <item.icon className={`w-5 h-5 ${isActive ? 'text-neutral-900' : 'text-neutral-400'}`} />
-                      {item.name}
-                      {isActive && (
-                        <div className="w-1.5 h-1.5 bg-neutral-900 rounded-full ml-auto" />
-                      )}
-                    </motion.div>
-                  </Link>
-                </li>
-              )
-            })}
-          </ul>
-        </nav>
-
-        {/* Bottom Navigation */}
-        <div className="px-4 pb-4">
-          <ul className="space-y-1 border-t border-neutral-200 pt-4">
-            {bottomNavigation.map((item) => {
-              const isActive = pathname === item.href
-              
-              return (
-                <li key={item.name}>
-                  <Link href={item.href}>
                     <div
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl text-[15px] font-medium transition-all ${
+                      className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-[15px] transition-colors ${
                         isActive 
-                          ? 'bg-white text-neutral-900 shadow-sm border border-neutral-200' 
-                          : 'text-neutral-600 hover:text-neutral-900 hover:bg-white/50'
+                          ? 'font-medium text-neutral-900' 
+                          : 'text-neutral-500 hover:text-neutral-900'
                       }`}
                     >
-                      <item.icon className={`w-5 h-5 ${isActive ? 'text-neutral-900' : 'text-neutral-400'}`} />
+                      {isActive && (
+                        <span className="w-1 h-1 bg-neutral-900 rounded-full" />
+                      )}
                       {item.name}
                     </div>
                   </Link>
@@ -130,36 +108,68 @@ export default function ClientDashboardLayout({
               )
             })}
           </ul>
-        </div>
-
-        {/* User Section */}
-        <div className="p-4 border-t border-neutral-200">
-          <div className="flex items-center gap-3 px-4 py-3">
-            <div className="w-10 h-10 bg-neutral-900 rounded-full flex items-center justify-center text-white font-medium text-sm">
-              {client.contact_name.split(' ').map(n => n[0]).join('').slice(0, 2)}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-neutral-900 truncate">
-                {client.contact_name}
-              </p>
-              <p className="text-xs text-neutral-500 truncate">
-                {client.email}
-              </p>
-            </div>
-            <button 
-              onClick={handleLogout}
-              className="p-2 text-neutral-400 hover:text-neutral-600 hover:bg-neutral-200 rounded-lg transition-colors"
-              title="Sign out"
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
+        </nav>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 ml-72">
-        <div className="max-w-5xl mx-auto px-8 py-12">
+      <main className="flex-1 ml-64">
+        {/* Top Bar with Avatar */}
+        <div className="sticky top-0 bg-white z-40">
+          <div className="max-w-4xl mx-auto px-8 py-6 flex justify-end">
+            <div className="relative" ref={menuRef}>
+              <button
+                onClick={() => setShowMenu(!showMenu)}
+                className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+              >
+                <div className="w-9 h-9 bg-neutral-900 rounded-full flex items-center justify-center text-white text-sm font-medium">
+                  {client.contact_name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                </div>
+                <ChevronDown className={`w-4 h-4 text-neutral-400 transition-transform ${showMenu ? 'rotate-180' : ''}`} />
+              </button>
+
+              {/* Dropdown Menu */}
+              <AnimatePresence>
+                {showMenu && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-neutral-200 overflow-hidden"
+                  >
+                    {/* User Info */}
+                    <div className="p-4 border-b border-neutral-100">
+                      <p className="font-medium text-neutral-900">{client.contact_name}</p>
+                      <p className="text-sm text-neutral-500">{client.email}</p>
+                    </div>
+
+                    {/* Menu Items */}
+                    <div className="p-2">
+                      <Link
+                        href="/client/dashboard/settings"
+                        onClick={() => setShowMenu(false)}
+                        className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900 transition-colors"
+                      >
+                        <Settings className="w-4 h-4" />
+                        Settings
+                      </Link>
+                      <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900 transition-colors"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        Sign out
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+        </div>
+
+        {/* Page Content */}
+        <div className="max-w-4xl mx-auto px-8 pb-16">
           {children}
         </div>
       </main>

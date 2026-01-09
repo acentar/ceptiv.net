@@ -14,15 +14,17 @@ export function RootLayoutClient({ children }: RootLayoutClientProps) {
   // Conditionally render navigation and footer based on current path
   const pathname = usePathname()
   const isAdminPage = pathname?.startsWith('/admin')
+  const isClientPage = pathname?.startsWith('/client')
+  const hideNavAndFooter = isAdminPage || isClientPage
 
   return (
     <AuthProvider>
       <FaviconManager />
-      {!isAdminPage && <Navigation />}
+      {!hideNavAndFooter && <Navigation />}
       <main className="min-h-screen">
         {children}
       </main>
-      {!isAdminPage && <Footer />}
+      {!hideNavAndFooter && <Footer />}
     </AuthProvider>
   );
 }
