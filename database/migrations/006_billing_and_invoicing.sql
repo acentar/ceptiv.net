@@ -105,17 +105,17 @@ $$ LANGUAGE plpgsql;
 -- CREATE FUNCTION TO CALCULATE NEXT BILLING DATE
 -- ============================================
 CREATE OR REPLACE FUNCTION calculate_next_billing_date(
-  current_date TIMESTAMP WITH TIME ZONE,
+  from_date TIMESTAMP WITH TIME ZONE,
   billing_cycle TEXT
 )
 RETURNS TIMESTAMP WITH TIME ZONE AS $$
 BEGIN
   CASE billing_cycle
-    WHEN 'monthly' THEN RETURN current_date + INTERVAL '1 month';
-    WHEN 'quarterly' THEN RETURN current_date + INTERVAL '3 months';
-    WHEN 'biannual' THEN RETURN current_date + INTERVAL '6 months';
-    WHEN 'annual' THEN RETURN current_date + INTERVAL '1 year';
-    ELSE RETURN current_date + INTERVAL '1 month';
+    WHEN 'monthly' THEN RETURN from_date + INTERVAL '1 month';
+    WHEN 'quarterly' THEN RETURN from_date + INTERVAL '3 months';
+    WHEN 'biannual' THEN RETURN from_date + INTERVAL '6 months';
+    WHEN 'annual' THEN RETURN from_date + INTERVAL '1 year';
+    ELSE RETURN from_date + INTERVAL '1 month';
   END CASE;
 END;
 $$ LANGUAGE plpgsql;
