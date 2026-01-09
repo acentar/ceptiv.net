@@ -22,14 +22,6 @@ export default function AdminLoginPage() {
     }
   }, [user, authLoading, router])
 
-  if (authLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-neutral-50">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-neutral-900"></div>
-      </div>
-    )
-  }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)

@@ -95,7 +95,7 @@ export default function ClientLoginPage() {
       {/* Left Section - Branding */}
       <div className="hidden lg:flex lg:w-1/2 bg-neutral-50 border-r border-neutral-200 items-center justify-center p-12">
         <div className="max-w-md">
-          <Logo width={140} height={40} variant="dark" textFallback="Ceptiv" />
+          <Logo width={140} height={40} variant="dark" />
           <h1 className="text-4xl font-bold text-neutral-900 mt-12 mb-4 tracking-tight">
             Welcome back.
           </h1>
@@ -116,7 +116,7 @@ export default function ClientLoginPage() {
           {/* Mobile Logo */}
           <div className="lg:hidden mb-12">
             <Link href="/">
-              <Logo width={100} height={28} variant="dark" textFallback="Ceptiv" />
+              <Logo width={120} height={34} variant="dark" />
             </Link>
           </div>
 

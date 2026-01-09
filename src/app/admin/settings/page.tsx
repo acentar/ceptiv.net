@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { X, Save, AlertCircle, FileText } from 'lucide-react'
 import { uploadFile } from '@/lib/storage'
 import { supabase } from '@/lib/supabase'
-import { LogoThumbnail } from '@/components/ui/logo'
+import { LogoThumbnail, clearLogoCache } from '@/components/ui/logo'
 
 export default function AdminSettingsPage() {
   const [logoFile, setLogoFile] = useState<File | null>(null)
@@ -273,6 +273,8 @@ export default function AdminSettingsPage() {
       if (uploadedCount === 0) {
         alert('No files selected for upload.')
       } else {
+        // Clear logo cache so new logos are fetched
+        clearLogoCache()
         alert(`Success! ${uploadedCount} file(s) uploaded and saved.`)
       }
     } catch (error) {

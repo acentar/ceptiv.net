@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { useRouter, usePathname } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
 import { AdminSidebar } from '@/components/admin/admin-sidebar'
 import { AdminHeader } from '@/components/admin/admin-header'
@@ -13,19 +13,26 @@ export default function AdminLayout({
 }) {
   const { user, loading } = useAuth()
   const router = useRouter()
+  const pathname = usePathname()
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    if (!loading && !user) {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (mounted && !loading && !user && pathname !== '/admin/login') {
       router.push('/admin/login')
     }
-  }, [user, loading, router])
+  }, [user, loading, router, pathname, mounted])
 
-  // For login page, don't show loading or redirect
-  if (typeof window !== 'undefined' && window.location.pathname === '/admin/login') {
+  // For login page, always just render children without the admin shell
+  if (pathname === '/admin/login') {
     return <>{children}</>
   }
 
-  if (loading) {
+  // Show loading state only after mount to avoid hydration mismatch
+  if (!mounted || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-neutral-50">
         <div className="text-center">

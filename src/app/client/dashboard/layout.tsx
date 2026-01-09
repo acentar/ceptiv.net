@@ -77,7 +77,7 @@ export default function ClientDashboardLayout({
         {/* Logo */}
         <div className="p-8">
           <Link href="/">
-            <Logo width={100} height={28} variant="dark" textFallback="Ceptiv" />
+            <Logo width={120} height={34} variant="dark" />
           </Link>
         </div>
 

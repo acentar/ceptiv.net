@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
@@ -30,19 +30,35 @@ import {
   Plus,
   Layers,
   AlertCircle,
-  Link2
+  Link2,
+  MessageSquare,
+  Send,
+  Loader2,
+  Bot,
+  RefreshCw,
+  ChevronDown,
+  ChevronUp,
+  Globe,
+  Package
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { generatePin, hashPin } from '@/lib/client-auth'
 
 type ProjectApproach = 'new' | 'existing' | null
 type ProjectType = 'system' | 'website' | 'mobile' | 'ai' | 'integration'
+type PackageSize = 'small' | 'medium' | 'large' | 'custom' | null
 
 interface ProjectTypeOption {
   id: ProjectType
   icon: React.ElementType
   title: string
   description: string
+}
+
+interface ChatMessage {
+  role: 'user' | 'assistant'
+  content: string
+  timestamp: Date
 }
 
 const projectTypes: ProjectTypeOption[] = [
@@ -63,14 +79,44 @@ const aiCapabilities = [
   'Not sure - advise me'
 ]
 
-const integrationOptions = [
-  'Payment gateways (Stripe, QuickPay, etc.)',
-  'Accounting (Dinero, e-conomic, Billy)',
-  'Shipping (Shipmondo, PostNord, GLS)',
-  'Payroll (DataLøn, Zenegy)',
-  'CRM (HubSpot, Pipedrive)',
-  'E-signature (Penneo, GetAccept)',
-  'Other API integration'
+// Enhanced integration options with categories
+const integrationCategories = [
+  {
+    name: 'Payment',
+    options: ['Stripe', 'QuickPay', 'MobilePay', 'Nets Easy', 'PayPal']
+  },
+  {
+    name: 'Accounting',
+    options: ['Dinero', 'e-conomic', 'Billy', 'Xero', 'QuickBooks']
+  },
+  {
+    name: 'Shipping',
+    options: ['Shipmondo', 'PostNord', 'GLS', 'DAO', 'Bring']
+  },
+  {
+    name: 'Payroll & HR',
+    options: ['DataLøn', 'Zenegy', 'Salary', 'Planday']
+  },
+  {
+    name: 'CRM & Marketing',
+    options: ['HubSpot', 'Pipedrive', 'Mailchimp', 'ActiveCampaign', 'Klaviyo']
+  },
+  {
+    name: 'E-signature',
+    options: ['Penneo', 'GetAccept', 'DocuSign', 'Signaturit']
+  },
+  {
+    name: 'SMS & Communication',
+    options: ['Twilio', 'GatewayAPI', 'MessageBird', 'Sinch']
+  },
+  {
+    name: 'Workspace',
+    options: ['Microsoft 365', 'Google Workspace', 'Slack', 'Teams']
+  },
+  {
+    name: 'AI Services',
+    options: ['OpenAI/GPT', 'x.ai Grok', 'Claude', 'Gemini']
+  }
 ]
 
 const integrationsNeeded = [
@@ -91,34 +137,151 @@ const timelineOptions = [
   { id: 'flexible', icon: Clock, label: 'Flexible', description: 'No rush' }
 ]
 
-const budgetRanges = {
-  starting: ['€2k-5k', '€5k-15k', '€15k-30k', '€30k+'],
-  monthly: ['€200-500', '€500-1k', '€1k-2k', '€2k+']
-}
+// Pricing packages based on current pricing model
+const webPackages = [
+  {
+    id: 'small',
+    name: 'Small',
+    features: 12,
+    integrations: 1,
+    oneTime: '18.000',
+    monthly: '600',
+    description: 'Perfect for MVPs and simple applications'
+  },
+  {
+    id: 'medium',
+    name: 'Medium',
+    features: 24,
+    integrations: 2,
+    oneTime: '36.000',
+    monthly: '900',
+    description: 'Great for growing businesses'
+  },
+  {
+    id: 'large',
+    name: 'Large',
+    features: 36,
+    integrations: 3,
+    oneTime: '54.000',
+    monthly: '1.200',
+    description: 'Full-featured enterprise solutions'
+  }
+]
+
+const mobilePackages = [
+  {
+    id: 'small',
+    name: 'Small',
+    features: 12,
+    integrations: 1,
+    oneTime: '28.000',
+    monthly: '1.200',
+    description: 'Simple mobile app'
+  },
+  {
+    id: 'medium',
+    name: 'Medium',
+    features: 24,
+    integrations: 2,
+    oneTime: '48.000',
+    monthly: '1.800',
+    description: 'Feature-rich app'
+  },
+  {
+    id: 'large',
+    name: 'Large',
+    features: 36,
+    integrations: 3,
+    oneTime: '72.000',
+    monthly: '2.400',
+    description: 'Complex mobile solution'
+  }
+]
 
 export default function StartProjectPage() {
   const router = useRouter()
+  const chatContainerRef = useRef<HTMLDivElement>(null)
+  
+  // Grok integration status
+  const [isGrokEnabled, setIsGrokEnabled] = useState<boolean | null>(null)
+  
+  // Step state - dynamically calculated based on Grok status
   const [currentStep, setCurrentStep] = useState(1)
+  const totalSteps = isGrokEnabled === false ? 6 : 7 // 6 steps without AI review, 7 with
+  
+  // Step 1: Project approach
   const [projectApproach, setProjectApproach] = useState<ProjectApproach>(null)
   const [understandsApproach, setUnderstandsApproach] = useState(false)
+  
+  // Step 2: Project types
   const [selectedTypes, setSelectedTypes] = useState<ProjectType[]>([])
+  
+  // Step 3: Project details
   const [projectDescription, setProjectDescription] = useState('')
   const [selectedIntegrations, setSelectedIntegrations] = useState<string[]>([])
   const [selectedAiCapabilities, setSelectedAiCapabilities] = useState<string[]>([])
   const [selectedIntegrationTypes, setSelectedIntegrationTypes] = useState<string[]>([])
+  const [otherApiDetails, setOtherApiDetails] = useState('')
   const [teamSize, setTeamSize] = useState('')
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null)
+  
+  // Step 4: Timeline & Package
   const [timeline, setTimeline] = useState('')
-  const [startingBudget, setStartingBudget] = useState('')
-  const [monthlyBudget, setMonthlyBudget] = useState('')
-  const [flexibleBudget, setFlexibleBudget] = useState(false)
+  const [packageSize, setPackageSize] = useState<PackageSize>(null)
+  
+  // Step 5: AI Review (only if Grok is enabled)
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
+  const [chatInput, setChatInput] = useState('')
+  const [isAiLoading, setIsAiLoading] = useState(false)
+  const [aiAnalysis, setAiAnalysis] = useState<string | null>(null)
+  const [hasStartedAiReview, setHasStartedAiReview] = useState(false)
+  
+  // Step 5/6: Contact info (step 5 if no AI, step 6 if AI enabled)
   const [name, setName] = useState('')
   const [company, setCompany] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
+  
+  // Step 6/7: Review
   const [additionalInfo, setAdditionalInfo] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const totalSteps = 6
+  // Get appropriate packages based on project type
+  const isMobileProject = selectedTypes.includes('mobile')
+  const packages = isMobileProject ? mobilePackages : webPackages
+
+  // Check if Grok is enabled on mount
+  useEffect(() => {
+    const checkGrokStatus = async () => {
+      try {
+        const { data } = await supabase
+          .from('cap_settings')
+          .select('value')
+          .eq('key', 'grok_enabled')
+          .single()
+        
+        setIsGrokEnabled(data?.value === 'true')
+      } catch {
+        // If we can't read the setting, assume Grok is disabled
+        setIsGrokEnabled(false)
+      }
+    }
+    checkGrokStatus()
+  }, [])
+
+  // Scroll to bottom of chat when new messages arrive
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
+    }
+  }, [chatMessages])
+
+  // Start AI analysis when entering step 5 (only if Grok is enabled)
+  useEffect(() => {
+    if (isGrokEnabled && currentStep === 5 && !hasStartedAiReview) {
+      startAiAnalysis()
+    }
+  }, [currentStep, hasStartedAiReview, isGrokEnabled])
 
   const toggleProjectType = (type: ProjectType) => {
     setSelectedTypes(prev => 
@@ -140,23 +303,225 @@ export default function StartProjectPage() {
     )
   }
 
+  // Get the actual step number accounting for Grok being disabled
+  const getActualStep = (step: number) => {
+    if (isGrokEnabled === false && step >= 5) {
+      // If Grok is disabled, steps 5+ shift down by 1 (no AI review step)
+      return step + 1
+    }
+    return step
+  }
+
+  // Get the display step for a given actual step
+  const getDisplayStep = (actualStep: number) => {
+    if (isGrokEnabled === false && actualStep >= 6) {
+      // If Grok is disabled, actual steps 6+ display as one less
+      return actualStep - 1
+    }
+    return actualStep
+  }
+
   const canProceed = () => {
     switch (currentStep) {
       case 1:
         return projectApproach !== null
       case 2:
         if (projectApproach === 'existing') {
-          return understandsApproach
+          return understandsApproach && selectedTypes.length > 0
         }
         return selectedTypes.length > 0
       case 3:
         return projectDescription.length > 10
       case 4:
-        return timeline !== ''
+        return timeline !== '' && packageSize !== null
       case 5:
+        // If Grok is disabled, step 5 is Contact Info
+        if (isGrokEnabled === false) {
+          return name !== '' && email !== ''
+        }
+        // If Grok is enabled, step 5 is AI Review
+        return aiAnalysis !== null
+      case 6:
+        // If Grok is disabled, step 6 is Review (always can proceed)
+        if (isGrokEnabled === false) {
+          return true
+        }
+        // If Grok is enabled, step 6 is Contact Info
         return name !== '' && email !== ''
+      case 7:
+        // Only reached if Grok is enabled - this is Review
+        return true
       default:
         return true
+    }
+  }
+
+  const startAiAnalysis = async () => {
+    setHasStartedAiReview(true)
+    setIsAiLoading(true)
+
+    const projectContext = {
+      projectType: selectedTypes,
+      description: projectDescription,
+      integrations: selectedIntegrations,
+      aiCapabilities: selectedAiCapabilities,
+      integrationTypes: selectedIntegrationTypes,
+      otherApiDetails,
+      teamSize,
+      packageSize: packageSize || 'medium'
+    }
+
+    const initialMessage = `Please analyze this project and provide your recommendations:
+
+**Project Description:**
+${projectDescription}
+
+**Project Types:** ${selectedTypes.map(t => projectTypes.find(pt => pt.id === t)?.title).join(', ')}
+
+${selectedIntegrations.length > 0 ? `**Systems to Connect:** ${selectedIntegrations.join(', ')}` : ''}
+${selectedIntegrationTypes.length > 0 ? `**Integrations Needed:** ${selectedIntegrationTypes.join(', ')}` : ''}
+${otherApiDetails ? `**Custom API Details:** ${otherApiDetails}` : ''}
+${selectedAiCapabilities.length > 0 ? `**AI Requirements:** ${selectedAiCapabilities.join(', ')}` : ''}
+${teamSize ? `**Expected Users:** ${teamSize}` : ''}
+
+I'm thinking this is a **${packageSize?.toUpperCase() || 'Medium'}** sized project. What do you think?`
+
+    try {
+      const response = await fetch('/api/grok/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [{ role: 'user', content: initialMessage }],
+          projectContext
+        })
+      })
+
+      const data = await response.json()
+      
+      if (!response.ok) {
+        // Use the error message from the API if available
+        throw new Error(data.error || 'Failed to get AI response')
+      }
+
+      const aiMessage: ChatMessage = {
+        role: 'assistant',
+        content: data.message,
+        timestamp: new Date()
+      }
+      
+      setChatMessages([aiMessage])
+      setAiAnalysis(data.message)
+    } catch (error) {
+      console.error('AI analysis error:', error)
+      // Provide a helpful fallback analysis
+      const selectedPackage = packages.find(p => p.id === packageSize)
+      const fallbackMessage = `### Project Summary
+
+Thank you for sharing your project details! Here's a summary of what you're looking to build:
+
+**What you need:**
+${projectDescription}
+
+**Project Type:** ${selectedTypes.map(t => projectTypes.find(pt => pt.id === t)?.title).join(', ')}
+${selectedIntegrationTypes.length > 0 ? `\n**Integrations:** ${selectedIntegrationTypes.join(', ')}` : ''}
+${selectedAiCapabilities.length > 0 ? `\n**AI Features:** ${selectedAiCapabilities.join(', ')}` : ''}
+${teamSize ? `\n**Users:** ${teamSize}` : ''}
+
+**Your Selected Package:** ${selectedPackage?.name || 'Custom'}
+${selectedPackage ? `- ${selectedPackage.features} features included
+- ${selectedPackage.integrations} integration${selectedPackage.integrations > 1 ? 's' : ''}
+- One-time: ${selectedPackage.oneTime} DKK
+- Monthly: ${selectedPackage.monthly} DKK/month` : '- We\'ll create a custom quote for you'}
+
+### Next Steps
+Our team will review your project in detail and prepare a personalized proposal. You can continue to submit your request, or add any additional notes below.
+
+*💡 Tip: The more details you provide, the more accurate our proposal will be!*`
+
+      const aiMessage: ChatMessage = {
+        role: 'assistant',
+        content: fallbackMessage,
+        timestamp: new Date()
+      }
+      setChatMessages([aiMessage])
+      setAiAnalysis(fallbackMessage)
+    } finally {
+      setIsAiLoading(false)
+    }
+  }
+
+  const sendChatMessage = async () => {
+    if (!chatInput.trim() || isAiLoading) return
+
+    const userMessage: ChatMessage = {
+      role: 'user',
+      content: chatInput,
+      timestamp: new Date()
+    }
+
+    setChatMessages(prev => [...prev, userMessage])
+    const userInput = chatInput
+    setChatInput('')
+    setIsAiLoading(true)
+
+    const projectContext = {
+      projectType: selectedTypes,
+      description: projectDescription,
+      integrations: selectedIntegrations,
+      aiCapabilities: selectedAiCapabilities,
+      integrationTypes: selectedIntegrationTypes,
+      otherApiDetails,
+      teamSize,
+      packageSize: packageSize || 'medium'
+    }
+
+    try {
+      // Build conversation history
+      const apiMessages = chatMessages.map(m => ({
+        role: m.role as 'user' | 'assistant',
+        content: m.content
+      }))
+      apiMessages.push({ role: 'user', content: userInput })
+
+      const response = await fetch('/api/grok/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: apiMessages,
+          projectContext
+        })
+      })
+
+      const data = await response.json()
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to get AI response')
+      }
+
+      const aiMessage: ChatMessage = {
+        role: 'assistant',
+        content: data.message,
+        timestamp: new Date()
+      }
+      
+      setChatMessages(prev => [...prev, aiMessage])
+      setAiAnalysis(data.message) // Update analysis with latest
+    } catch (error) {
+      console.error('Chat error:', error)
+      const errorMessage: ChatMessage = {
+        role: 'assistant',
+        content: `Thanks for the additional information! I've noted: "${userInput}"
+
+This will be included in your project request. Our team will take this into account when preparing your proposal.
+
+Is there anything else you'd like to add?`,
+        timestamp: new Date()
+      }
+      setChatMessages(prev => [...prev, errorMessage])
+      // Update the project description to include user notes
+      setAdditionalInfo(prev => prev ? `${prev}\n\nUser note: ${userInput}` : `User note: ${userInput}`)
+    } finally {
+      setIsAiLoading(false)
     }
   }
 
@@ -164,11 +529,9 @@ export default function StartProjectPage() {
     setIsSubmitting(true)
     
     try {
-      // Generate a 4-digit PIN for the client
       const pin = generatePin()
       const hashedPin = hashPin(pin)
       
-      // Check if client already exists
       const { data: existingClient } = await supabase
         .from('cap_clients')
         .select('id')
@@ -178,10 +541,8 @@ export default function StartProjectPage() {
       let clientId: string
       
       if (existingClient) {
-        // Use existing client
         clientId = existingClient.id
       } else {
-        // Create new client
         const { data: newClient, error: clientError } = await supabase
           .from('cap_clients')
           .insert({
@@ -202,7 +563,6 @@ export default function StartProjectPage() {
         clientId = newClient.id
       }
       
-      // Map project type to database enum
       const projectTypeMap: Record<ProjectType, string> = {
         system: 'backend_application',
         website: 'website',
@@ -211,10 +571,21 @@ export default function StartProjectPage() {
         integration: 'integration'
       }
       
-      // Create the project
       const projectName = company 
         ? `${company} - ${selectedTypes.map(t => projectTypes.find(pt => pt.id === t)?.title).join(' & ')}`
         : `${name}'s Project`
+
+      // Build comprehensive description including AI analysis
+      const fullDescription = [
+        projectDescription,
+        '',
+        '--- AI Analysis ---',
+        aiAnalysis || 'No AI analysis available',
+        '',
+        additionalInfo ? `--- Additional Info ---\n${additionalInfo}` : ''
+      ].filter(Boolean).join('\n')
+
+      const selectedPackage = packages.find(p => p.id === packageSize)
       
       const { error: projectError } = await supabase
         .from('cap_projects')
@@ -222,10 +593,12 @@ export default function StartProjectPage() {
           client_id: clientId,
           project_name: projectName,
           project_type: projectTypeMap[selectedTypes[0]] || 'backend_application',
-          description: projectDescription + (additionalInfo ? `\n\nAdditional info: ${additionalInfo}` : ''),
+          description: fullDescription,
           is_new_build: projectApproach === 'new',
           timeline: timelineOptions.find(t => t.id === timeline)?.label || timeline,
-          budget_range: `Starting: ${startingBudget || 'Flexible'}, Monthly: ${monthlyBudget || 'Flexible'}`,
+          budget_range: selectedPackage 
+            ? `Package: ${selectedPackage.name} (${selectedPackage.oneTime} DKK + ${selectedPackage.monthly} DKK/mo)`
+            : 'Custom quote requested',
           status: 'pending',
           contact_person_name: 'Daniel Vestergaard',
           contact_person_email: 'dv@ceptiv.net'
@@ -236,7 +609,6 @@ export default function StartProjectPage() {
         throw new Error('Failed to create project')
       }
       
-      // Auto-login the client by storing their data in localStorage
       const clientData = {
         id: clientId,
         email: email.toLowerCase(),
@@ -247,7 +619,6 @@ export default function StartProjectPage() {
       }
       localStorage.setItem('ceptiv_client', JSON.stringify(clientData))
       
-      // Redirect to client dashboard with PIN in query param to show welcome modal
       router.push(`/client/dashboard?welcome=true&pin=${pin}`)
       
     } catch (error) {
@@ -369,101 +740,82 @@ export default function StartProjectPage() {
             </motion.div>
           )}
 
-          {/* Step 2: Explanation for existing OR Project Types for new */}
-          {currentStep === 2 && projectApproach === 'existing' && (
+          {/* Step 2: Project Types (with existing system explanation) */}
+          {currentStep === 2 && (
             <motion.div
-              key="step2-existing"
+              key="step2"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="flex items-center mb-6">
-                <AlertCircle className="w-8 h-8 text-neutral-600 mr-3" />
-                <h1 className="text-3xl lg:text-4xl font-bold text-neutral-900">
-                  Important: How we work
-                </h1>
-              </div>
-              
-              <Card className="mb-8 border-neutral-300">
-                <CardContent className="p-8">
-                  <h2 className="text-xl font-bold text-neutral-900 mb-4">
-                    We don't work on existing codebases.
-                  </h2>
-                  <p className="text-neutral-600 mb-6">
-                    Here's why: Working with code we didn't build is expensive and unpredictable. 
-                    Every project involves understanding unfamiliar structures, dealing with legacy decisions, 
-                    and navigating undocumented quirks. This makes projects take longer and cost more.
-                  </p>
-                  <p className="text-neutral-600 mb-6">
-                    By building everything from scratch, we leverage our pre-built modules, proven patterns, 
-                    and deep expertise. This is how we deliver high-quality solutions at competitive prices.
-                  </p>
+              {projectApproach === 'existing' && !understandsApproach && (
+                <>
+                  <div className="flex items-center mb-6">
+                    <AlertCircle className="w-8 h-8 text-neutral-600 mr-3" />
+                    <h1 className="text-3xl lg:text-4xl font-bold text-neutral-900">
+                      Important: How we work
+                    </h1>
+                  </div>
                   
-                  <div className="bg-neutral-50 rounded-xl p-6 border border-neutral-200">
-                    <div className="flex items-center mb-4">
-                      <Link2 className="w-6 h-6 text-neutral-900 mr-3" />
-                      <h3 className="font-bold text-neutral-900">What we CAN do for you:</h3>
-                    </div>
-                    <p className="text-neutral-600 mb-4">
-                      We can build what you need as a <strong>separate, standalone system</strong> that connects 
-                      to your existing solution via API. We'll create a fully documented API that your 
-                      current system can integrate with.
-                    </p>
-                    <ul className="space-y-2 text-neutral-600">
-                      <li className="flex items-center">
-                        <Check className="w-4 h-4 mr-2 text-neutral-900" />
-                        Clean, new codebase that we maintain
-                      </li>
-                      <li className="flex items-center">
-                        <Check className="w-4 h-4 mr-2 text-neutral-900" />
-                        Fully documented REST or GraphQL API
-                      </li>
-                      <li className="flex items-center">
-                        <Check className="w-4 h-4 mr-2 text-neutral-900" />
-                        Your existing system connects to our API
-                      </li>
-                      <li className="flex items-center">
-                        <Check className="w-4 h-4 mr-2 text-neutral-900" />
-                        Same great pricing as our other projects
-                      </li>
-                    </ul>
-                  </div>
-                </CardContent>
-              </Card>
+                  <Card className="mb-8 border-neutral-300">
+                    <CardContent className="p-8">
+                      <h2 className="text-xl font-bold text-neutral-900 mb-4">
+                        We don't work on existing codebases.
+                      </h2>
+                      <p className="text-neutral-600 mb-6">
+                        Here's why: Working with code we didn't build is expensive and unpredictable. 
+                        Every project involves understanding unfamiliar structures, dealing with legacy decisions, 
+                        and navigating undocumented quirks.
+                      </p>
+                      
+                      <div className="bg-neutral-50 rounded-xl p-6 border border-neutral-200">
+                        <div className="flex items-center mb-4">
+                          <Link2 className="w-6 h-6 text-neutral-900 mr-3" />
+                          <h3 className="font-bold text-neutral-900">What we CAN do:</h3>
+                        </div>
+                        <p className="text-neutral-600 mb-4">
+                          We build a <strong>separate, standalone system</strong> with a fully documented API 
+                          that your existing solution can integrate with.
+                        </p>
+                        <ul className="space-y-2 text-neutral-600">
+                          <li className="flex items-center">
+                            <Check className="w-4 h-4 mr-2 text-neutral-900" />
+                            Clean, new codebase that we maintain
+                          </li>
+                          <li className="flex items-center">
+                            <Check className="w-4 h-4 mr-2 text-neutral-900" />
+                            Fully documented REST or GraphQL API
+                          </li>
+                          <li className="flex items-center">
+                            <Check className="w-4 h-4 mr-2 text-neutral-900" />
+                            Same great pricing as our other projects
+                          </li>
+                        </ul>
+                      </div>
+                    </CardContent>
+                  </Card>
 
-              <div className="mb-8">
-                <button
-                  type="button"
-                  onClick={() => setUnderstandsApproach(!understandsApproach)}
-                  className={`flex items-center space-x-3 px-6 py-4 rounded-lg transition-colors ${
-                    understandsApproach
-                      ? 'bg-neutral-900 text-white'
-                      : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
-                  }`}
-                >
-                  <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
-                    understandsApproach ? 'border-white' : 'border-neutral-400'
-                  }`}>
-                    {understandsApproach && <Check className="w-3 h-3" />}
-                  </div>
-                  <span className="font-medium">
-                    I understand. Let's build a separate system with API connectivity.
-                  </span>
-                </button>
-              </div>
+                  <button
+                    type="button"
+                    onClick={() => setUnderstandsApproach(true)}
+                    className="flex items-center space-x-3 px-6 py-4 rounded-lg bg-neutral-900 text-white hover:bg-neutral-800 transition-colors"
+                  >
+                    <Check className="w-5 h-5" />
+                    <span className="font-medium">
+                      I understand. Let's build a separate system with API connectivity.
+                    </span>
+                  </button>
+                </>
+              )}
 
-              {understandsApproach && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <h2 className="text-xl font-bold text-neutral-900 mb-4">
-                    What are we building?
-                  </h2>
-                  <p className="text-neutral-600 mb-6">
-                    Select all that apply for your new standalone system.
+              {(projectApproach === 'new' || understandsApproach) && (
+                <>
+                  <h1 className="text-3xl lg:text-4xl font-bold text-neutral-900 mb-4">
+                    What are we building together?
+                  </h1>
+                  <p className="text-lg text-neutral-600 mb-8">
+                    Select all that apply. We often combine multiple solutions into one system.
                   </p>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -492,56 +844,12 @@ export default function StartProjectPage() {
                       </Card>
                     ))}
                   </div>
-                </motion.div>
+                </>
               )}
             </motion.div>
           )}
 
-          {currentStep === 2 && projectApproach === 'new' && (
-            <motion.div
-              key="step2-new"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <h1 className="text-3xl lg:text-4xl font-bold text-neutral-900 mb-4">
-                What are we building together?
-              </h1>
-              <p className="text-lg text-neutral-600 mb-8">
-                Select all that apply. We often combine multiple solutions into one system.
-              </p>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {projectTypes.map((type) => (
-                  <Card
-                    key={type.id}
-                    className={`cursor-pointer transition-all duration-200 ${
-                      selectedTypes.includes(type.id)
-                        ? 'border-neutral-900 bg-neutral-900 text-white'
-                        : 'border-neutral-200 hover:border-neutral-400'
-                    }`}
-                    onClick={() => toggleProjectType(type.id)}
-                  >
-                    <CardContent className="p-6">
-                      <div className="flex items-start justify-between mb-4">
-                        <type.icon className={`w-8 h-8 ${selectedTypes.includes(type.id) ? 'text-white' : 'text-neutral-900'}`} />
-                        {selectedTypes.includes(type.id) && (
-                          <CheckCircle2 className="w-6 h-6 text-white" />
-                        )}
-                      </div>
-                      <h3 className="font-bold text-lg mb-1">{type.title}</h3>
-                      <p className={selectedTypes.includes(type.id) ? 'text-neutral-300' : 'text-neutral-600'}>
-                        {type.description}
-                      </p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </motion.div>
-          )}
-
-          {/* Step 3: Project Details */}
+          {/* Step 3: Project Details with Enhanced Integrations */}
           {currentStep === 3 && (
             <motion.div
               key="step3"
@@ -554,7 +862,7 @@ export default function StartProjectPage() {
                 Tell us about your project
               </h1>
               <p className="text-lg text-neutral-600 mb-8">
-                The more details you share, the more accurate our proposal will be.
+                The more details you share, the better our AI can help you refine your project.
               </p>
 
               <div className="space-y-8">
@@ -573,10 +881,7 @@ export default function StartProjectPage() {
 
                 <div>
                   <Label className="text-base font-medium mb-4 block">
-                    {projectApproach === 'existing' 
-                      ? 'What systems does this need to integrate with?'
-                      : 'Any existing systems this needs to connect to?'
-                    }
+                    Any existing systems this needs to connect to?
                   </Label>
                   <div className="flex flex-wrap gap-3">
                     {integrationsNeeded.map((system) => (
@@ -596,6 +901,100 @@ export default function StartProjectPage() {
                   </div>
                 </div>
 
+                {/* Integration Categories - Expandable */}
+                {selectedTypes.includes('integration') && (
+                  <div>
+                    <Label className="text-base font-medium mb-4 block">
+                      What integrations do you need?
+                    </Label>
+                    <div className="space-y-3">
+                      {integrationCategories.map((category) => (
+                        <div key={category.name} className="border border-neutral-200 rounded-lg overflow-hidden">
+                          <button
+                            type="button"
+                            onClick={() => setExpandedCategory(expandedCategory === category.name ? null : category.name)}
+                            className="w-full px-4 py-3 flex items-center justify-between bg-neutral-50 hover:bg-neutral-100 transition-colors"
+                          >
+                            <span className="font-medium text-neutral-900">{category.name}</span>
+                            <div className="flex items-center gap-2">
+                              {selectedIntegrationTypes.filter(i => category.options.includes(i)).length > 0 && (
+                                <span className="text-xs bg-neutral-900 text-white px-2 py-1 rounded-full">
+                                  {selectedIntegrationTypes.filter(i => category.options.includes(i)).length} selected
+                                </span>
+                              )}
+                              {expandedCategory === category.name ? (
+                                <ChevronUp className="w-5 h-5 text-neutral-500" />
+                              ) : (
+                                <ChevronDown className="w-5 h-5 text-neutral-500" />
+                              )}
+                            </div>
+                          </button>
+                          <AnimatePresence>
+                            {expandedCategory === category.name && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.2 }}
+                                className="overflow-hidden"
+                              >
+                                <div className="p-4 flex flex-wrap gap-2 bg-white">
+                                  {category.options.map((option) => (
+                                    <button
+                                      key={option}
+                                      type="button"
+                                      onClick={() => toggleArrayItem(option, selectedIntegrationTypes, setSelectedIntegrationTypes)}
+                                      className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                                        selectedIntegrationTypes.includes(option)
+                                          ? 'bg-neutral-900 text-white'
+                                          : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
+                                      }`}
+                                    >
+                                      {option}
+                                    </button>
+                                  ))}
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      ))}
+                      
+                      {/* Other API option */}
+                      <div className="border border-neutral-200 rounded-lg p-4">
+                        <div className="flex items-center gap-2 mb-3">
+                          <button
+                            type="button"
+                            onClick={() => toggleArrayItem('Other API', selectedIntegrationTypes, setSelectedIntegrationTypes)}
+                            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                              selectedIntegrationTypes.includes('Other API')
+                                ? 'bg-neutral-900 text-white'
+                                : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
+                            }`}
+                          >
+                            Other API
+                          </button>
+                          <span className="text-sm text-neutral-500">Not in the list?</span>
+                        </div>
+                        {selectedIntegrationTypes.includes('Other API') && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                          >
+                            <Textarea
+                              value={otherApiDetails}
+                              onChange={(e) => setOtherApiDetails(e.target.value)}
+                              placeholder="Describe the API or service you need to integrate with..."
+                              className="min-h-[80px]"
+                            />
+                          </motion.div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {selectedTypes.includes('ai') && (
                   <div>
                     <Label className="text-base font-medium mb-4 block">
@@ -614,30 +1013,6 @@ export default function StartProjectPage() {
                           }`}
                         >
                           {capability}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {selectedTypes.includes('integration') && (
-                  <div>
-                    <Label className="text-base font-medium mb-4 block">
-                      What do you need to integrate?
-                    </Label>
-                    <div className="flex flex-wrap gap-3">
-                      {integrationOptions.map((option) => (
-                        <button
-                          key={option}
-                          type="button"
-                          onClick={() => toggleArrayItem(option, selectedIntegrationTypes, setSelectedIntegrationTypes)}
-                          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                            selectedIntegrationTypes.includes(option)
-                              ? 'bg-neutral-900 text-white'
-                              : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
-                          }`}
-                        >
-                          {option}
                         </button>
                       ))}
                     </div>
@@ -669,7 +1044,7 @@ export default function StartProjectPage() {
             </motion.div>
           )}
 
-          {/* Step 4: Timeline & Budget */}
+          {/* Step 4: Timeline & Package Selection */}
           {currentStep === 4 && (
             <motion.div
               key="step4"
@@ -679,10 +1054,10 @@ export default function StartProjectPage() {
               transition={{ duration: 0.3 }}
             >
               <h1 className="text-3xl lg:text-4xl font-bold text-neutral-900 mb-4">
-                Timeline & Budget
+                Timeline & Project Size
               </h1>
               <p className="text-lg text-neutral-600 mb-8">
-                Help us understand your constraints so we can provide the best solution.
+                Select your timeline and estimated project size. Our AI will help refine this in the next step.
               </p>
 
               <div className="space-y-12">
@@ -714,75 +1089,213 @@ export default function StartProjectPage() {
                 </div>
 
                 <div>
-                  <Label className="text-base font-medium mb-4 block">
-                    Starting fee budget
+                  <Label className="text-base font-medium mb-2 block">
+                    How big do you think your project is?
                   </Label>
-                  <div className="flex flex-wrap gap-3">
-                    {budgetRanges.starting.map((budget) => (
-                      <button
-                        key={budget}
-                        type="button"
-                        onClick={() => setStartingBudget(budget)}
-                        className={`px-6 py-3 rounded-lg text-sm font-medium transition-colors ${
-                          startingBudget === budget
-                            ? 'bg-neutral-900 text-white'
-                            : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
+                  <p className="text-sm text-neutral-500 mb-4">
+                    {isMobileProject ? 'Native mobile app pricing' : 'Web project pricing'} • Don't worry, our AI will help you refine this
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    {packages.map((pkg) => (
+                      <Card
+                        key={pkg.id}
+                        className={`cursor-pointer transition-all duration-200 ${
+                          packageSize === pkg.id
+                            ? 'border-neutral-900 bg-neutral-900 text-white'
+                            : 'border-neutral-200 hover:border-neutral-400'
                         }`}
+                        onClick={() => setPackageSize(pkg.id as PackageSize)}
                       >
-                        {budget}
-                      </button>
+                        <CardContent className="p-6">
+                          <div className="flex items-start justify-between mb-4">
+                            <Package className={`w-6 h-6 ${packageSize === pkg.id ? 'text-white' : 'text-neutral-900'}`} />
+                            {packageSize === pkg.id && (
+                              <CheckCircle2 className="w-5 h-5 text-white" />
+                            )}
+                          </div>
+                          <h3 className="font-bold text-xl mb-1">{pkg.name}</h3>
+                          <p className={`text-sm mb-4 ${packageSize === pkg.id ? 'text-neutral-300' : 'text-neutral-600'}`}>
+                            {pkg.description}
+                          </p>
+                          <div className={`space-y-1 text-sm ${packageSize === pkg.id ? 'text-neutral-300' : 'text-neutral-600'}`}>
+                            <p>✓ {pkg.features} features included</p>
+                            <p>✓ {pkg.integrations} integration{pkg.integrations > 1 ? 's' : ''}</p>
+                          </div>
+                          <div className="mt-4 pt-4 border-t border-neutral-200/20">
+                            <p className={`font-bold ${packageSize === pkg.id ? 'text-white' : 'text-neutral-900'}`}>
+                              {pkg.oneTime} DKK
+                            </p>
+                            <p className={`text-sm ${packageSize === pkg.id ? 'text-neutral-300' : 'text-neutral-500'}`}>
+                              + {pkg.monthly} DKK/month
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
                     ))}
                   </div>
-                </div>
-
-                <div>
-                  <Label className="text-base font-medium mb-4 block">
-                    Monthly subscription budget
-                  </Label>
-                  <div className="flex flex-wrap gap-3">
-                    {budgetRanges.monthly.map((budget) => (
-                      <button
-                        key={budget}
-                        type="button"
-                        onClick={() => setMonthlyBudget(budget)}
-                        className={`px-6 py-3 rounded-lg text-sm font-medium transition-colors ${
-                          monthlyBudget === budget
-                            ? 'bg-neutral-900 text-white'
-                            : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
-                        }`}
-                      >
-                        {budget}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <button
-                    type="button"
-                    onClick={() => setFlexibleBudget(!flexibleBudget)}
-                    className={`flex items-center space-x-3 px-6 py-4 rounded-lg transition-colors ${
-                      flexibleBudget
-                        ? 'bg-neutral-900 text-white'
-                        : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
+                  
+                  {/* Custom option */}
+                  <Card
+                    className={`cursor-pointer transition-all duration-200 ${
+                      packageSize === 'custom'
+                        ? 'border-neutral-900 bg-neutral-900 text-white'
+                        : 'border-neutral-200 hover:border-neutral-400'
                     }`}
+                    onClick={() => setPackageSize('custom')}
                   >
-                    <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
-                      flexibleBudget ? 'border-white' : 'border-neutral-400'
-                    }`}>
-                      {flexibleBudget && <Check className="w-3 h-3" />}
-                    </div>
-                    <span className="font-medium">I'm flexible - give me options</span>
-                  </button>
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <Building2 className={`w-6 h-6 ${packageSize === 'custom' ? 'text-white' : 'text-neutral-900'}`} />
+                          <div>
+                            <h3 className="font-bold text-lg">Bigger Project?</h3>
+                            <p className={`text-sm ${packageSize === 'custom' ? 'text-neutral-300' : 'text-neutral-600'}`}>
+                              Need more than 36 features or 3 integrations? We'll create a custom quote.
+                            </p>
+                          </div>
+                        </div>
+                        {packageSize === 'custom' && (
+                          <CheckCircle2 className="w-5 h-5 text-white" />
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
               </div>
             </motion.div>
           )}
 
-          {/* Step 5: Contact Information */}
-          {currentStep === 5 && (
+          {/* Step 5: AI Project Review (only if Grok is enabled) */}
+          {currentStep === 5 && isGrokEnabled && (
             <motion.div
               key="step5"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+              className="h-full"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-full bg-neutral-900 flex items-center justify-center">
+                  <Bot className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-2xl lg:text-3xl font-bold text-neutral-900">
+                    AI Project Review
+                  </h1>
+                  <p className="text-neutral-600">
+                    Let's refine your project together
+                  </p>
+                </div>
+              </div>
+
+              {/* Chat Container */}
+              <Card className="mb-4 overflow-hidden">
+                <div 
+                  ref={chatContainerRef}
+                  className="h-[400px] overflow-y-auto p-4 space-y-4 bg-neutral-50"
+                >
+                  {isAiLoading && chatMessages.length === 0 && (
+                    <div className="flex items-center justify-center h-full">
+                      <div className="text-center">
+                        <Loader2 className="w-8 h-8 animate-spin text-neutral-400 mx-auto mb-4" />
+                        <p className="text-neutral-600">Analyzing your project...</p>
+                        <p className="text-sm text-neutral-400 mt-1">This may take a few seconds</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {chatMessages.map((message, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                    >
+                      <div
+                        className={`max-w-[85%] rounded-2xl px-4 py-3 ${
+                          message.role === 'user'
+                            ? 'bg-neutral-900 text-white'
+                            : 'bg-white border border-neutral-200 text-neutral-900'
+                        }`}
+                      >
+                        {message.role === 'assistant' && (
+                          <div className="flex items-center gap-2 mb-2 pb-2 border-b border-neutral-100">
+                            <Bot className="w-4 h-4 text-neutral-500" />
+                            <span className="text-xs text-neutral-500 font-medium">Ceptiv AI</span>
+                          </div>
+                        )}
+                        <div className="whitespace-pre-wrap text-sm leading-relaxed">
+                          {message.content}
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+
+                  {isAiLoading && chatMessages.length > 0 && (
+                    <div className="flex justify-start">
+                      <div className="bg-white border border-neutral-200 rounded-2xl px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <Loader2 className="w-4 h-4 animate-spin text-neutral-400" />
+                          <span className="text-sm text-neutral-500">Thinking...</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Chat Input */}
+                <div className="border-t border-neutral-200 p-4 bg-white">
+                  <div className="flex gap-2">
+                    <Input
+                      value={chatInput}
+                      onChange={(e) => setChatInput(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && sendChatMessage()}
+                      placeholder="Type to refine your project... (e.g., 'I also need user authentication')"
+                      className="flex-1"
+                      disabled={isAiLoading}
+                    />
+                    <Button
+                      onClick={sendChatMessage}
+                      disabled={!chatInput.trim() || isAiLoading}
+                      className="bg-neutral-900 hover:bg-neutral-800"
+                    >
+                      {isAiLoading ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Send className="w-4 h-4" />
+                      )}
+                    </Button>
+                  </div>
+                  <p className="text-xs text-neutral-400 mt-2">
+                    💡 Disagree with something? Just tell the AI and it will adjust the analysis.
+                  </p>
+                </div>
+              </Card>
+
+              {/* Restart Analysis */}
+              <div className="flex justify-center">
+                <button
+                  onClick={() => {
+                    setChatMessages([])
+                    setAiAnalysis(null)
+                    setHasStartedAiReview(false)
+                    startAiAnalysis()
+                  }}
+                  className="text-sm text-neutral-500 hover:text-neutral-700 flex items-center gap-1"
+                  disabled={isAiLoading}
+                >
+                  <RefreshCw className="w-3 h-3" />
+                  Restart analysis
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Contact Information (Step 5 if no Grok, Step 6 if Grok enabled) */}
+          {((isGrokEnabled === false && currentStep === 5) || (isGrokEnabled && currentStep === 6)) && (
+            <motion.div
+              key="contact-info"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
@@ -792,7 +1305,7 @@ export default function StartProjectPage() {
                 Almost there! Let's get acquainted.
               </h1>
               <p className="text-lg text-neutral-600 mb-8">
-                We'll use this information to send you your personalized proposal.
+                We'll use this information to create your account and send your proposal.
               </p>
 
               <div className="space-y-6 max-w-xl">
@@ -827,7 +1340,7 @@ export default function StartProjectPage() {
                 <div>
                   <Label htmlFor="email" className="text-base font-medium flex items-center">
                     <Mail className="w-4 h-4 mr-2" />
-                    Email (for your proposal) *
+                    Email (for your account) *
                   </Label>
                   <Input
                     id="email"
@@ -837,6 +1350,9 @@ export default function StartProjectPage() {
                     placeholder="john@acme.com"
                     className="mt-2"
                   />
+                  <p className="text-xs text-neutral-500 mt-1">
+                    You'll receive a 4-digit PIN to access your client portal
+                  </p>
                 </div>
 
                 <div>
@@ -857,10 +1373,10 @@ export default function StartProjectPage() {
             </motion.div>
           )}
 
-          {/* Step 6: Review & Submit */}
-          {currentStep === 6 && (
+          {/* Review & Submit (Step 6 if no Grok, Step 7 if Grok enabled) */}
+          {((isGrokEnabled === false && currentStep === 6) || (isGrokEnabled && currentStep === 7)) && (
             <motion.div
-              key="step6"
+              key="review"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
@@ -876,25 +1392,25 @@ export default function StartProjectPage() {
               <div className="space-y-6">
                 <Card>
                   <CardContent className="p-6">
-                    <h3 className="font-bold text-neutral-900 mb-4">Project Approach</h3>
-                    <p className="text-neutral-600">
-                      {projectApproach === 'new' 
-                        ? '✓ Building from scratch'
-                        : '✓ Separate system with API connectivity to existing solution'
-                      }
-                    </p>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardContent className="p-6">
-                    <h3 className="font-bold text-neutral-900 mb-4">Project Types</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedTypes.map(type => (
-                        <span key={type} className="px-3 py-1 bg-neutral-100 rounded-full text-sm">
-                          {projectTypes.find(pt => pt.id === type)?.title}
-                        </span>
-                      ))}
+                    <h3 className="font-bold text-neutral-900 mb-4">Project Overview</h3>
+                    <div className="space-y-3 text-neutral-600">
+                      <p>
+                        <strong>Approach:</strong>{' '}
+                        {projectApproach === 'new' 
+                          ? 'Building from scratch'
+                          : 'Separate system with API connectivity'
+                        }
+                      </p>
+                      <div>
+                        <strong>Project Types:</strong>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {selectedTypes.map(type => (
+                            <span key={type} className="px-3 py-1 bg-neutral-100 rounded-full text-sm">
+                              {projectTypes.find(pt => pt.id === type)?.title}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -903,17 +1419,33 @@ export default function StartProjectPage() {
                   <CardContent className="p-6">
                     <h3 className="font-bold text-neutral-900 mb-4">Project Description</h3>
                     <p className="text-neutral-600">{projectDescription}</p>
+                    {selectedIntegrationTypes.length > 0 && (
+                      <div className="mt-4 pt-4 border-t border-neutral-100">
+                        <strong className="text-sm text-neutral-700">Integrations:</strong>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {selectedIntegrationTypes.map(i => (
+                            <span key={i} className="px-2 py-1 bg-neutral-100 rounded text-xs">
+                              {i}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
 
                 <Card>
                   <CardContent className="p-6">
-                    <h3 className="font-bold text-neutral-900 mb-4">Timeline & Budget</h3>
+                    <h3 className="font-bold text-neutral-900 mb-4">Timeline & Package</h3>
                     <div className="space-y-2 text-neutral-600">
                       <p><strong>Timeline:</strong> {timelineOptions.find(t => t.id === timeline)?.label}</p>
-                      {startingBudget && <p><strong>Starting fee:</strong> {startingBudget}</p>}
-                      {monthlyBudget && <p><strong>Monthly budget:</strong> {monthlyBudget}</p>}
-                      {flexibleBudget && <p className="text-neutral-500 italic">Flexible on budget - looking for options</p>}
+                      <p>
+                        <strong>Package:</strong>{' '}
+                        {packageSize === 'custom' 
+                          ? 'Custom quote requested'
+                          : `${packages.find(p => p.id === packageSize)?.name} (${packages.find(p => p.id === packageSize)?.oneTime} DKK + ${packages.find(p => p.id === packageSize)?.monthly} DKK/mo)`
+                        }
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
@@ -961,17 +1493,22 @@ export default function StartProjectPage() {
 
           <Button
             onClick={nextStep}
-            disabled={!canProceed() || isSubmitting}
+            disabled={!canProceed() || isSubmitting || (isGrokEnabled && currentStep === 5 && isAiLoading)}
             className="bg-neutral-900 hover:bg-neutral-800 text-white px-8"
           >
             {isSubmitting ? (
               <>
-                <span className="animate-spin mr-2">⏳</span>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                 Submitting...
               </>
             ) : currentStep === totalSteps ? (
               <>
                 Submit Request
+                <Check className="w-4 h-4 ml-2" />
+              </>
+            ) : (isGrokEnabled && currentStep === 5) ? (
+              <>
+                I'm Happy with This
                 <Check className="w-4 h-4 ml-2" />
               </>
             ) : (

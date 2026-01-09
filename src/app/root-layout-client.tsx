@@ -15,7 +15,8 @@ export function RootLayoutClient({ children }: RootLayoutClientProps) {
   const pathname = usePathname()
   const isAdminPage = pathname?.startsWith('/admin')
   const isClientPage = pathname?.startsWith('/client')
-  const hideNavAndFooter = isAdminPage || isClientPage
+  const isStartPage = pathname?.startsWith('/start')
+  const hideNavAndFooter = isAdminPage || isClientPage || isStartPage
 
   return (
     <AuthProvider>

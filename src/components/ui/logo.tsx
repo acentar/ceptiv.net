@@ -1,112 +1,131 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+
+// Global cache for logo URLs to prevent refetching on every page navigation
+const logoCache: Record<string, string | null> = {}
+const fetchingPromises: Record<string, Promise<string | null>> = {}
 
 interface LogoProps {
   className?: string
   width?: number
   height?: number
   variant?: 'dark' | 'light' | 'auto'
-  textFallback?: string
 }
 
 export function Logo({
   className = '',
-  width = 120,
+  width = 140,
   height = 40,
-  variant = 'auto',
-  textFallback = 'Ceptiv'
+  variant = 'auto'
 }: LogoProps) {
-  const [logoUrl, setLogoUrl] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
+  // Determine cache key - light variant uses white logo, dark uses black logo
+  const settingKey = variant === 'light' ? 'light_logo_url' : 'logo_url'
+  
+  // Track the current setting key to detect changes
+  const [currentKey, setCurrentKey] = useState(settingKey)
+  const [logoUrl, setLogoUrl] = useState<string | null>(() => logoCache[settingKey] ?? null)
 
-  useEffect(() => {
-    const fetchLogoFromSettings = async () => {
+  const fetchLogo = useCallback(async (key: string) => {
+    // Return cached value if available
+    if (key in logoCache) {
+      setLogoUrl(logoCache[key])
+      return
+    }
+
+    // If already fetching, wait for that promise
+    if (fetchingPromises[key]) {
+      const result = await fetchingPromises[key]
+      setLogoUrl(result)
+      return
+    }
+
+    // Start fetching
+    fetchingPromises[key] = (async () => {
       try {
-        // Determine which logo setting to fetch based on variant
-        let settingKey = ''
-        if (variant === 'dark') {
-          settingKey = 'logo_url'
-        } else if (variant === 'light') {
-          settingKey = 'light_logo_url'
-        } else {
-          // Auto mode - prefer dark logo, fallback to light
-          settingKey = 'logo_url'
-        }
-
-        console.log('Fetching logo for variant:', variant, 'using setting key:', settingKey)
-
-        // Fetch logo URL from settings table
         const { data, error } = await supabase
           .from('cap_settings')
           .select('value')
-          .eq('key', settingKey)
+          .eq('key', key)
           .single()
 
-        if (error) {
-          console.warn('Error fetching logo setting:', error, 'for key:', settingKey)
-        } else if (data?.value) {
-          console.log('Found logo URL in database:', data.value)
-          // Verify the logo URL is accessible
+        if (error || !data?.value) {
+          logoCache[key] = null
+          return null
+        }
+
+        // Verify the logo URL is accessible
+        try {
           const response = await fetch(data.value, { method: 'HEAD' })
           if (response.ok) {
-            console.log('Logo URL is accessible, setting logoUrl')
-            setLogoUrl(data.value)
-          } else {
-            console.warn('Logo URL not accessible:', data.value, 'status:', response.status)
+            logoCache[key] = data.value
+            return data.value
           }
-        } else {
-          console.log('No logo URL found in database for key:', settingKey)
+        } catch {
+          // Network error, use cached value if any
         }
-      } catch (error) {
-        console.warn('Error fetching logo:', error)
+        
+        logoCache[key] = null
+        return null
+      } catch {
+        logoCache[key] = null
+        return null
       } finally {
-        setLoading(false)
+        delete fetchingPromises[key]
+      }
+    })()
+
+    const result = await fetchingPromises[key]
+    setLogoUrl(result)
+  }, [])
+
+  // React to variant/settingKey changes
+  useEffect(() => {
+    if (settingKey !== currentKey) {
+      setCurrentKey(settingKey)
+      // Immediately set from cache if available, otherwise fetch
+      if (settingKey in logoCache) {
+        setLogoUrl(logoCache[settingKey])
+      } else {
+        fetchLogo(settingKey)
       }
     }
+  }, [settingKey, currentKey, fetchLogo])
 
-    fetchLogoFromSettings()
-  }, [variant])
+  // Initial fetch
+  useEffect(() => {
+    if (!(settingKey in logoCache)) {
+      fetchLogo(settingKey)
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (loading) {
-    // Show a placeholder while loading
-    return (
-      <div
-        className={`bg-neutral-200 animate-pulse rounded ${className}`}
-        style={{ width, height }}
-      />
-    )
-  }
-
+  // No fallback - return null if no logo URL available
   if (!logoUrl) {
-    // Fallback text logo if no image is available
-    // Use variant to determine text color
-    const textColorClass = variant === 'light' ? 'text-white' : 'text-neutral-900'
-    return (
-      <div
-        className={`flex items-center font-bold tracking-tight ${textColorClass} ${className}`}
-        style={{ fontSize: height * 0.7 }}
-      >
-        {textFallback}
-      </div>
-    )
+    return null
   }
 
+  // Use regular img for SVGs to avoid Next.js Image optimization issues
+  // eslint-disable-next-line @next/next/no-img-element
   return (
     <img
       src={logoUrl}
-      alt={`${textFallback} Logo`}
-      width={width}
-      height={height}
+      alt="Ceptiv Logo"
       className={className}
+      style={{ width }}
       onError={() => {
-        // Fallback to text logo if image fails to load
+        // Clear cache if image fails to load
+        logoCache[settingKey] = null
         setLogoUrl(null)
       }}
     />
   )
+}
+
+// Function to clear logo cache (useful when logo is updated in admin)
+export function clearLogoCache() {
+  Object.keys(logoCache).forEach(key => delete logoCache[key])
 }
 
 // LogoThumbnail component for displaying logo previews in settings

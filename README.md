@@ -1,142 +1,447 @@
 # Ceptiv.net
 
-A Next.js application with Supabase integration, using shadcn/ui components and deployed on Vercel.
+A Next.js 16 web application with Supabase backend, featuring a client portal and admin panel. Built for Ceptiv, a digital solutions agency part of Acenta Group ApS.
 
-## Setup
+## Project Overview
 
-1. Clone the repository
-2. Install dependencies: `npm install`
+**Ceptiv** is a Danish digital agency targeting small to mid-size businesses without in-house development teams. The platform offers:
 
-### Environment Variables
+- **Public Website**: Marketing pages for services, pricing, portfolio
+- **Client Portal**: Authenticated area where clients manage projects, subscriptions, and invoices
+- **Admin Panel**: Internal management for projects, clients, features, and invoicing
 
-1. Copy the template file: `cp env-template.txt .env.local`
-2. Edit `.env.local` and replace the placeholder values with your actual Supabase credentials
+### Tech Stack
+
+- **Framework**: Next.js 16.1+ with App Router and Turbopack
+- **Styling**: Tailwind CSS v4 with shadcn/ui components
+- **Database**: Supabase (PostgreSQL with Row Level Security)
+- **Authentication**: 
+  - Admin: Supabase Auth (email/password)
+  - Client: Custom auth (email + 4-digit PIN stored in `cap_clients` table)
+- **Animations**: Framer Motion
+- **Deployment**: Vercel
+
+---
+
+## Integrations
+
+### Grok AI Integration
+
+**x.ai Grok AI** is integrated throughout the platform for AI-powered features.
+
+#### Configuration
+- **Admin Panel**: `/admin/integrations/grok`
+- **API Endpoint**: `https://api.x.ai/v1/chat/completions`
+- **Settings Storage**: `cap_settings` table with keys `grok_enabled` and `grok_api_key`
+
+#### Features
+- **Start Project AI Review**: During project submission, Grok analyzes the project description, suggests features, estimates costs, and helps users refine their requirements through real-time chat
+- **AI-powered content generation**
+- **Smart project analysis and recommendations**
+
+#### Start Project Flow with AI
+The `/start` page includes a 7-step wizard:
+1. **Situation**: New build or existing system integration
+2. **Project Types**: Backend, Website, Mobile, AI, Integration
+3. **Project Details**: Description, integrations, AI capabilities, team size
+4. **Timeline & Package**: Timeline selection and package size (Small/Medium/Large)
+5. **AI Project Review**: Grok analyzes the project and chats with user to refine
+6. **Contact Info**: Name, company, email, phone
+7. **Review & Submit**: Final review and submission
+
+#### AI System Prompt
+The Grok system prompt is defined in `src/lib/grok-system-prompt.ts` and includes:
+- Company information and pricing model
+- Feature definitions and examples
+- Integration pricing guide
+- Response format guidelines
+
+#### API Route
+- **Endpoint**: `POST /api/grok/chat`
+- **Request Body**: `{ messages: ChatMessage[], projectContext: ProjectContext }`
+- **Response**: `{ message: string, usage: object }`
+
+#### Setup Steps
+1. Visit [x.ai/api](https://x.ai/api) to obtain an API key
+2. Go to Admin Panel → Integrations → Configure (Grok card)
+3. Toggle "Enable Grok Integration" on
+4. Enter your x.ai API key
+5. Click "Connect" to validate the API key
+6. Save configuration
+
+#### Database Requirements
+- Uses existing `cap_settings` table (no additional migrations needed)
+- Columns: `key` (VARCHAR), `value` (TEXT)
+- Stores rows with keys: `grok_enabled` ('true'/'false'), `grok_api_key` (API key string)
+
+#### Connection Status
+- 🟢 **Connected**: Green dot with "Connected" text when API key is valid
+- 🔄 **Connecting**: Loading spinner during validation
+- ❌ **Error**: Red indicator when connection fails
+
+---
+
+## Critical Information for AI Assistants
+
+### ⚠️ Authentication Architecture
+
+This project uses **two separate authentication systems**:
+
+1. **Admin Authentication** (`/admin/*`):
+   - Uses Supabase Auth
+   - Context: `src/lib/auth-context.tsx` with `useAuth()` hook
+   - Users are `authenticated` role in RLS policies
+
+2. **Client Authentication** (`/client/*`):
+   - Uses **custom authentication** (NOT Supabase Auth)
+   - Context: `src/lib/client-auth.tsx` with `useClientAuth()` hook
+   - Clients login with email + 4-digit PIN
+   - PIN is stored hashed in `cap_clients.pin_code`
+   - Clients are `anon` users to Supabase (critical for RLS policies!)
+
+### ⚠️ RLS Policy Requirements
+
+Because client portal users are `anon` to Supabase:
+
+- All client-facing tables need RLS policies for `anon` role
+- See `database/migrations/007_anon_insert_policies.sql` for required policies
+- Tables requiring anon access: `cap_clients`, `cap_projects`, `cap_subscriptions`, `cap_features`, `cap_invoices`, `cap_notifications`
+
+### ⚠️ Database Naming Convention
+
+**ALL tables must be prefixed with `cap_`** (Ceptiv Admin Panel):
+
+```sql
+-- ✅ Correct
+CREATE TABLE cap_clients (...);
+CREATE TABLE cap_projects (...);
+
+-- ❌ Wrong
+CREATE TABLE clients (...);
+CREATE TABLE projects (...);
+```
+
+### ⚠️ Migration File Naming
+
+Database scripts use 3-digit numbering:
+
+```
+database/migrations/
+├── 001_create_cap_settings_table.sql
+├── 002_create_cap_user_roles_table.sql
+├── 003_create_cap_assets_table.sql
+├── 004_create_admin_user.sql
+├── 005_create_client_portal_tables.sql
+├── 006_billing_and_invoicing.sql
+└── 007_anon_insert_policies.sql
+```
+
+### ⚠️ Hydration Issues
+
+To avoid React hydration mismatches in Client Components:
+
+```tsx
+// ❌ WRONG - causes hydration mismatch
+if (typeof window !== 'undefined') {
+  // client-only code
+}
+
+// ✅ CORRECT - use hooks
+const pathname = usePathname()
+const [mounted, setMounted] = useState(false)
+
+useEffect(() => {
+  setMounted(true)
+}, [])
+```
+
+### ⚠️ Logo Component Caching
+
+The `Logo` component (`src/components/ui/logo.tsx`) uses an in-memory cache to prevent flickering on navigation. When updating logos in admin:
+
+```tsx
+import { clearLogoCache } from '@/components/ui/logo'
+// Call after successful logo upload
+clearLogoCache()
+```
+
+---
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── page.tsx                    # Homepage
+│   ├── layout.tsx                  # Root layout (server component)
+│   ├── root-layout-client.tsx      # Client-side providers wrapper
+│   ├── admin/                      # Admin panel (requires Supabase auth)
+│   │   ├── layout.tsx              # Admin shell with sidebar
+│   │   ├── login/                  # Admin login page
+│   │   ├── dashboard/              # Admin dashboard
+│   │   ├── projects/               # Manage client projects
+│   │   ├── subscriptions/          # Manage subscriptions
+│   │   ├── invoices/               # View all invoices
+│   │   ├── features/               # Manage feature requests
+│   │   └── settings/               # Company settings, branding
+│   ├── client/                     # Client portal (custom auth)
+│   │   ├── layout.tsx              # Minimal layout (no nav/footer)
+│   │   ├── login/                  # Client login (email + PIN)
+│   │   └── dashboard/              # Client dashboard
+│   │       ├── page.tsx            # Overview with projects
+│   │       ├── projects/           # Project details
+│   │       ├── subscription/       # View subscription
+│   │       ├── invoices/           # View invoices
+│   │       └── settings/           # Client settings
+│   ├── services/                   # Service detail pages
+│   ├── pricing/                    # Pricing page with packages
+│   ├── start/                      # Project request form
+│   └── ...                         # Other marketing pages
+├── components/
+│   ├── ui/                         # shadcn/ui components
+│   ├── layout/                     # Navigation, Footer
+│   └── admin/                      # Admin-specific components
+└── lib/
+    ├── supabase.ts                 # Supabase client
+    ├── auth-context.tsx            # Admin auth (Supabase)
+    ├── client-auth.tsx             # Client auth (custom PIN)
+    ├── storage.ts                  # File upload utilities
+    └── utils.ts                    # Utility functions
+```
+
+---
+
+## Database Schema
+
+### Core Tables
+
+| Table | Purpose |
+|-------|---------|
+| `cap_settings` | Key-value store for app settings (logo URLs, company info) |
+| `cap_clients` | Client accounts with email, PIN, company info |
+| `cap_projects` | Client projects with status, proposals |
+| `cap_subscriptions` | Active subscriptions with billing cycles |
+| `cap_features` | Feature requests linked to projects |
+| `cap_invoices` | Generated invoices with line items |
+| `cap_notifications` | Client notifications |
+| `cap_user_roles` | Admin user roles |
+| `cap_assets` | Uploaded file tracking |
+
+### Key Relationships
+
+```
+cap_clients (1) ──── (N) cap_projects
+cap_projects (1) ──── (1) cap_subscriptions
+cap_projects (1) ──── (N) cap_features
+cap_subscriptions (1) ──── (N) cap_invoices
+```
+
+---
+
+## Business Logic
+
+### Subscription Model
+
+- **One-time fee**: Initial project setup
+- **Monthly fee**: Ongoing subscription
+- **Per-feature pricing**: Additional features cost extra
+- **Billing cycles**: Monthly, quarterly, semi-annual, annual
+- **Cancellation**: 24-month minimum commitment with early cancellation penalty
+
+### Project Flow
+
+1. Client submits project via `/start` form
+2. Client account created with generated 4-digit PIN
+3. Client auto-redirected to portal with PIN displayed
+4. Admin reviews project in admin panel
+5. Admin sends proposal with package selection and pricing
+6. Client accepts proposal in portal
+7. Subscription and first invoice created automatically
+
+### Packages
+
+- **Small**: Up to 5 features, 1 integration
+- **Medium**: Up to 12 features, 3 integrations
+- **Large**: Up to 25 features, 6 integrations
+- **Custom**: For larger projects
+
+---
+
+## Setup Instructions
+
+### 1. Environment Variables
+
+Create `.env.local`:
 
 ```env
-# Supabase Configuration
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-Get these values from your Supabase project dashboard.
+### 2. Database Setup
 
-### Storage Bucket Setup
-
-For file uploads (logos, favicons) to work, you need to create and configure the storage bucket:
-
-**Recommended: Dashboard Setup**
-1. Go to your Supabase project dashboard
-2. Navigate to **Storage**
-3. Click **Create bucket**
-4. Name it: `cap_file_bucket`
-5. ✅ Check "Public bucket"
-6. Click **Create bucket**
-7. **Add Required Policies:**
-   - **SELECT policy:** `Public access to cap_file_bucket files` (public)
-   - **UPDATE policy:** `Authenticated users can update cap_file_bucket files` (authenticated)
-   - **DELETE policy:** `Authenticated users can delete cap_file_bucket files` (authenticated)
-
-**Reference Scripts:**
-- Bucket creation: `database/setup/001_create_assets_bucket.sql`
-- Policy reference: `database/setup/002_storage_policies_reference.sql`
-- Manual SQL commands: `database/setup/003_manual_policy_commands.sql`
-1. Go to **Storage** in the dashboard
-2. Click **Create bucket**
-3. Name it: `cap_file_bucket`
-4. ✅ **Check "Public bucket"** (important!)
-5. Click **Create bucket**
-6. **Important:** You'll need to manually create RLS policies (see SQL script for examples)
-
-### Admin User Setup
-
-To create the default admin user, run the database migration script:
-
-1. Go to your Supabase project dashboard
-2. Navigate to **SQL Editor**
-3. Run the script: `database/migrations/004_create_admin_user.sql`
-
-**Admin Credentials:**
-- **Email:** `admin@ceptiv.net`
-- **Password:** `Star9!`
-
-⚠️ **Security Note:** This script contains a development password. In production, users should set their own secure passwords.
-
-### Database Schema
-
-**Important:** All tables created in Supabase must be prefixed with `cap_`. This naming convention helps organize the database schema and prevents conflicts with future tables.
-
-Example table names:
-- `cap_users` (instead of `users`)
-- `cap_posts` (instead of `posts`)
-- `cap_comments` (instead of `comments`)
-
-**Database Scripts:** All database migration scripts and SQL files must be prefixed with a 3-digit number for proper ordering and versioning.
-
-Database scripts are located in the `database/migrations/` directory.
-
-**Available Scripts:**
-- `001_create_cap_settings_table.sql` - Application settings storage
-- `002_create_cap_user_roles_table.sql` - User roles and permissions
-- `003_create_cap_assets_table.sql` - Uploaded files/assets tracking
-- `004_create_admin_user.sql` - Creates admin user (admin@ceptiv.net / Star9!)
-
-**Example script names:**
-- `005_create_cap_users_table.sql`
-- `006_add_cap_posts_table.sql`
-- `007_create_cap_comments_table.sql`
-
-## Development
-
-Run the development server:
+Run migrations in order in Supabase SQL Editor:
 
 ```bash
+database/migrations/001_create_cap_settings_table.sql
+database/migrations/002_create_cap_user_roles_table.sql
+database/migrations/003_create_cap_assets_table.sql
+database/migrations/004_create_admin_user.sql
+database/migrations/005_create_client_portal_tables.sql
+database/migrations/006_billing_and_invoicing.sql
+database/migrations/007_anon_insert_policies.sql
+```
+
+### 3. Storage Bucket
+
+In Supabase Dashboard > Storage:
+
+1. Create bucket: `cap_file_bucket`
+2. Enable public access
+3. Add RLS policies (see `database/setup/`)
+
+### 4. Admin User
+
+Default credentials (created by migration 004):
+- **Email**: `admin@ceptiv.net`
+- **Password**: `Star9!`
+
+### 5. Run Development Server
+
+```bash
+npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000)
+
+---
 
 ## Design System
 
-### Color Tokens
-This project uses a strict neutral color palette to maintain a sleek, professional appearance. **Only color tokens from the UI kit are allowed to be used.**
+### Color Palette
 
-#### Primary Colors
-- **Primary**: `neutral-900` (black) - Used for headings, primary buttons, and key UI elements
-- **Secondary**: `neutral-700` - Used for secondary buttons and important text
-- **Accent**: `neutral-600` - Used for icons, borders, and supporting text
+This project uses a **strict neutral color palette**. No arbitrary colors allowed.
 
-#### Neutral Palette
-- `neutral-50` - Very light backgrounds
-- `neutral-100` - Light backgrounds and subtle borders
-- `neutral-200` - Light borders and dividers
-- `neutral-300` - Medium borders
-- `neutral-400` - Medium text and disabled states
-- `neutral-500` - Placeholder text
-- `neutral-600` - Body text and icons
-- `neutral-700` - Secondary buttons and headings
-- `neutral-800` - Dark backgrounds
-- `neutral-900` - Primary headings and dark text
+```css
+/* Primary */
+neutral-900  /* Black - headings, primary buttons */
+neutral-700  /* Secondary buttons, important text */
 
-#### Usage Rules
-1. **Never use arbitrary colors** - Always use Tailwind's neutral scale
-2. **Primary color is black** (`neutral-900`) - This represents Ceptiv's professional brand
-3. **Maintain contrast ratios** - Ensure text readability with proper contrast
-4. **Consistent application** - Use the same color tokens across similar UI elements
-5. **Theme consistency** - All components should follow the neutral theme
-
-#### Examples
-```tsx
-// ✅ Correct - Using UI kit colors
-<Button className="bg-neutral-900 hover:bg-neutral-800 text-white">
-  Primary Action
-</Button>
-
-// ❌ Incorrect - Using arbitrary colors
-<Button className="bg-blue-600 hover:bg-blue-700 text-white">
-  Wrong Color
-</Button>
+/* Scale */
+neutral-50   /* Very light backgrounds */
+neutral-100  /* Light backgrounds, subtle borders */
+neutral-200  /* Light borders, dividers */
+neutral-300  /* Medium borders */
+neutral-400  /* Disabled states */
+neutral-500  /* Placeholder text */
+neutral-600  /* Body text, icons */
+neutral-800  /* Dark backgrounds */
 ```
+
+### Button Variants
+
+```tsx
+// On light backgrounds
+<Button variant="default">Primary</Button>
+<Button variant="outline">Secondary</Button>
+
+// On dark backgrounds
+<Button variant="outline-light">Outlined on Dark</Button>
+<Button className="bg-white text-neutral-900">Solid on Dark</Button>
+```
+
+### Typography
+
+- **Font**: Geist Sans & Geist Mono (Google Fonts)
+- Headings: `font-bold tracking-tight`
+- Body: Default weight
+
+---
+
+## Common Patterns
+
+### Client-Side Data Fetching
+
+```tsx
+'use client'
+
+import { supabase } from '@/lib/supabase'
+import { useClientAuth } from '@/lib/client-auth'
+
+export default function ClientPage() {
+  const { client } = useClientAuth()
+  const [data, setData] = useState([])
+
+  useEffect(() => {
+    if (client?.id) {
+      supabase
+        .from('cap_projects')
+        .select('*')
+        .eq('client_id', client.id)
+        .then(({ data }) => setData(data || []))
+    }
+  }, [client])
+}
+```
+
+### Protected Admin Routes
+
+Admin layout (`src/app/admin/layout.tsx`) handles auth check:
+- Redirects to `/admin/login` if not authenticated
+- Shows loading state while checking auth
+- Renders admin shell (sidebar + header) for authenticated users
+
+### Protected Client Routes
+
+Client dashboard layout handles auth check:
+- Redirects to `/client/login` if not authenticated
+- Uses custom `useClientAuth()` hook
+
+---
+
+## Troubleshooting
+
+### "Projects not appearing for clients"
+
+RLS policies missing for `anon` role. Run:
+```sql
+-- database/migrations/007_anon_insert_policies.sql
+```
+
+### "Hydration mismatch errors"
+
+Check for `typeof window !== 'undefined'` patterns and replace with proper React hooks.
+
+### "Logo flickering on navigation"
+
+The logo uses in-memory caching. If issues persist after logo update, ensure `clearLogoCache()` is called.
+
+### "Database operations failing silently"
+
+Check Supabase logs. Common issues:
+- RLS policies blocking access
+- Missing `anon` policies for client portal
+- Table/column name mismatches
+
+---
+
+## Company Information
+
+**Ceptiv** (Part of Acenta Group ApS)
+
+- **CVR**: 37576476
+- **Address**: Maglebjergvej 6, 2800 Kongens Lyngby, Denmark
+- **Email**: dv@ceptiv.net
+- **Phone**: +45 81 98 32 71
+
+---
 
 ## Deployment
 
-This project is configured for deployment on Vercel. Make sure to set the environment variables in your Vercel project settings.
+Configured for Vercel. Set environment variables in Vercel project settings.
+
+```bash
+npm run build  # Production build
+npm run start  # Start production server
+```

@@ -14,7 +14,8 @@ import {
   FolderKanban,
   CreditCard,
   FileText,
-  Sparkles
+  Sparkles,
+  Zap
 } from 'lucide-react'
 
 const navigation = [
@@ -52,6 +53,11 @@ const navigation = [
     name: 'Analytics',
     href: '/admin/analytics',
     icon: BarChart3,
+  },
+  {
+    name: 'Integrations',
+    href: '/admin/integrations',
+    icon: Zap,
   },
 ]
 

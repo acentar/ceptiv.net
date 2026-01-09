@@ -78,41 +78,37 @@ export function Navigation() {
           <div className="flex justify-between items-center h-16 lg:h-20">
             {/* Logo */}
             <Link href="/" className="flex-shrink-0 relative z-50">
-              <Logo width={100} height={28} variant={logoVariant} textFallback="Ceptiv" />
+              <Logo width={80} variant={logoVariant} />
             </Link>
 
             {/* Right side: Login + Start Project + Menu */}
             <div className="flex items-center space-x-3">
-              {/* Login Button - Desktop */}
-              <div className="hidden sm:block">
-                <Button
-                  asChild
-                  variant={isTransparent ? 'outline-light' : 'outline'}
-                  className="transition-all duration-300"
-                >
-                  <Link href="/client/login">
-                    <LogIn className="w-4 h-4 mr-2" />
-                    Login
-                  </Link>
-                </Button>
-              </div>
+              {/* Login Button - All devices */}
+              <Button
+                asChild
+                variant={isTransparent ? 'outline-light' : 'outline'}
+                className="transition-all duration-300"
+              >
+                <Link href="/client/login">
+                  <LogIn className="w-4 h-4 mr-2 hidden sm:inline-block" />
+                  Login
+                </Link>
+              </Button>
 
-              {/* Start Project Button - Desktop */}
-              <div className="hidden sm:block">
-                <Button
-                  asChild
-                  className={`transition-all duration-300 ${
-                    isTransparent
-                      ? 'bg-white text-neutral-900 hover:bg-neutral-100'
-                      : 'bg-neutral-900 text-white hover:bg-neutral-800'
-                  }`}
-                >
-                  <Link href="/start">
-                    Start Project
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Link>
-                </Button>
-              </div>
+              {/* Start Project Button - All devices */}
+              <Button
+                asChild
+                className={`transition-all duration-300 ${
+                  isTransparent
+                    ? 'bg-white text-neutral-900 hover:bg-neutral-100'
+                    : 'bg-neutral-900 text-white hover:bg-neutral-800'
+                }`}
+              >
+                <Link href="/start">
+                  Start Project
+                  <ArrowRight className="w-4 h-4 ml-2 hidden sm:inline-block" />
+                </Link>
+              </Button>
 
               {/* Menu Button */}
               <button
@@ -261,35 +257,6 @@ export function Navigation() {
                       </div>
                     </motion.div>
 
-                    {/* CTA */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.6 }}
-                      className="flex flex-col sm:flex-row gap-4"
-                    >
-                      <Button
-                        asChild
-                        size="lg"
-                        className="w-full sm:w-auto bg-white text-neutral-900 hover:bg-neutral-100"
-                      >
-                        <Link href="/start">
-                          Start Your Project
-                          <ArrowRight className="w-5 h-5 ml-2" />
-                        </Link>
-                      </Button>
-                      <Button
-                        asChild
-                        size="lg"
-                        variant="outline-light"
-                        className="w-full sm:w-auto"
-                      >
-                        <Link href="/client/login">
-                          <LogIn className="w-5 h-5 mr-2" />
-                          Client Login
-                        </Link>
-                      </Button>
-                    </motion.div>
                   </div>
                 </div>
 
