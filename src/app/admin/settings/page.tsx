@@ -4,9 +4,10 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { X, Save, AlertCircle } from 'lucide-react'
+import { X, Save, AlertCircle, FileText } from 'lucide-react'
 import { uploadFile } from '@/lib/storage'
 import { supabase } from '@/lib/supabase'
 import { LogoThumbnail } from '@/components/ui/logo'
@@ -20,6 +21,21 @@ export default function AdminSettingsPage() {
   const [currentLogoUrl, setCurrentLogoUrl] = useState<string | null>(null)
   const [currentLightLogoUrl, setCurrentLightLogoUrl] = useState<string | null>(null)
   const [currentFaviconUrl, setCurrentFaviconUrl] = useState<string | null>(null)
+  
+  // Invoice settings
+  const [invoiceSettings, setInvoiceSettings] = useState({
+    company_name: '',
+    street: '',
+    postal: '',
+    city: '',
+    country: '',
+    cvr: '',
+    policy: '',
+    bank_name: '',
+    bank_account: '',
+    bank_iban: ''
+  })
+  const [savingInvoice, setSavingInvoice] = useState(false)
 
   useEffect(() => {
     // Check Supabase connection and fetch current logo URLs
@@ -59,6 +75,21 @@ export default function AdminSettingsPage() {
           if (faviconResult.data?.value) {
             console.log('Setting favicon URL:', faviconResult.data.value)
             setCurrentFaviconUrl(faviconResult.data.value)
+          }
+          
+          // Fetch invoice settings
+          const { data: invoiceData } = await supabase
+            .from('cap_settings')
+            .select('key, value')
+            .like('key', 'invoice_%')
+          
+          if (invoiceData) {
+            const settings: Record<string, string> = {}
+            invoiceData.forEach(item => {
+              const key = item.key.replace('invoice_', '')
+              settings[key] = item.value || ''
+            })
+            setInvoiceSettings(prev => ({ ...prev, ...settings }))
           }
         }
       } catch (err) {
@@ -262,8 +293,9 @@ export default function AdminSettingsPage() {
       </div>
 
       <Tabs defaultValue="branding" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="branding">Branding</TabsTrigger>
+          <TabsTrigger value="invoice">Invoice</TabsTrigger>
           <TabsTrigger value="general">General</TabsTrigger>
           <TabsTrigger value="advanced">Advanced</TabsTrigger>
         </TabsList>
@@ -402,6 +434,147 @@ export default function AdminSettingsPage() {
                 <p className="text-sm text-neutral-500">
                   Upload an SVG favicon that will be used across all pages
                 </p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="invoice" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="w-5 h-5" />
+                Invoice Settings
+              </CardTitle>
+              <CardDescription>
+                Configure your company information for invoices.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Company Name</Label>
+                  <Input 
+                    value={invoiceSettings.company_name}
+                    onChange={(e) => setInvoiceSettings({...invoiceSettings, company_name: e.target.value})}
+                    placeholder="Acenta Group ApS"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>CVR Number</Label>
+                  <Input 
+                    value={invoiceSettings.cvr}
+                    onChange={(e) => setInvoiceSettings({...invoiceSettings, cvr: e.target.value})}
+                    placeholder="37576476"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Street Address</Label>
+                <Input 
+                  value={invoiceSettings.street}
+                  onChange={(e) => setInvoiceSettings({...invoiceSettings, street: e.target.value})}
+                  placeholder="Maglebjergvej 6"
+                />
+              </div>
+
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label>Postal Code</Label>
+                  <Input 
+                    value={invoiceSettings.postal}
+                    onChange={(e) => setInvoiceSettings({...invoiceSettings, postal: e.target.value})}
+                    placeholder="2800"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>City</Label>
+                  <Input 
+                    value={invoiceSettings.city}
+                    onChange={(e) => setInvoiceSettings({...invoiceSettings, city: e.target.value})}
+                    placeholder="Kongens Lyngby"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Country</Label>
+                  <Input 
+                    value={invoiceSettings.country}
+                    onChange={(e) => setInvoiceSettings({...invoiceSettings, country: e.target.value})}
+                    placeholder="Denmark"
+                  />
+                </div>
+              </div>
+
+              <div className="border-t pt-6 mt-6">
+                <h3 className="font-medium mb-4">Bank Details (Optional)</h3>
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label>Bank Name</Label>
+                    <Input 
+                      value={invoiceSettings.bank_name}
+                      onChange={(e) => setInvoiceSettings({...invoiceSettings, bank_name: e.target.value})}
+                      placeholder="Danske Bank"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Account Number</Label>
+                    <Input 
+                      value={invoiceSettings.bank_account}
+                      onChange={(e) => setInvoiceSettings({...invoiceSettings, bank_account: e.target.value})}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>IBAN</Label>
+                    <Input 
+                      value={invoiceSettings.bank_iban}
+                      onChange={(e) => setInvoiceSettings({...invoiceSettings, bank_iban: e.target.value})}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-t pt-6 mt-6">
+                <div className="space-y-2">
+                  <Label>Invoice Policy / Payment Terms</Label>
+                  <Textarea 
+                    value={invoiceSettings.policy}
+                    onChange={(e) => setInvoiceSettings({...invoiceSettings, policy: e.target.value})}
+                    placeholder="Payment is due within 14 days of invoice date..."
+                    rows={4}
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end">
+                <Button 
+                  onClick={async () => {
+                    setSavingInvoice(true)
+                    try {
+                      const updates = Object.entries(invoiceSettings).map(([key, value]) => ({
+                        key: `invoice_${key}`,
+                        value: value
+                      }))
+                      
+                      for (const update of updates) {
+                        await supabase
+                          .from('cap_settings')
+                          .upsert({ key: update.key, value: update.value }, { onConflict: 'key' })
+                      }
+                      
+                      alert('Invoice settings saved!')
+                    } catch (error) {
+                      console.error('Error saving invoice settings:', error)
+                      alert('Failed to save invoice settings')
+                    } finally {
+                      setSavingInvoice(false)
+                    }
+                  }}
+                  disabled={savingInvoice}
+                >
+                  <Save className="w-4 h-4 mr-2" />
+                  {savingInvoice ? 'Saving...' : 'Save Invoice Settings'}
+                </Button>
               </div>
             </CardContent>
           </Card>

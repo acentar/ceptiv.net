@@ -10,11 +10,11 @@ import {
   Settings,
   FileImage,
   Users,
-  Database,
   BarChart3,
   FolderKanban,
   CreditCard,
-  FileText
+  FileText,
+  Sparkles
 } from 'lucide-react'
 
 const navigation = [
@@ -27,6 +27,11 @@ const navigation = [
     name: 'Projects',
     href: '/admin/projects',
     icon: FolderKanban,
+  },
+  {
+    name: 'Features',
+    href: '/admin/features',
+    icon: Sparkles,
   },
   {
     name: 'Clients',
@@ -42,11 +47,6 @@ const navigation = [
     name: 'Invoices',
     href: '/admin/invoices',
     icon: FileText,
-  },
-  {
-    name: 'Content',
-    href: '/admin/content',
-    icon: FileImage,
   },
   {
     name: 'Analytics',

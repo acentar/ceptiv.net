@@ -119,17 +119,32 @@ export default function ProjectDetailPage() {
     setIsAccepting(true)
 
     try {
+      const now = new Date()
+      const billingCycle = (project as unknown as { proposed_billing_cycle?: string }).proposed_billing_cycle || 'monthly'
+      
+      // Calculate next billing date based on cycle
+      const getNextBillingDate = (cycle: string) => {
+        const date = new Date()
+        switch (cycle) {
+          case 'quarterly': date.setMonth(date.getMonth() + 3); break
+          case 'biannual': date.setMonth(date.getMonth() + 6); break
+          case 'annual': date.setFullYear(date.getFullYear() + 1); break
+          default: date.setMonth(date.getMonth() + 1)
+        }
+        return date.toISOString()
+      }
+
       // Update project status
       await supabase
         .from('cap_projects')
         .update({
           status: 'proposal_accepted',
-          proposal_accepted_at: new Date().toISOString()
+          proposal_accepted_at: now.toISOString()
         })
         .eq('id', project.id)
 
       // Create subscription
-      await supabase
+      const { data: subscription } = await supabase
         .from('cap_subscriptions')
         .insert({
           client_id: client.id,
@@ -140,8 +155,46 @@ export default function ProjectDetailPage() {
           monthly_fee: project.proposed_monthly_fee || 0,
           total_features: project.proposed_features || 12,
           total_integrations: project.proposed_integrations || 1,
+          billing_cycle: billingCycle,
+          next_billing_date: getNextBillingDate(billingCycle),
+          last_billing_date: now.toISOString(),
           status: 'active'
         })
+        .select('id')
+        .single()
+
+      // Generate invoice number (simple format for now)
+      const invoiceNumber = `INV-${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}-${Math.random().toString(36).substr(2, 4).toUpperCase()}`
+
+      // Create one-time fee invoice
+      if (project.proposed_one_time_fee && project.proposed_one_time_fee > 0) {
+        await supabase
+          .from('cap_invoices')
+          .insert({
+            client_id: client.id,
+            project_id: project.id,
+            subscription_id: subscription?.id,
+            invoice_number: invoiceNumber,
+            invoice_type: 'one_time',
+            amount: project.proposed_one_time_fee,
+            currency: 'DKK',
+            description: `${project.proposed_package?.charAt(0).toUpperCase()}${project.proposed_package?.slice(1)} Package - One-time setup fee for ${project.project_name}`,
+            status: 'sent',
+            issued_at: now.toISOString(),
+            due_at: new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000).toISOString(), // 14 days
+            line_items: JSON.stringify([
+              {
+                description: `${project.proposed_package?.charAt(0).toUpperCase()}${project.proposed_package?.slice(1)} Package Setup`,
+                quantity: 1,
+                unit_price: project.proposed_one_time_fee,
+                amount: project.proposed_one_time_fee
+              }
+            ]),
+            subtotal: project.proposed_one_time_fee,
+            tax_rate: 0,
+            tax_amount: 0
+          })
+      }
 
       // Create notification
       await supabase
@@ -149,7 +202,7 @@ export default function ProjectDetailPage() {
         .insert({
           client_id: client.id,
           title: 'Proposal Accepted!',
-          message: `You've accepted the proposal for "${project.project_name}". We'll start working on it right away!`,
+          message: `You've accepted the proposal for "${project.project_name}". We'll start working on it right away! Your invoice has been sent.`,
           type: 'project_update',
           related_project_id: project.id
         })

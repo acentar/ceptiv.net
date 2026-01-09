@@ -266,9 +266,14 @@ export default function ClientSubscriptionPage() {
                       </>
                     )}
                   </div>
-                  <Button variant="outline" size="sm">
-                    Manage Subscription
-                  </Button>
+                </div>
+
+                {/* Cancellation Notice */}
+                <div className="p-4 bg-neutral-50 border-t border-neutral-200 text-center">
+                  <p className="text-xs text-neutral-500">
+                    Need to cancel or modify your subscription?{' '}
+                    <a href="mailto:dv@ceptiv.net" className="text-neutral-700 hover:underline">Contact us</a>
+                  </p>
                 </div>
               </motion.div>
             )

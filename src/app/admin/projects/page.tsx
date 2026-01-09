@@ -64,6 +64,13 @@ const packageOptions = [
   { value: 'large', label: 'Large', features: 36, integrations: 3, oneTime: 54000, monthly: 1200 },
 ]
 
+const billingCycleOptions = [
+  { value: 'monthly', label: 'Monthly', months: 1 },
+  { value: 'quarterly', label: 'Quarterly (3 months)', months: 3 },
+  { value: 'biannual', label: 'Biannual (6 months)', months: 6 },
+  { value: 'annual', label: 'Annual (12 months)', months: 12 },
+]
+
 export default function AdminProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -76,6 +83,7 @@ export default function AdminProjectsPage() {
   const [customMonthly, setCustomMonthly] = useState('')
   const [customFeatures, setCustomFeatures] = useState('')
   const [customIntegrations, setCustomIntegrations] = useState('')
+  const [billingCycle, setBillingCycle] = useState('monthly')
   const [proposalNotes, setProposalNotes] = useState('')
   const [isSending, setIsSending] = useState(false)
 
@@ -114,6 +122,7 @@ export default function AdminProjectsPage() {
     setCustomMonthly('')
     setCustomFeatures('')
     setCustomIntegrations('')
+    setBillingCycle('monthly')
     setProposalNotes('')
     setShowProposalModal(true)
   }
@@ -144,6 +153,7 @@ export default function AdminProjectsPage() {
           proposed_monthly_fee: parseFloat(customMonthly),
           proposed_features: parseInt(customFeatures),
           proposed_integrations: parseInt(customIntegrations),
+          proposed_billing_cycle: billingCycle,
           proposal_notes: proposalNotes,
           proposal_sent_at: new Date().toISOString(),
           status: 'proposal_sent'
@@ -404,6 +414,26 @@ export default function AdminProjectsPage() {
                     onChange={(e) => setCustomIntegrations(e.target.value)}
                     placeholder="1"
                   />
+                </div>
+              </div>
+
+              {/* Billing Cycle */}
+              <div>
+                <Label className="text-base font-medium mb-3 block">Subscription Billing Cycle</Label>
+                <div className="grid grid-cols-4 gap-3">
+                  {billingCycleOptions.map((cycle) => (
+                    <button
+                      key={cycle.value}
+                      onClick={() => setBillingCycle(cycle.value)}
+                      className={`p-3 rounded-xl border-2 text-center transition-all ${
+                        billingCycle === cycle.value
+                          ? 'border-neutral-900 bg-neutral-50'
+                          : 'border-neutral-200 hover:border-neutral-400'
+                      }`}
+                    >
+                      <p className="font-medium text-neutral-900 text-sm">{cycle.label}</p>
+                    </button>
+                  ))}
                 </div>
               </div>
 
