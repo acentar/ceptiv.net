@@ -108,47 +108,39 @@ export default function ClientProjectsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
               >
-                <div className="border border-neutral-200 rounded-2xl p-6 hover:border-neutral-400 transition-colors">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-lg font-semibold text-neutral-900">{project.project_name}</h3>
-                        <span className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${status.bgColor} ${status.color}`}>
-                          <StatusIcon className="w-3 h-3" />
-                          {status.label}
-                        </span>
-                      </div>
-                      <p className="text-sm text-neutral-500 mb-2">
-                        {project.project_type.replace('_', ' ')} • Started {new Date(project.created_at).toLocaleDateString()}
-                      </p>
-                      {project.description && (
-                        <p className="text-sm text-neutral-600 line-clamp-2">{project.description}</p>
-                      )}
-                      
-                      {/* Proposal section */}
-                      {project.status === 'proposal_sent' && project.proposed_package && (
-                        <div className="mt-4 p-4 bg-blue-50 rounded-xl border border-blue-100">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="font-medium text-blue-900 mb-1">Proposal ready for review</p>
-                              <p className="text-sm text-blue-700">
-                                {project.proposed_package.charAt(0).toUpperCase() + project.proposed_package.slice(1)} package • 
-                                {' '}{project.proposed_one_time_fee?.toLocaleString()} DKK + {project.proposed_monthly_fee?.toLocaleString()} kr/mo
-                              </p>
-                              {project.proposal_notes && (
-                                <p className="text-sm text-blue-600 mt-2">{project.proposal_notes}</p>
-                              )}
-                            </div>
-                            <Button className="bg-blue-600 hover:bg-blue-700">
-                              Accept Proposal
-                            </Button>
-                          </div>
+                <Link href={`/client/dashboard/projects/${project.id}`}>
+                  <div className="border border-neutral-200 rounded-2xl p-6 hover:border-neutral-400 transition-colors cursor-pointer">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <h3 className="text-lg font-semibold text-neutral-900">{project.project_name}</h3>
+                          <span className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${status.bgColor} ${status.color}`}>
+                            <StatusIcon className="w-3 h-3" />
+                            {status.label}
+                          </span>
                         </div>
-                      )}
+                        <p className="text-sm text-neutral-500 mb-2">
+                          {project.project_type.replace('_', ' ')} • Started {new Date(project.created_at).toLocaleDateString()}
+                        </p>
+                        {project.description && (
+                          <p className="text-sm text-neutral-600 line-clamp-2">{project.description}</p>
+                        )}
+                        
+                        {/* Proposal section */}
+                        {project.status === 'proposal_sent' && project.proposed_package && (
+                          <div className="mt-4 p-4 bg-blue-50 rounded-xl border border-blue-100">
+                            <p className="font-medium text-blue-900 mb-1">Proposal ready for review</p>
+                            <p className="text-sm text-blue-700">
+                              {project.proposed_package.charAt(0).toUpperCase() + project.proposed_package.slice(1)} package • 
+                              {' '}{project.proposed_one_time_fee?.toLocaleString()} DKK + {project.proposed_monthly_fee?.toLocaleString()} kr/mo
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                      <ChevronRight className="w-5 h-5 text-neutral-300 ml-4" />
                     </div>
-                    <ChevronRight className="w-5 h-5 text-neutral-300 ml-4" />
                   </div>
-                </div>
+                </Link>
               </motion.div>
             )
           })}
