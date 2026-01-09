@@ -15,7 +15,8 @@ import {
   CreditCard,
   FileText,
   Sparkles,
-  Zap
+  Zap,
+  FileSignature
 } from 'lucide-react'
 
 const navigation = [
@@ -58,6 +59,11 @@ const navigation = [
     name: 'Integrations',
     href: '/admin/integrations',
     icon: Zap,
+  },
+  {
+    name: 'Agreement',
+    href: '/admin/agreement',
+    icon: FileSignature,
   },
 ]
 

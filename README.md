@@ -116,6 +116,78 @@ The Grok system prompt is defined in `src/lib/grok-system-prompt.ts` and include
 - Supports both client-side and server-side tracking
 - Respects user privacy and consent requirements
 
+## Agreement Templates
+
+**Custom agreement template management** for generating professional project proposals and contracts.
+
+#### Configuration
+- **Admin Panel**: `/admin/agreement`
+- **Template Storage**: `cap_settings` table with key `agreement_template`
+- **Rich Text Editor**: Full template customization with variable replacement
+
+#### Available Variables
+
+**Client Information:**
+- `{{client_name}}` - Client full name
+- `{{client_email}}` - Client email address
+- `{{client_company}}` - Company name
+- `{{client_phone}}` - Phone number
+- `{{client_title}}` - Job title
+
+**Project Details:**
+- `{{project_description}}` - Full project description
+- `{{project_types}}` - Selected project types (Backend, Website, Mobile, AI, etc.)
+- `{{selected_integrations}}` - Required third-party integrations
+- `{{ai_capabilities}}` - AI/ML requirements
+- `{{team_size}}` - Team size estimate
+
+**Package & Pricing:**
+- `{{package_name}}` - Package name (Small/Medium/Large/Custom)
+- `{{package_features}}` - Number of features included
+- `{{package_integrations}}` - Number of integrations included
+- `{{package_onetime}}` - One-time development fee (DKK)
+- `{{package_monthly}}` - Monthly subscription fee (DKK)
+- `{{additional_features}}` - List of extra features
+- `{{additional_features_cost}}` - Cost of additional features
+- `{{early_cancellation_fee}}` - Early cancellation fee
+
+**Timeline & Dates:**
+- `{{timeline}}` - Selected timeline preference
+- `{{timeline_description}}` - Detailed timeline information
+- `{{current_date}}` - Today's date
+- `{{project_start_date}}` - Estimated project start date
+
+**Support & Services:**
+- `{{monthly_support_hours}}` - Monthly support hours included
+
+**Company Information:**
+- `{{company_name}}` - Ceptiv ApS
+- `{{company_cvr}}` - CVR number (37576476)
+- `{{company_address}}` - Company address
+- `{{company_email}}` - Company email (dv@ceptiv.net)
+- `{{company_phone}}` - Company phone (+45 81 98 32 71)
+
+#### Features
+- **Rich Text Editor**: Full template customization
+- **Variable Replacement**: Automatic population of client and project data
+- **Default Template**: Comprehensive agreement template included
+- **Real-time Preview**: Test templates with sample data
+- **Export Options**: Save and export customized agreements
+
+#### Default Template Includes
+- Project overview and scope
+- Services and deliverables
+- Pricing and payment terms
+- Timeline and milestones
+- Intellectual property rights
+- Confidentiality agreements
+- Data protection compliance
+- Warranties and limitations
+- Termination conditions
+- Support and maintenance
+- Dispute resolution
+- Signature sections
+
 ---
 
 ## Critical Information for AI Assistants
