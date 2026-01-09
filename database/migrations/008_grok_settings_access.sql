@@ -5,7 +5,7 @@
 DROP POLICY IF EXISTS "Allow anon to read grok settings" ON cap_settings;
 
 CREATE POLICY "Allow anon to read grok settings" ON cap_settings
-    FOR SELECT 
+    FOR SELECT
     USING (
         key IN ('grok_enabled', 'grok_api_key') 
         OR is_public = true 

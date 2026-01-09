@@ -36,7 +36,7 @@ export function Logo({
     }
 
     // If already fetching, wait for that promise
-    if (fetchingPromises[key]) {
+    if (fetchingPromises[key] !== undefined) {
       const result = await fetchingPromises[key]
       setLogoUrl(result)
       return

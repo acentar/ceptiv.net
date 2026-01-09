@@ -321,7 +321,7 @@ export default function StartProjectPage() {
     return actualStep
   }
 
-  const canProceed = () => {
+  const canProceed = (): boolean => {
     switch (currentStep) {
       case 1:
         return projectApproach !== null
@@ -1493,7 +1493,7 @@ Is there anything else you'd like to add?`,
 
           <Button
             onClick={nextStep}
-            disabled={!canProceed() || isSubmitting || (isGrokEnabled && currentStep === 5 && isAiLoading)}
+            disabled={!canProceed() || isSubmitting || (isGrokEnabled === true && currentStep === 5 && isAiLoading)}
             className="bg-neutral-900 hover:bg-neutral-800 text-white px-8"
           >
             {isSubmitting ? (
