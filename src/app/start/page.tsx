@@ -27,14 +27,10 @@ import {
   Building2,
   User,
   CheckCircle2,
-  PartyPopper,
   Plus,
   Layers,
   AlertCircle,
-  Link2,
-  Key,
-  Copy,
-  LogIn
+  Link2
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { generatePin, hashPin } from '@/lib/client-auth'
@@ -121,9 +117,6 @@ export default function StartProjectPage() {
   const [phone, setPhone] = useState('')
   const [additionalInfo, setAdditionalInfo] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [generatedPin, setGeneratedPin] = useState('')
-  const [pinCopied, setPinCopied] = useState(false)
 
   const totalSteps = 6
 
@@ -254,9 +247,8 @@ export default function StartProjectPage() {
       }
       localStorage.setItem('ceptiv_client', JSON.stringify(clientData))
       
-      // Store the generated PIN to show to user
-      setGeneratedPin(pin)
-      setIsSubmitted(true)
+      // Redirect to client dashboard with PIN in query param to show welcome modal
+      router.push(`/client/dashboard?welcome=true&pin=${pin}`)
       
     } catch (error) {
       console.error('Submission error:', error)
@@ -278,143 +270,6 @@ export default function StartProjectPage() {
     if (currentStep > 1) {
       setCurrentStep(prev => prev - 1)
     }
-  }
-
-  const copyPin = () => {
-    navigator.clipboard.writeText(generatedPin)
-    setPinCopied(true)
-    setTimeout(() => setPinCopied(false), 2000)
-  }
-
-  if (isSubmitted) {
-    return (
-      <div className="min-h-screen bg-neutral-900 flex items-center justify-center px-4">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-          className="max-w-xl w-full text-center"
-        >
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-            className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-8"
-          >
-            <PartyPopper className="w-12 h-12 text-neutral-900" />
-          </motion.div>
-          
-          <h1 className="text-3xl lg:text-4xl font-bold text-white mb-4">
-            Welcome to Ceptiv!
-          </h1>
-          
-          <p className="text-lg text-neutral-300 mb-8">
-            Your project request has been submitted. Save your login PIN below.
-          </p>
-
-          {/* PIN Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <Card className="mb-6 bg-gradient-to-br from-neutral-800 to-neutral-900 border-neutral-700">
-              <CardContent className="p-8">
-                <div className="flex items-center justify-center gap-3 mb-4">
-                  <Key className="w-6 h-6 text-neutral-400" />
-                  <p className="text-neutral-400 font-medium">Your Login PIN</p>
-                </div>
-                
-                <div className="flex justify-center gap-3 mb-6">
-                  {generatedPin.split('').map((digit, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, scale: 0 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.5 + index * 0.1 }}
-                      className="w-16 h-20 bg-white rounded-xl flex items-center justify-center text-3xl font-bold text-neutral-900"
-                    >
-                      {digit}
-                    </motion.div>
-                  ))}
-                </div>
-
-                <Button 
-                  onClick={copyPin}
-                  variant="outline"
-                  className="border-neutral-600 text-white hover:bg-neutral-800"
-                >
-                  {pinCopied ? (
-                    <>
-                      <Check className="w-4 h-4 mr-2" />
-                      Copied!
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-4 h-4 mr-2" />
-                      Copy PIN
-                    </>
-                  )}
-                </Button>
-
-                <p className="text-sm text-neutral-500 mt-4">
-                  Use this PIN with your email ({email}) to log in to your client portal.
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Next Steps */}
-          <Card className="mb-8 bg-neutral-800 border-neutral-700">
-            <CardContent className="p-6">
-              <h3 className="font-bold text-white mb-4 text-left">What happens next?</h3>
-              <ul className="text-left space-y-3 text-neutral-300">
-                <li className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-neutral-700 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-xs font-bold text-white">1</span>
-                  </div>
-                  <span>We review your project and prepare a proposal within 24 hours</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-neutral-700 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-xs font-bold text-white">2</span>
-                  </div>
-                  <span>You&apos;ll receive a notification when your proposal is ready</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-neutral-700 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-xs font-bold text-white">3</span>
-                  </div>
-                  <span>Log in to your portal to review and accept the proposal</span>
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              asChild 
-              size="lg" 
-              className="bg-white text-neutral-900 hover:bg-neutral-100"
-            >
-              <Link href="/client/dashboard">
-                <ArrowRight className="w-5 h-5 mr-2" />
-                Continue to Dashboard
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="outline-light">
-              <Link href="/">
-                Back to Homepage
-              </Link>
-            </Button>
-          </div>
-
-          <p className="text-neutral-500 text-sm mt-6">
-            You&apos;re now signed in. Save your PIN for future logins.
-          </p>
-        </motion.div>
-      </div>
-    )
   }
 
   return (

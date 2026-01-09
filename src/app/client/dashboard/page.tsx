@@ -1,8 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { 
   ArrowRight,
@@ -14,7 +15,12 @@ import {
   Sparkles,
   ChevronRight,
   FileText,
-  Plus
+  Plus,
+  PartyPopper,
+  Key,
+  Copy,
+  Check,
+  X
 } from 'lucide-react'
 import { useClientAuth } from '@/lib/client-auth'
 import { supabase } from '@/lib/supabase'
@@ -53,9 +59,32 @@ const statusConfig: Record<string, { label: string; color: string; icon: typeof 
 
 export default function ClientDashboard() {
   const { client } = useClientAuth()
+  const searchParams = useSearchParams()
+  const router = useRouter()
   const [projects, setProjects] = useState<Project[]>([])
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [showWelcome, setShowWelcome] = useState(false)
+  const [welcomePin, setWelcomePin] = useState('')
+  const [pinCopied, setPinCopied] = useState(false)
+
+  // Check for welcome flow
+  useEffect(() => {
+    const isWelcome = searchParams.get('welcome')
+    const pin = searchParams.get('pin')
+    if (isWelcome === 'true' && pin) {
+      setWelcomePin(pin)
+      setShowWelcome(true)
+      // Clean up URL
+      router.replace('/client/dashboard', { scroll: false })
+    }
+  }, [searchParams, router])
+
+  const copyPin = () => {
+    navigator.clipboard.writeText(welcomePin)
+    setPinCopied(true)
+    setTimeout(() => setPinCopied(false), 2000)
+  }
 
   useEffect(() => {
     if (client) {
@@ -95,6 +124,91 @@ export default function ClientDashboard() {
 
   return (
     <div>
+      {/* Welcome Modal */}
+      <AnimatePresence>
+        {showWelcome && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="bg-white rounded-2xl max-w-md w-full p-8 text-center relative"
+            >
+              <button
+                onClick={() => setShowWelcome(false)}
+                className="absolute top-4 right-4 p-2 text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="w-16 h-16 bg-neutral-900 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <PartyPopper className="w-8 h-8 text-white" />
+              </div>
+              
+              <h2 className="text-2xl font-bold text-neutral-900 mb-2">
+                Welcome to Ceptiv!
+              </h2>
+              <p className="text-neutral-500 mb-6">
+                Your project has been submitted. Save your login PIN for future access.
+              </p>
+
+              {/* PIN Display */}
+              <div className="bg-neutral-50 rounded-xl p-6 mb-6">
+                <div className="flex items-center justify-center gap-2 mb-4">
+                  <Key className="w-4 h-4 text-neutral-400" />
+                  <span className="text-sm text-neutral-500">Your PIN</span>
+                </div>
+                <div className="flex justify-center gap-2 mb-4">
+                  {welcomePin.split('').map((digit, index) => (
+                    <div
+                      key={index}
+                      className="w-12 h-14 bg-white border-2 border-neutral-200 rounded-lg flex items-center justify-center text-2xl font-bold text-neutral-900"
+                    >
+                      {digit}
+                    </div>
+                  ))}
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={copyPin}
+                  className="mx-auto"
+                >
+                  {pinCopied ? (
+                    <>
+                      <Check className="w-4 h-4 mr-2" />
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4 mr-2" />
+                      Copy PIN
+                    </>
+                  )}
+                </Button>
+              </div>
+
+              <p className="text-xs text-neutral-400 mb-6">
+                Use this PIN with your email to sign in next time
+              </p>
+
+              <Button
+                onClick={() => setShowWelcome(false)}
+                className="w-full"
+              >
+                Got it
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Welcome Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
