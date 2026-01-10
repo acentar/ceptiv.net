@@ -568,9 +568,10 @@ export const translations = {
 
 // Type for the translation structure
 export type Translations = typeof translations
+export type TranslationContent = Translations['en'] | Translations['da']
 
 // Helper function to get translations for a language
-export function getTranslations(lang: Language): Translations['en'] {
+export function getTranslations(lang: Language): TranslationContent {
   return translations[lang] || translations.en
 }
 
