@@ -104,19 +104,14 @@ export const getLocalizedUrl = (route: string, lang: Language): string => {
   // Clean the route (remove leading/trailing slashes)
   const cleanRoute = route.replace(/^\/+|\/+$/g, '')
   
-  if (lang === 'en' || lang === DEFAULT_LANGUAGE) {
+  if (lang === 'en') {
     // English uses clean URLs without language prefix
     return cleanRoute ? `/${cleanRoute}` : '/'
   }
 
-  if (lang === 'da') {
-    // Danish uses /da/ prefix with localized slugs
-    const danishSlug = DANISH_URL_MAPPINGS[cleanRoute] || cleanRoute
-    return danishSlug ? `/da/${danishSlug}` : '/da'
-  }
-
-  // Fallback
-  return cleanRoute ? `/${cleanRoute}` : '/'
+  // Danish uses /da/ prefix with localized slugs
+  const danishSlug = DANISH_URL_MAPPINGS[cleanRoute] || cleanRoute
+  return danishSlug ? `/da/${danishSlug}` : '/da'
 }
 
 // Extract language from URL path
