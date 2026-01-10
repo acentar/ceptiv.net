@@ -6,6 +6,8 @@ import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Logo } from '@/components/ui/logo'
 import { Button } from '@/components/ui/button'
+import { LanguageSwitcher } from '@/components/language-switcher'
+import { useLanguage } from '@/hooks/use-language'
 import { Menu, X, ArrowRight, Zap, Code, Smartphone, Brain, CreditCard, Mail, Phone, LogIn } from 'lucide-react'
 
 // Pages with dark hero sections that need transparent nav
@@ -32,9 +34,29 @@ export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [hasScrolled, setHasScrolled] = useState(false)
   const pathname = usePathname()
+  const { getLocalizedPath, currentLanguage } = useLanguage()
 
   // Check if current page has a dark hero
   const hasDarkHero = darkHeroPages.includes(pathname)
+
+  // Get localized menu links
+  const getLocalizedMenuLinks = () => {
+    return menuLinks.map(link => ({
+      ...link,
+      href: getLocalizedPath(link.href)
+    }))
+  }
+
+  // Get localized service links
+  const getLocalizedServiceLinks = () => {
+    return serviceLinks.map(service => ({
+      ...service,
+      href: getLocalizedPath(service.href)
+    }))
+  }
+
+  const localizedMenuLinks = getLocalizedMenuLinks()
+  const localizedServiceLinks = getLocalizedServiceLinks()
 
   // Handle scroll for sticky nav transformation
   useEffect(() => {
@@ -77,7 +99,7 @@ export function Navigation() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 lg:h-20">
             {/* Logo */}
-            <Link href="/" className="flex-shrink-0 relative z-50">
+            <Link href={getLocalizedPath('/')} className="flex-shrink-0 relative z-50">
               <Logo width={80} variant={logoVariant} />
             </Link>
 
@@ -89,10 +111,10 @@ export function Navigation() {
                 variant={isTransparent ? 'outline-light' : 'outline'}
                 className="transition-all duration-300"
               >
-                <Link href="/client/login">
-                  <LogIn className="w-4 h-4 mr-2 hidden sm:inline-block" />
-                  Login
-                </Link>
+                  <Link href={getLocalizedPath('/client/login')}>
+                    <LogIn className="w-4 h-4 mr-2 hidden sm:inline-block" />
+                    Login
+                  </Link>
               </Button>
 
               {/* Start Project Button - All devices */}
@@ -104,11 +126,14 @@ export function Navigation() {
                     : 'bg-neutral-900 text-white hover:bg-neutral-800'
                 }`}
               >
-                <Link href="/start">
+                <Link href={getLocalizedPath('/start')}>
                   Start Project
                   <ArrowRight className="w-4 h-4 ml-2 hidden sm:inline-block" />
                 </Link>
               </Button>
+
+              {/* Language Switcher */}
+              <LanguageSwitcher />
 
               {/* Menu Button */}
               <button
@@ -175,7 +200,7 @@ export function Navigation() {
                       NAVIGATION
                     </motion.p>
                     <nav className="space-y-2">
-                      {menuLinks.map((link, index) => (
+                      {localizedMenuLinks.map((link, index) => (
                         <motion.div
                           key={link.name}
                           initial={{ opacity: 0, x: -20 }}
@@ -211,7 +236,7 @@ export function Navigation() {
                         SERVICES
                       </motion.p>
                       <div className="grid grid-cols-2 gap-4">
-                        {serviceLinks.map((service, index) => (
+                        {localizedServiceLinks.map((service, index) => (
                           <motion.div
                             key={service.name}
                             initial={{ opacity: 0, y: 20 }}
@@ -270,10 +295,10 @@ export function Navigation() {
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0 text-neutral-500 text-sm">
                     <p>© {new Date().getFullYear()} Ceptiv. All rights reserved.</p>
                     <div className="flex space-x-6">
-                      <Link href="/privacy" className="hover:text-white transition-colors">
+                      <Link href={getLocalizedPath('/privacy')} className="hover:text-white transition-colors">
                         Privacy
                       </Link>
-                      <Link href="/terms" className="hover:text-white transition-colors">
+                      <Link href={getLocalizedPath('/terms')} className="hover:text-white transition-colors">
                         Terms
                       </Link>
                     </div>

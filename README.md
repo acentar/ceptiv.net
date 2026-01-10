@@ -23,6 +23,113 @@ A Next.js 16 web application with Supabase backend, featuring a client portal an
 
 ---
 
+## Multi-Language SEO Implementation
+
+### Language Structure & Routing
+
+**Intelligent URL-based multi-language routing** implemented for optimal SEO:
+
+#### URL Structure
+- **English (Default)**: `ceptiv.net/page` or `ceptiv.net/en/page`
+- **Danish**: `ceptiv.net/da/page`
+- **Automatic Redirects**: Root URLs redirect to default language
+- **Middleware Detection**: Automatic language detection from URL slugs
+
+#### Technical Implementation
+- **Next.js Dynamic Routes**: `/[lang]` folder structure for language-specific pages
+- **Middleware**: Automatic language routing and redirects
+- **Language Hooks**: `useLanguage()` hook for component-level language management
+- **URL Generation**: Automatic localized URL generation
+
+#### SEO Benefits
+- **Clean URLs**: Subdirectory structure preferred by Google
+- **Language Targeting**: Clear language signals for search engines
+- **Scalable**: Easy to add new languages
+- **User-Friendly**: Intuitive URL structure
+
+### Hreflang Implementation
+
+**Comprehensive hreflang tags** for international SEO:
+
+#### Automatic Hreflang Generation
+```html
+<link rel="alternate" hreflang="en" href="https://ceptiv.net/en/page" />
+<link rel="alternate" hreflang="da" href="https://ceptiv.net/da/page" />
+<link rel="alternate" hreflang="x-default" href="https://ceptiv.net/en/page" />
+```
+
+#### Features
+- **Dynamic Generation**: Automatically generated for all pages
+- **Language Pairs**: All language combinations covered
+- **X-Default**: Default language fallback for unmatched regions
+- **Real-time Updates**: Updates based on current page and language
+
+### XML Sitemap with Hreflang
+
+**Advanced sitemap generation** with hreflang annotations:
+
+#### Sitemap Features
+- **Multi-language URLs**: All language versions included
+- **Hreflang Annotations**: Complete hreflang markup in XML
+- **Priority & Frequency**: SEO-optimized change frequencies
+- **Route: `/sitemap.xml`**: Automatically generated XML sitemap
+
+#### Sitemap Structure
+```xml
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://ceptiv.net/en/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ceptiv.net/en/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://ceptiv.net/da/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ceptiv.net/en/" />
+  </url>
+</urlset>
+```
+
+### HTML Language Attributes
+
+**Proper language tagging** for accessibility and SEO:
+
+- **English**: `<html lang="en">`
+- **Danish**: `<html lang="da">`
+- **Automatic Updates**: Language attributes update based on URL
+
+### Language Switcher
+
+**User-friendly language selection** in navigation:
+
+- **Dropdown Interface**: Flag + native language name
+- **URL Preservation**: Maintains current page when switching languages
+- **Responsive**: Works on mobile and desktop
+- **SEO-Friendly**: Uses proper language links
+
+### Meta Data Generation
+
+**SEO-optimized metadata** for both languages:
+
+#### Dynamic Meta Generation
+- **Titles**: Localized with proper length limits (50-60 characters)
+- **Descriptions**: Compelling descriptions (140-160 characters)
+- **Keywords**: Localized keyword targeting
+- **Open Graph**: Social media optimization
+
+#### Available Variables
+- `{{client_name}}`, `{{client_company}}`, `{{project_description}}`
+- `{{package_name}}`, `{{package_onetime}}`, `{{package_monthly}}`
+- `{{timeline}}`, `{{current_date}}`
+- Custom variables for dynamic content
+
+### SEO Optimizations
+
+**Advanced SEO features** implemented:
+
+- **Canonical URLs**: Self-referential canonical tags
+- **Structured Data**: JSON-LD for rich snippets
+- **Performance**: Optimized for Core Web Vitals
+- **Mobile-First**: Responsive design with mobile optimization
+- **Accessibility**: WCAG compliant for better search rankings
+
 ## Integrations
 
 ### Grok AI Integration
