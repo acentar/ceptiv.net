@@ -10,8 +10,15 @@ import { LanguageSwitcher } from '@/components/language-switcher'
 import { useLanguage } from '@/hooks/use-language'
 import { Menu, X, ArrowRight, Zap, Code, Smartphone, Brain, CreditCard, Mail, Phone, LogIn } from 'lucide-react'
 
-// Pages with dark hero sections that need transparent nav
-const darkHeroPages = ['/', '/services', '/about', '/portfolio', '/pricing']
+// Base pages with dark hero sections that need transparent nav (without language prefix)
+// Includes both English and Danish slugs
+const darkHeroBasePages = [
+  '', // Home
+  'services', 'tjenester', // Services
+  'about', 'om-os', // About
+  'portfolio', 'portefolio', // Portfolio
+  'pricing', 'priser', // Pricing
+]
 
 const menuLinks = [
   { name: 'Home', href: '/' },
@@ -37,7 +44,17 @@ export function Navigation() {
   const { getLocalizedPath, currentLanguage } = useLanguage()
 
   // Check if current page has a dark hero
-  const hasDarkHero = darkHeroPages.includes(pathname)
+  // Strip language prefix to get base path for comparison
+  const getBasePath = (path: string) => {
+    const segments = path.split('/').filter(Boolean)
+    // If first segment is a language code, remove it
+    if (segments[0] === 'en' || segments[0] === 'da') {
+      return segments.slice(1).join('/')
+    }
+    return segments.join('/')
+  }
+  const basePath = getBasePath(pathname)
+  const hasDarkHero = darkHeroBasePages.includes(basePath)
 
   // Get localized menu links
   const getLocalizedMenuLinks = () => {
@@ -131,9 +148,6 @@ export function Navigation() {
                   <ArrowRight className="w-4 h-4 ml-2 hidden sm:inline-block" />
                 </Link>
               </Button>
-
-              {/* Language Switcher */}
-              <LanguageSwitcher />
 
               {/* Menu Button */}
               <button
@@ -280,6 +294,18 @@ export function Navigation() {
                           <span>+45 81 98 32 71</span>
                         </a>
                       </div>
+                    </motion.div>
+
+                    {/* Language Switcher */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.6 }}
+                    >
+                      <p className="text-neutral-500 text-sm font-medium mb-6">
+                        LANGUAGE
+                      </p>
+                      <LanguageSwitcher variant="dark" />
                     </motion.div>
 
                   </div>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { RootLayoutClient } from "./root-layout-client";
+import { generatePageMetadata } from "@/lib/seo";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,10 +14,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Ceptiv - Digital Solutions & Automation",
-  description: "Transform your business with custom automation, AI integrations, and high-performance web solutions. Low starting fees, transparent pricing.",
-};
+// Use the SEO system for homepage metadata
+export const metadata: Metadata = generatePageMetadata('home', 'en');
 
 export default function RootLayout({
   children,

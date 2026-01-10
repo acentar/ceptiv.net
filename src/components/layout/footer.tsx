@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { Logo } from '@/components/ui/logo'
 import { Button } from '@/components/ui/button'
+import { LanguageSwitcher } from '@/components/language-switcher'
 import { ArrowRight, Mail, Phone } from 'lucide-react'
 
 const footerNavigation = {
@@ -193,12 +194,13 @@ export function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="relative">
+      <div className="relative border-t border-neutral-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex justify-center">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-neutral-500 text-sm">
               © {new Date().getFullYear()} Ceptiv. All rights reserved.
             </p>
+            <LanguageSwitcher variant="dark" />
           </div>
         </div>
       </div>

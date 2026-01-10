@@ -1,14 +1,19 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import {
-  SUPPORTED_LANGUAGES,
-  DEFAULT_LANGUAGE,
-  extractLanguageFromPath,
-  addLanguagePrefix,
-  removeLanguagePrefix
-} from '@/lib/languages'
+import { SUPPORTED_LANGUAGES } from '@/lib/languages'
 
-// Paths that should not be prefixed with language
+/**
+ * Middleware for Multi-Language Routing
+ * 
+ * URL Structure:
+ * - English (default): /about, /services, /pricing (no /en/ prefix)
+ * - Danish: /da/om-os, /da/tjenester, /da/priser (with /da/ prefix and Danish slugs)
+ * 
+ * The middleware only handles /da/* routes and lets everything else pass through
+ * to be handled by the existing page files in the /app directory.
+ */
+
+// Paths that should never go through language routing
 const EXCLUDED_PATHS = [
   '/api',
   '/_next',
@@ -35,20 +40,14 @@ export function middleware(request: NextRequest) {
   const segments = pathname.split('/').filter(Boolean)
   const firstSegment = segments[0]
 
-  // If no language prefix, redirect to default language
-  if (!firstSegment || !SUPPORTED_LANGUAGES.includes(firstSegment as any)) {
-    const newPath = addLanguagePrefix(pathname, DEFAULT_LANGUAGE)
-    return NextResponse.redirect(new URL(newPath, request.url))
-  }
-
-  // If language is supported, continue normally
+  // If first segment is a supported language (da or en), let it through to [lang] routes
   if (SUPPORTED_LANGUAGES.includes(firstSegment as any)) {
     return NextResponse.next()
   }
 
-  // Fallback: redirect to default language
-  const newPath = addLanguagePrefix(pathname, DEFAULT_LANGUAGE)
-  return NextResponse.redirect(new URL(newPath, request.url))
+  // For all other paths (English pages), let them through to root-level pages
+  // e.g., /about → src/app/about/page.tsx
+  return NextResponse.next()
 }
 
 export const config = {

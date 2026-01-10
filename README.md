@@ -25,110 +25,402 @@ A Next.js 16 web application with Supabase backend, featuring a client portal an
 
 ## Multi-Language SEO Implementation
 
-### Language Structure & Routing
+### ⚠️ Critical SEO Architecture Overview
 
-**Intelligent URL-based multi-language routing** implemented for optimal SEO:
+This site implements a **comprehensive multi-language SEO system** following Google's best practices for international websites. The implementation ensures:
 
-#### URL Structure
-- **English (Default)**: `ceptiv.net/page` or `ceptiv.net/en/page`
-- **Danish**: `ceptiv.net/da/page`
-- **Automatic Redirects**: Root URLs redirect to default language
-- **Middleware Detection**: Automatic language detection from URL slugs
+- **No duplicate content penalties** - Proper hreflang and canonical tags
+- **Correct language serving** - Users see the right language version in search results
+- **Localized Danish URLs** - SEO-friendly slugs like `/da/om-os` instead of `/da/about`
+- **Complete crawlability** - All language versions discoverable by search engines
 
-#### Technical Implementation
-- **Next.js Dynamic Routes**: `/[lang]` folder structure for language-specific pages
-- **Middleware**: Automatic language routing and redirects
-- **Language Hooks**: `useLanguage()` hook for component-level language management
-- **URL Generation**: Automatic localized URL generation
+### How Google Handles This Setup
 
-#### SEO Benefits
-- **Clean URLs**: Subdirectory structure preferred by Google
-- **Language Targeting**: Clear language signals for search engines
-- **Scalable**: Easy to add new languages
-- **User-Friendly**: Intuitive URL structure
+With subdirectories (`/` for English, `/da/` for Danish), hreflang tags (including self-references and x-default), HTML lang attributes, unique translated content, and an XML sitemap with all versions, Google will:
+
+1. **Detect as Multilingual**: URL structure + hreflang + `<html lang>` signal distinct language variants
+2. **Index Separately**: Each language version indexed independently (no duplicate content)
+3. **Serve Correctly**: Danish users see `/da/` pages; global users see English
+
+#### User Location/Language → Search Result
+| User Profile | Search Result |
+|-------------|---------------|
+| User in Denmark, Danish query | `/da/om-os` |
+| User in USA, English query | `/about` |
+| User in Germany, English query | `/about` (x-default) |
+
+---
+
+### Core Files & Their Purposes
+
+| File | Purpose |
+|------|---------|
+| `src/lib/languages.ts` | Language configuration, URL mappings, supported languages |
+| `src/lib/translations.ts` | Complete translations for all pages (EN/DA) |
+| `src/lib/seo.ts` | SEO metadata generation, hreflang helpers, Schema.org |
+| `src/hooks/use-language.ts` | React hook for language detection & switching |
+| `src/components/seo/hreflang-head.tsx` | Hreflang link tag component |
+| `src/components/seo/structured-data.tsx` | Schema.org JSON-LD components |
+| `src/app/sitemap.xml/route.ts` | Dynamic XML sitemap with hreflang |
+| `src/app/robots.txt/route.ts` | Robots.txt with sitemap reference |
+| `src/app/[lang]/layout.tsx` | Language-specific layout with html lang |
+| `src/app/[lang]/(pages)/[...slug]/page.tsx` | Catch-all route for localized URLs |
+| `src/middleware.ts` | URL routing and language detection |
+
+---
+
+### URL Structure (Subdirectory Approach)
+
+**This is Google's recommended approach for multilingual sites.**
+
+| English (Default) | Danish |
+|------------------|--------|
+| `ceptiv.net/` | `ceptiv.net/da` |
+| `ceptiv.net/about` | `ceptiv.net/da/om-os` |
+| `ceptiv.net/services` | `ceptiv.net/da/tjenester` |
+| `ceptiv.net/pricing` | `ceptiv.net/da/priser` |
+| `ceptiv.net/contact` | `ceptiv.net/da/kontakt` |
+| `ceptiv.net/portfolio` | `ceptiv.net/da/portefolio` |
+| `ceptiv.net/privacy` | `ceptiv.net/da/privatliv` |
+| `ceptiv.net/terms` | `ceptiv.net/da/vilkar` |
+| `ceptiv.net/start` | `ceptiv.net/da/start` |
+
+#### Localized Danish Slugs
+
+Danish URLs use SEO-friendly localized slugs defined in `src/lib/languages.ts`:
+
+```typescript
+export const DANISH_URL_MAPPINGS: Record<string, string> = {
+  'about': 'om-os',
+  'services': 'tjenester',
+  'pricing': 'priser',
+  'contact': 'kontakt',
+  'portfolio': 'portefolio',
+  'privacy': 'privatliv',
+  'terms': 'vilkar',
+  // ... etc
+}
+```
+
+---
 
 ### Hreflang Implementation
 
-**Comprehensive hreflang tags** for international SEO:
+**Hreflang tags tell search engines about alternate language versions, preventing duplicate content issues.**
 
-#### Automatic Hreflang Generation
+#### Every Page Includes These Tags
+
 ```html
-<link rel="alternate" hreflang="en" href="https://ceptiv.net/en/page" />
-<link rel="alternate" hreflang="da" href="https://ceptiv.net/da/page" />
-<link rel="alternate" hreflang="x-default" href="https://ceptiv.net/en/page" />
+<!-- Self-reference + alternate + x-default -->
+<link rel="alternate" hreflang="en" href="https://ceptiv.net/about" />
+<link rel="alternate" hreflang="da" href="https://ceptiv.net/da/om-os" />
+<link rel="alternate" hreflang="x-default" href="https://ceptiv.net/about" />
 ```
 
-#### Features
-- **Dynamic Generation**: Automatically generated for all pages
-- **Language Pairs**: All language combinations covered
-- **X-Default**: Default language fallback for unmatched regions
-- **Real-time Updates**: Updates based on current page and language
+#### Implementation Requirements (CRITICAL)
+
+1. **Self-referencing**: Each page MUST reference itself
+2. **Bi-directional**: EN→DA AND DA→EN links required
+3. **x-default**: Fallback for unmatched regions (points to English)
+4. **Consistency**: Same hreflang in both sitemap AND page metadata
+
+#### Hreflang Helper Usage
+
+```tsx
+import { generateHreflangLinks } from '@/lib/seo'
+
+// In generateMetadata function:
+const hreflangLinks = generateHreflangLinks('about')
+// Returns array of { rel, hreflang, href } objects
+```
+
+---
 
 ### XML Sitemap with Hreflang
 
-**Advanced sitemap generation** with hreflang annotations:
+**Route**: `/sitemap.xml`
 
-#### Sitemap Features
-- **Multi-language URLs**: All language versions included
-- **Hreflang Annotations**: Complete hreflang markup in XML
-- **Priority & Frequency**: SEO-optimized change frequencies
-- **Route: `/sitemap.xml`**: Automatically generated XML sitemap
+**The sitemap includes ALL language versions with complete hreflang annotations:**
 
-#### Sitemap Structure
 ```xml
+<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://ceptiv.net/en/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://ceptiv.net/en/" />
-    <xhtml:link rel="alternate" hreflang="da" href="https://ceptiv.net/da/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://ceptiv.net/en/" />
+    <loc>https://ceptiv.net/about</loc>
+    <lastmod>2026-01-10T...</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ceptiv.net/about" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://ceptiv.net/da/om-os" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ceptiv.net/about" />
+  </url>
+  <url>
+    <loc>https://ceptiv.net/da/om-os</loc>
+    <lastmod>2026-01-10T...</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ceptiv.net/about" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://ceptiv.net/da/om-os" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ceptiv.net/about" />
   </url>
 </urlset>
 ```
 
+#### Priority Configuration
+
+```typescript
+const PAGE_PRIORITIES: Record<string, number> = {
+  '': 1.0,           // Home - highest
+  'services': 0.9,
+  'pricing': 0.9,
+  'contact': 0.8,
+  'about': 0.7,
+  'privacy': 0.3,    // Legal - lowest
+  'terms': 0.3,
+}
+```
+
+---
+
 ### HTML Language Attributes
 
-**Proper language tagging** for accessibility and SEO:
+**Set dynamically in `src/app/[lang]/layout.tsx`:**
 
-- **English**: `<html lang="en">`
-- **Danish**: `<html lang="da">`
-- **Automatic Updates**: Language attributes update based on URL
+```tsx
+export default async function LangLayout({ children, params }) {
+  const lang = (await params).lang
+  
+  return (
+    <html lang={lang} dir="ltr">
+      <body>{children}</body>
+    </html>
+  )
+}
+```
+
+- **English pages**: `<html lang="en">`
+- **Danish pages**: `<html lang="da">`
+
+---
+
+### Metadata System
+
+**File**: `src/lib/seo.ts`
+
+#### Research-Backed Meta Lengths
+
+| Element | Max Length | Reason |
+|---------|-----------|--------|
+| Meta Title | 50-60 chars | Avoids truncation in SERPs |
+| Meta Description | 140-160 chars | Full visibility on desktop |
+
+#### Page Metadata Structure
+
+```typescript
+export const PAGE_METADATA = {
+  home: {
+    en: {
+      title: 'Ceptiv - Your Dev Team Without the Overhead',
+      description: 'Custom web apps, mobile solutions & AI integrations...',
+      keywords: ['web development', 'mobile apps', ...],
+    },
+    da: {
+      title: 'Ceptiv - Dit Udviklerteam Uden Overhead',
+      description: 'Skræddersyede webapps, mobilløsninger & AI-integrationer...',
+      keywords: ['webudvikling', 'mobilapps', ...],
+    },
+  },
+  // ... all pages
+}
+```
+
+#### Usage in Pages
+
+```tsx
+import { generatePageMetadata } from '@/lib/seo'
+
+export async function generateMetadata({ params }) {
+  const lang = (await params).lang
+  return generatePageMetadata('about', lang)
+}
+```
+
+---
+
+### Translations System
+
+**File**: `src/lib/translations.ts`
+
+**Complete translations for all UI content:**
+
+```typescript
+export const translations = {
+  en: {
+    nav: {
+      home: 'Home',
+      services: 'Services',
+      // ...
+    },
+    home: {
+      hero: {
+        title: 'Your dev team.',
+        titleAccent: 'Without the overhead.',
+        // ...
+      },
+    },
+    // ... all pages
+  },
+  da: {
+    nav: {
+      home: 'Hjem',
+      services: 'Tjenester',
+      // ...
+    },
+    // ... all translations
+  },
+}
+```
+
+#### Usage in Components
+
+```tsx
+import { useTranslations } from '@/hooks/use-language'
+
+export function MyComponent() {
+  const { t, translations } = useTranslations()
+  
+  return (
+    <h1>{t('home.hero.title')}</h1>
+    // or
+    <h1>{translations.home.hero.title}</h1>
+  )
+}
+```
+
+---
+
+### Structured Data (Schema.org)
+
+**File**: `src/components/seo/structured-data.tsx`
+
+**JSON-LD schemas for rich snippets:**
+
+```tsx
+import { OrganizationSchema, WebPageSchema, LocalBusinessSchema } from '@/components/seo/structured-data'
+
+// In your layout/page:
+<>
+  <OrganizationSchema />
+  <WebPageSchema page="about" lang="en" url="https://ceptiv.net/about" />
+</>
+```
+
+#### Available Schemas
+
+| Schema | Purpose |
+|--------|---------|
+| `OrganizationSchema` | Company information |
+| `LocalBusinessSchema` | Local SEO (Denmark) |
+| `WebPageSchema` | Individual page info |
+| `ServiceSchema` | Service offerings |
+| `BreadcrumbSchema` | Navigation breadcrumbs |
+| `FAQSchema` | FAQ rich snippets |
+
+---
 
 ### Language Switcher
 
-**User-friendly language selection** in navigation:
+**File**: `src/components/language-switcher.tsx`
 
-- **Dropdown Interface**: Flag + native language name
-- **URL Preservation**: Maintains current page when switching languages
-- **Responsive**: Works on mobile and desktop
-- **SEO-Friendly**: Uses proper language links
+```tsx
+<LanguageSwitcher variant="dark" /> // For dark backgrounds
+<LanguageSwitcher variant="light" /> // For light backgrounds (default)
+```
 
-### Meta Data Generation
+**Features**:
+- Dropdown with flag + native language name
+- Automatically redirects to localized URL (e.g., `/about` → `/da/om-os`)
+- Works on mobile and desktop
 
-**SEO-optimized metadata** for both languages:
+---
 
-#### Dynamic Meta Generation
-- **Titles**: Localized with proper length limits (50-60 characters)
-- **Descriptions**: Compelling descriptions (140-160 characters)
-- **Keywords**: Localized keyword targeting
-- **Open Graph**: Social media optimization
+### ⚠️ SEO Implementation Gotchas
 
-#### Available Variables
-- `{{client_name}}`, `{{client_company}}`, `{{project_description}}`
-- `{{package_name}}`, `{{package_onetime}}`, `{{package_monthly}}`
-- `{{timeline}}`, `{{current_date}}`
-- Custom variables for dynamic content
+#### 1. Hreflang Consistency
+**Hreflang must be identical in BOTH the sitemap AND page metadata alternates.**
 
-### SEO Optimizations
+#### 2. No Auto-Redirects Based on Location
+**NEVER** use IP-based redirects to force language. This confuses crawlers and harms UX.
 
-**Advanced SEO features** implemented:
+#### 3. Crawl All Versions
+Googlebot primarily crawls from US locations. Use Google Search Console to:
+- Submit sitemap: `https://ceptiv.net/sitemap.xml`
+- Request indexing for `/da/` URLs specifically
 
-- **Canonical URLs**: Self-referential canonical tags
-- **Structured Data**: JSON-LD for rich snippets
-- **Performance**: Optimized for Core Web Vitals
-- **Mobile-First**: Responsive design with mobile optimization
-- **Accessibility**: WCAG compliant for better search rankings
+#### 4. Translate Everything
+All content must be translated—not just body text:
+- Meta titles & descriptions ✅
+- Alt text for images
+- Navigation labels ✅
+- Button text ✅
+- Error messages
+
+#### 5. Validation Tools
+Validate hreflang with:
+- [Google's Rich Results Test](https://search.google.com/test/rich-results)
+- [Hreflang Tags Testing Tool](https://technicalseo.com/tools/hreflang/)
+- [Aleyda Solis Hreflang Generator](https://www.aleydasolis.com/english/international-seo-tools/hreflang-tags-generator/)
+
+---
+
+### Adding a New Language
+
+To add a new language (e.g., German):
+
+1. **Update `src/lib/languages.ts`**:
+   ```typescript
+   export const LANGUAGES = {
+     en: { ... },
+     da: { ... },
+     de: {
+       code: 'de',
+       name: 'German',
+       nativeName: 'Deutsch',
+       flag: '🇩🇪',
+       hreflang: 'de',
+       default: false,
+     },
+   }
+   
+   export const GERMAN_URL_MAPPINGS = {
+     'about': 'uber-uns',
+     'services': 'dienstleistungen',
+     // ...
+   }
+   ```
+
+2. **Add translations in `src/lib/translations.ts`**
+
+3. **Update SEO metadata in `src/lib/seo.ts`**
+
+4. **Update sitemap to include new language**
+
+5. **Submit new URLs to Google Search Console**
+
+---
+
+### Google Search Console Setup
+
+For proper monitoring, add BOTH URL prefixes:
+
+1. `https://ceptiv.net/` (covers English)
+2. `https://ceptiv.net/da/` (covers Danish)
+
+Then:
+- Submit sitemap: `https://ceptiv.net/sitemap.xml`
+- Monitor indexing separately for each language
+- Check for crawl errors in non-English versions
 
 ## Integrations
 

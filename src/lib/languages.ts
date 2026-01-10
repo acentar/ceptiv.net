@@ -89,18 +89,34 @@ export const DANISH_URL_MAPPINGS: Record<string, string> = {
   'start': 'start'
 }
 
-// Get URL for specific language
+/**
+ * Get URL for specific language
+ * 
+ * URL Structure:
+ * - English: /about, /services (no prefix, clean URLs)
+ * - Danish: /da/om-os, /da/tjenester (with /da/ prefix and Danish slugs)
+ * 
+ * @param route - English route key (e.g., 'about', 'services')
+ * @param lang - Target language
+ * @returns Localized URL path
+ */
 export const getLocalizedUrl = (route: string, lang: Language): string => {
-  if (lang === 'en') {
-    return `/${route || ''}`
+  // Clean the route (remove leading/trailing slashes)
+  const cleanRoute = route.replace(/^\/+|\/+$/g, '')
+  
+  if (lang === 'en' || lang === DEFAULT_LANGUAGE) {
+    // English uses clean URLs without language prefix
+    return cleanRoute ? `/${cleanRoute}` : '/'
   }
 
   if (lang === 'da') {
-    const danishPath = DANISH_URL_MAPPINGS[route] || route
-    return `/${danishPath || ''}`
+    // Danish uses /da/ prefix with localized slugs
+    const danishSlug = DANISH_URL_MAPPINGS[cleanRoute] || cleanRoute
+    return danishSlug ? `/da/${danishSlug}` : '/da'
   }
 
-  return `/${route || ''}`
+  // Fallback
+  return cleanRoute ? `/${cleanRoute}` : '/'
 }
 
 // Extract language from URL path

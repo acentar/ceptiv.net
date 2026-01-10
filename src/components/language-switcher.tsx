@@ -1,46 +1,34 @@
 'use client'
 
+import Link from 'next/link'
 import { useLanguage } from '@/hooks/use-language'
-import { LANGUAGES } from '@/lib/languages'
-import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { ChevronDown, Globe } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 
-export function LanguageSwitcher() {
-  const { currentLanguage, switchLanguage, languageConfig } = useLanguage()
+interface LanguageSwitcherProps {
+  variant?: 'light' | 'dark'
+}
+
+export function LanguageSwitcher({ variant = 'light' }: LanguageSwitcherProps) {
+  const { currentLanguage } = useLanguage()
+
+  const isDark = variant === 'dark'
+
+  // Show link to the other language's homepage
+  const isEnglish = currentLanguage === 'en'
+  const targetHref = isEnglish ? '/da' : '/'
+  const linkText = isEnglish ? 'Vores danske website' : 'Our english website'
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="flex items-center gap-2">
-          <Globe className="w-4 h-4" />
-          <span className="hidden sm:inline">{languageConfig?.nativeName}</span>
-          <span className="sm:hidden">{languageConfig?.flag}</span>
-          <ChevronDown className="w-3 h-3" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-40">
-        {Object.entries(LANGUAGES).map(([code, config]) => (
-          <DropdownMenuItem
-            key={code}
-            onClick={() => switchLanguage(code as any)}
-            className={`flex items-center gap-2 cursor-pointer ${
-              currentLanguage === code ? 'bg-neutral-100' : ''
-            }`}
-          >
-            <span>{config.flag}</span>
-            <span>{config.nativeName}</span>
-            {currentLanguage === code && (
-              <span className="ml-auto text-neutral-500">✓</span>
-            )}
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Link 
+      href={targetHref}
+      className={`inline-flex items-center gap-2 text-sm font-medium transition-colors group ${
+        isDark 
+          ? 'text-neutral-400 hover:text-white' 
+          : 'text-neutral-600 hover:text-neutral-900'
+      }`}
+    >
+      <span>{linkText}</span>
+      <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+    </Link>
   )
 }

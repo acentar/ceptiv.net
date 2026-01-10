@@ -1,13 +1,27 @@
+/**
+ * Language-Specific Home Page
+ * 
+ * URL Structure:
+ * - /    → English homepage (root page.tsx)
+ * - /da  → Danish homepage (this page)
+ * - /en  → Redirects to / (clean English URL)
+ */
+
 import { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { generatePageMetadata } from '@/lib/seo'
-import { Language, isSupportedLanguage } from '@/lib/languages'
+import { Language, isSupportedLanguage, DEFAULT_LANGUAGE } from '@/lib/languages'
 import HomePage from '@/app/page'
 
 interface PageProps {
   params: Promise<{
     lang: string
   }>
+}
+
+// Generate static params for Danish only (English homepage is at root)
+export async function generateStaticParams() {
+  return [{ lang: 'da' }]
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -30,7 +44,12 @@ export default async function LangPage({ params }: PageProps) {
     notFound()
   }
 
-  // For now, return the original homepage
-  // In a full implementation, this would render translated content
+  // Redirect /en to / (clean English URL)
+  if (lang === DEFAULT_LANGUAGE) {
+    redirect('/')
+  }
+
+  // For Danish, render the homepage
+  // In future, pass lang prop: <HomePage lang={lang} />
   return <HomePage />
 }
